@@ -1,10 +1,12 @@
 {%- if include.menu -%}
 <style>
-.dropdown { position: relative; display: inline-block; }
-.dropdown > span { cursor: pointer; }
-.dropdown-menu { display: none; position: absolute; top: 100%; left: 0; z-index: 100; min-width: 220px; background: var(--background); border: 1px solid currentColor; padding: 0.5em 0; }
-.dropdown-menu a { display: block; padding: 0.4em 1em; white-space: normal; }
-.dropdown:hover .dropdown-menu { display: block; }
+nav .dropdown { position: relative; display: inline-block; vertical-align: middle; }
+nav .dropdown > span { cursor: pointer; color: inherit; padding: 0 0.75em; white-space: nowrap; }
+nav .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; z-index: 200; min-width: 260px; background: #1e2327; border-top: 2px solid rgba(255,255,255,0.15); box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
+nav .dropdown-menu a { display: block; padding: 0.6em 1em; color: inherit; white-space: normal; border-bottom: 1px solid rgba(255,255,255,0.08); }
+nav .dropdown-menu a:last-child { border-bottom: none; }
+nav .dropdown-menu a:hover { background: rgba(255,255,255,0.1); }
+nav .dropdown:hover .dropdown-menu { display: block; }
 </style>
 <nav>
 {%- for item in include.menu -%}
