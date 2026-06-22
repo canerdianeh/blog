@@ -50,14 +50,12 @@ loadrack.php:
 
 ```
 
-```
-
-php
+```php
 PHP
-error\_reporting(0);
+error\\_reporting(0);
 require 'includes/aws-init.php';
-include 'includes/capacity\_vars.php';
-require\_once 'includes/functions.php';
+include 'includes/capacity\\_vars.php';
+require\\_once 'includes/functions.php';
 header("Content-type: text/html; charset=utf-8");
 $bwin = array();
 $bwout = array();
@@ -65,10 +63,10 @@ $conn = array();
 $cap = array();
 $iid = array();
 $ver = array();
-if (isset($\_GET['origin'])) { $origin\_ip = $\_GET['origin'];} else { die('No Origin Server Specified'); }
+if (isset($\\_GET['origin'])) { $origin\\_ip = $\\_GET['origin'];} else { die('No Origin Server Specified'); }
 // Gather Data
-$ip = getRepeaters($origin\_ip);
-$origin\_ver = getVersion($origin\_ip);
+$ip = getRepeaters($origin\\_ip);
+$origin\\_ver = getVersion($origin\\_ip);
 foreach ($ip as $repeater) {
 list($in, $out, $count) = getLoad($repeater);
 $bwin[$repeater] = $in;
@@ -82,64 +80,46 @@ $cap[$repeater] = $mbps[$size];
 }
 } //End Repeater Foreach
 // Display Summary
-$total\_cap = array\_sum($cap);
-$total\_load = array\_sum($bwout) / $total\_cap \* 100; // convert to percentage
-$load\_string = sprintf("%.2f",$total\_load);
-$bwout\_string = sprintf("%.3f",array\_sum($bwout));
+$total\\_cap = array\\_sum($cap);
+$total\\_load = array\\_sum($bwout) / $total\\_cap \\* 100; // convert to percentage
+$load\\_string = sprintf("%.2f",$total\\_load);
+$bwout\\_string = sprintf("%.3f",array\\_sum($bwout));
 $total['repeaters'] = sizeof($ip);
-$total['conns'] = array\_sum($conn);
-$load\_round = round($total\_load);
-switch ($total\_load) {
-case ($total\_load  99): $color = "#000000"; break;
-case ($total\_load >= 85): $color = "#FF0000"; break;
-case ($total\_load >= 75): $color = "#FFFF00"; break;
+$total['conns'] = array\\_sum($conn);
+$load\\_round = round($total\\_load);
+switch ($total\\_load) {
+case ($total\\_load 99): $color = "#000000"; break;
+case ($total\\_load >= 85): $color = "#FF0000"; break;
+case ($total\\_load >= 75): $color = "#FFFF00"; break;
 default: $color = "#00FF00";
 }
-$label = 'Origin | ['. $origin\_ip . "](http://'.$origin_ip.':1935/loadbalancer?serverInfoXML)";
+$label = 'Origin | ['. $origin\\_ip . "](http://'.$origin\_ip.':1935/loadbalancer?serverInfoXML)";
 ?>
-
-=$total['conns'];? Connections (=$total['repeaters'];? Edges)  
-=$bwout\_string;? Mbps (=$load\_string;? %)
-
+=$total['conns'];? Connections (=$total['repeaters'];? Edges)
+=$bwout\\_string;? Mbps (=$load\\_string;? %)
 =$label;?
-
 php
 // Iterate through IP address array and display individual servers
 foreach ($ip as $repeater) {
-$server\_load = $bwout[$repeater] / $cap[$addr] \* 100; // convert to percentage
-$load\_string = sprintf("%.2f",$server\_load);
-$bwout\_string = sprintf("%.3f",$bwout[$repeater]);
-$load\_round = round($server\_load);
-switch ($server\_load) {
-case ($server\_load  99): $color = "#000000"; $heavy = true; break;
-case ($server\_load >= 85): $color = "#FF0000"; $heavy = true; break;
-case ($server\_load >= 75): $color = "#FFFF00"; break;
+$server\\_load = $bwout[$repeater] / $cap[$addr] \\* 100; // convert to percentage
+$load\\_string = sprintf("%.2f",$server\\_load);
+$bwout\\_string = sprintf("%.3f",$bwout[$repeater]);
+$load\\_round = round($server\\_load);
+switch ($server\\_load) {
+case ($server\\_load 99): $color = "#000000"; $heavy = true; break;
+case ($server\\_load >= 85): $color = "#FF0000"; $heavy = true; break;
+case ($server\\_load >= 75): $color = "#FFFF00"; break;
 default: $color = "#00FF00";
 }
 $label = 'Edge | ['. $repeater . "](http://'.$repeater.':8086/serverinfo.xml)";
-$lcd = $conn[$repeater]." Connections   
-$bwout\_string Mbps ($load\_string%)";
+$lcd = $conn[$repeater]." Connections
+$bwout\\_string Mbps ($load\\_string%)";
 ?>
-
 =$lcd;?
-
 =$label;?
-
 php
-if ($repeater != $origin\_ip) {
-echo '<FORM action="terminate.php" method="POST" target="\_blank"';
-echo '';
-echo '';
-echo '';
-}
-else
-{
-echo '';
-echo '![](images/power-gray.png "Power control disabled on origin")';
-echo '';
-}
-?>
-
+if ($repeater != $origin\\_ip) {
+echo '
 "
 style="position: absolute;
 left: 23px;
@@ -149,13 +129,9 @@ height: 20px;
 border-radius: 10px;
 border: none;
 ">
-
 php
 } // Repeater Loop
-echo "<SMALLLast Refresh: ";
-echo $date = date("Y-m-d H:i:s");
-echo "\n";
-?>
+echo "
 
 ```
 

@@ -126,9 +126,9 @@ def clean_body(body):
         else:
             result.append(html_to_markdown(part))
     body = ''.join(result)
-    body = re.sub(r'([^\n])(```)', r'\1\n\n```', body)
-    body = re.sub(r'```([^\n`])', r'```\n\n\1', body)
-    body = re.sub(r'```\n([^\n`])', r'```\n\n\1', body)
+    body = re.sub(r'([^\n])(```)', r'\1\n\n```', body)        # blank line before opening fence
+    body = re.sub(r'```([^\n`\w])', r'```\n\n\1', body)       # blank line after closing fence (same line, non-word)
+    body = re.sub(r'```\n([^\n`])', r'```\n\n\1', body)       # blank line after closing fence (next line)
     body = re.sub(r'\n{3,}', '\n\n', body)
     return body.strip()
 
