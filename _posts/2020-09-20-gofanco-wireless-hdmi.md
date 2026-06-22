@@ -37,27 +37,16 @@ image: "https://nerdian.ca/files/2020/09/IMG_1936.png"
 ---
 
 A few weeks ago, I went to Amazon and picked up a [cheap wireless HDMI transmitter](https://amzn.to/3hK2ajj) to solve a camera connection challenge at the church. I needed to send a GoPro feed back to the booth without running cables all over the floor (or worrying about the GoPro's live streaming latency -- it uses HLS with a real short segment size-- and getting that stream into the switcher was not a trivial task).
-
 As is so often the case with these "off-brand" (or less well-known brand) devices, my expectations were low, and I fully expected to return it after a week.
-
 That didn't happen. Not only was it easy to set up, the picture quality was excellent, and latency almost nonexistent. I immediately picked up another set to run a mobile confidence monitor cart. It's also able to send IR control to the receiver.
-
 As it turns out, [GoFanco](https://www.gofanco.com/) is starting to make a name for themselves in the video accessories market for both pros and consumers, not entirely unlike how BlackMagic got their start. They offer quite a wide assortment of gizmos to move video signals around.
-
-![]({{site.baseurl}}/assets/2020/09/IMG_1936-1024x768.png)  
-
+![]({{site.baseurl}}/assets/2020/09/IMG\_1936-1024x768.png)
 The mobile GoPro rig. This could also potentially be used for linking live UAS footage back to a switcher.
-
-Since I am a wireless network engineer by profession, I had significant concerns about how well this would behave in the spectrum - it advertises that it uses 5GHz, and I expected it to grab as much spectrum as it could (as most wireless video devices tend to), and walk all over everything else in the band. So I hauled out my Ekahau Sidekick and its spectrum analyzer to see how well-behaved it would be... And I was pleasantly surprised to discover that it was *very* well-behaved on the Wi-Fi spectrum... because it's actually running Wi-Fi!
-
+Since I am a wireless network engineer by profession, I had significant concerns about how well this would behave in the spectrum - it advertises that it uses 5GHz, and I expected it to grab as much spectrum as it could (as most wireless video devices tend to), and walk all over everything else in the band. So I hauled out my Ekahau Sidekick and its spectrum analyzer to see how well-behaved it would be... And I was pleasantly surprised to discover that it was \*very\* well-behaved on the Wi-Fi spectrum... because it's actually running Wi-Fi!
 It's running 802.11ac on a 20MHz channel (and the channel selection allows 10 different channels, which tells me it's running on UNII-1 and UNII-3 and avoiding the DFS bands). Airtime usage is quite efficient, around 4%, which is shocking for a video application. And perhaps most useful is that it runs on 5VDC, and the supply is rated at 2A... Which means I can use a USB battery to power the transmitter and the GoPro (and a 20Ah slice will run this rig All. Day. Long.
-
 Additional features allow not just 1:1 link, but 1TX:2RX, 2TX:1RX, all using a single channel. And because it's quite efficient in spectrum/airtime usage, it does this in such a way that will coexist peacefully with your Wi-Fi.
-
 It also means that if a presenter brings a laptop and wants to put it up on the screen, the transmitter can be powered from the laptop itself. This thing is a definitely a worthwhile addition to your tool kit.
-
 The gory technical details,
-
 - Channel 0: Wifi Channel 36 (20MHz) (Default)
 - Channel 1: Wifi Channel 44 (20MHz)
 - Channel 2: Wifi Channel 157 (20MHz)
@@ -68,21 +57,12 @@ The gory technical details,
 - Channel 7: Wifi Channel 153 (40MHz)
 - Channel 8: Wifi Channel 165 (20MHz)
 - Channel 9: Wifi Channel 161 (20MHz)
-
 This appears to be fairly smart frequency selection behaviour since these preprogrammed channels look like it will never set itself up on the secondary channel of a 40MHz pair, which is good for co-existence with other Wi-Fi. When powering up the unit, it will start on 0 but then switch to the last channel it was using once it completes booting, which only takes about 5 seconds.
-
-Each channel is its own encrypted SSID named LK\_<Channel #>.
-
+Each channel is its own encrypted SSID named LK\\_.
 There is a pair of LEDs on each unit: The transmitter has one that indicates it is getting a good HDMI signal, the other indicates that it has synced up with the receiver. On the receiver, one indicates that it has a good wireless signal (solid indicates a connection, blinking indicates active data transmission), and the other indicates that it has synced up with the transmitter. A mild annoyance here is that changing the channel on the receiver will not trigger the transmitter to switch channels. However, the included IR remote will let you do so. The transmitter also has an HDMI pass through, so you can insert it between a source and a monitor.
-
 Here's about a [minute of traffic captured from the Sidekick](https://packets.arista.com/upload/link?id=5f677ab80cbb753f85278824bc01f09ea95c322ecaf129c8c53545fd). A channel change happens around 30 seconds in. The channel change process is pretty straightforward and exactly what you'd expect. When initiated from the receiver, it sends a deauth frame, and then the transmitter continues to beacon on its existing channel. When channel change is initiated on the transmitter, it will send a series of broadcast deauth frames to the SSID, change to the new SSID and start beaconing (this takes less than a second). Meanwhile, the receiver is looking for beacons from its pal, and when it sees the right SSID on its channel, it sends a broadcast probe request, gets the response from the transmitter, and goes through the standard association process. Management frames do not appear to be protected, so this device is vulnerable to deauth spoofing.
-
-Data rate hovers around 100Mbps according to [AristaPackets](https://packets.arista.com) analysis of the capture. Given their use of off-the-shelf Wi-Fi for the networking component, I wouldn't be surprised in the least to discover that the video protocol running underneath the hood was [NDI](https://en.wikipedia.org/wiki/Network_Device_Interface), or something based on it. Why reinvent the wheel? I'd really love to crack open the encryption on this guy and see...
-
+Data rate hovers around 100Mbps according to [AristaPackets](https://packets.arista.com) analysis of the capture. Given their use of off-the-shelf Wi-Fi for the networking component, I wouldn't be surprised in the least to discover that the video protocol running underneath the hood was [NDI](https://en.wikipedia.org/wiki/Network\_Device\_Interface), or something based on it. Why reinvent the wheel? I'd really love to crack open the encryption on this guy and see...
 ![]({{site.baseurl}}/assets/2020/09/Screen-Shot-2020-09-20-at-10.47.50-AM-1024x144.png)
-
 Given that this is using standard 802.11, the advertised range is about 50 metres, but it could easily be made to go longer distances simply by attaching a 2x2 MIMO directional antenna. Antenna connectors are RP-SMA.
-
 One caveat: When I first set it up, the receiver was having a hard time staying up and maintaining signal... I quickly discovered that I had grabbed the wrong 5V power supply, and it was only able to source up to 1A - This device definitely needs more juice than that. Once I grabbed the correct 5V power supply, everything worked great. If you use a USB cable to power it, make sure the USB supply can source the full 2A (any supply designed for tablets or higher end smart phones should be adequate)
-
 All in all, not a bad little setup for $200 and small change. It appears to be engineered above its price point, which is a great value.

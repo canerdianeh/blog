@@ -68,19 +68,14 @@ boot
 ```
 
 Power up the AP, either via PoE or external DC power (If your AP has a 12V input, I've found that a [Type C PD to 12V cable](https://amzn.to/3ttwBm9) is very handy for powering an AP off a standard Type C battery). Make sure you also have something like a laptop connected to the eth0 port because Instant gets a little cranky about operating when it doesn't have Ethernet.
-
 Your boot time will vary by your specific AP model, but I've observed the following boot times to be typical:
-
 - AP-514/515: 3-4 minutes
 - AP-303H: 8-10 minutes
-
 Once the AP has booted up and the CLI is ready and not in degraded mode, log in.
-
-- **Default credentials:**
-  - standalone mode : **admin/admin**
-  - virtual controller mode : **admin/<serial number>**
-
-Start with the initial configuration (initial clock set time is in UTC). If you need to configure DST, follow [the instructions](https://www.arubanetworks.com/techdocs/CLI-Bank/Content/instant/clock-summ-time.htm) for **clock summer-time**:
+- \*\*Default credentials:\*\*
+- standalone mode : \*\*admin/admin\*\*
+- virtual controller mode : \*\*admin/\*\*
+Start with the initial configuration (initial clock set time is in UTC). If you need to configure DST, follow [the instructions](https://www.arubanetworks.com/techdocs/CLI-Bank/Content/instant/clock-summ-time.htm) for \*\*clock summer-time\*\*:
 
 ```
 

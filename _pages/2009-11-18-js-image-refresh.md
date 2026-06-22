@@ -24,19 +24,18 @@ author:
 permalink: "/code/client/js-image-refresh/"
 ---
 
-[js]  
-<IMG src="streams.png" name="refresh">  
-<SCRIPT language="JavaScript" type="text/javascript">  
-<!--  
-var t = 30 // interval in seconds  
-image = "streams.png" //name of the image  
-function Start() {  
-tmp = new Date();  
-tmp = "?"+tmp.getTime()  
-document.images["refresh"].src = image+tmp  
-setTimeout("Start()", t\*1000)  
-}  
-Start();  
-// -->  
-</SCRIPT>  
+[js]
+![](streams.png)
+
+<!--
+var t = 30 // interval in seconds
+image = "streams.png" //name of the image
+function Start() {
+tmp = new Date();
+tmp = "?"+tmp.getTime()
+document.images["refresh"].src = image+tmp
+setTimeout("Start()", t\\*1000)
+}
+Start();
+// -->
 [/js]

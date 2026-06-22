@@ -40,18 +40,12 @@ permalink: "/2011/01/17/wowza-stream-class/"
 ---
 
 I mentioned in the previous post about using [ffmpeg](http://ffmpeg.org "ffmpeg") in a cron job to create Simulated Live events via Wowza. In this post, I'll explain how to do it using the Wowza Stream Class module, which allows you to set a broadcast schedule to play a mix of recorded and live content.
-
 Wowza has a pretty good [document](http://www.wowzamedia.com/forums/content.php?145 "Stream class example with playlists and schedules set in smil file") on how to add this module in to your server and do a test playlist.If you're setting this up on Amazon EC2, you'll need to update your startup package by putting the module in the wowza/lib directory and the playlist in the wowza/content directory
-
 Unfortunately, the tutorial doesn't really cover playlist creation beyond the example. This is especially tricky, given that the scheduling parameters don't seem to conform to any known SMIL standard. Yes, it's XML, so theoretically, it doesn't matter, but there are extensions in [SMIL 3.0](http://www.w3.org/TR/2006/WD-SMIL3-20061220/ "SMIL 3.0") that are meant to deal with server-side playlists for automating programming.
-
-Unless you specified a different application name in the Properties section of Server.xml, the automated playlist will publish to the *live* application.
-
-The basic structure of the SMIL file body consists of <stream> and <playlist> statements.
-
+Unless you specified a different application name in the Properties section of Server.xml, the automated playlist will publish to the \*live\* application.
+The basic structure of the SMIL file body consists of  and  statements.
 ### Stream Element
-
-The <stream> element defines one or more virtual stream names that the playlists will feed into:
+The  element defines one or more virtual stream names that the playlists will feed into:
 
 ```
 
@@ -60,43 +54,29 @@ The <stream> element defines one or more virtual stream names that the playlists
 ```
 
 In this example, I have a high and low bandwidth stream. In your player, you reference the stream name, rather than the streamshedule.smil file, like this:
-
 #### Flash RTMP:
-
-streamer: rtmp://wowza.server.address(:port)/live  
+streamer: rtmp://wowza.server.address(:port)/live
 file: playlist-high
-
 #### Flash HTTP:
-
 http://wowza.server.address/live/playlist-high/manifest.f4m
-
 #### HLS:
-
 http://wowza.server.address/live/playlist-high/playlist.m3u8
-
 #### Silverlight
-
 http://wowza.server.address/live/playlist-high/Manifest
-
 ### Playlist element
-
-The <playlist> element defines specific video sequences that go into the virtual stream. There are four key parameters to the playlist element:
-
-- **name** : This is a unique name for that particular sequence.
-- **playOnStream** : This tells the Stream Class module which of the previously defined streams this playlist is associated with.
-- **repeat** : Valid values are true/false. This defines whether this playlist loops when it gets to the end.
-- **scheduled** : When this playlist is scheduled, in the format "YYYY-MM-DD HH:MM:SS" (24-hour time)
-
-Within the playlist element are one or more <video> statements that use the following parameters:
-
-- **src**: the video to be played. Can either be:
-  - a stream within the same live application (use the stream name only)
-  - an MP4 video file in the Wowza content directory (use *mp4:filename.mp4*)
-  - A stream elsewhere (requires some additional modules)
-- **start** : The number of seconds into the video to start playing. If this is a live source, use the value **-2**.
-- **length** : The number of seconds to play the video. The value **-1** indicates to play until it ends.
-
-Using start/length is a useful way to introduce commercial breaks or intermissions into a stream. This example would show **BigBuckBunny.mp4** from the start, for 60 seconds, then cut to a commercial for the duration of the **advertisement-1.mp4** file. After the commercial, it would resume and play for 2 more minutes, play a 30-second commercial from **advertisement-2.mp4** and then plays the rest of the **BigBuckBunny.mp4** file. If the playlist set to repeat, this will loop.
+The  element defines specific video sequences that go into the virtual stream. There are four key parameters to the playlist element:
+- \*\*name\*\* : This is a unique name for that particular sequence.
+- \*\*playOnStream\*\* : This tells the Stream Class module which of the previously defined streams this playlist is associated with.
+- \*\*repeat\*\* : Valid values are true/false. This defines whether this playlist loops when it gets to the end.
+- \*\*scheduled\*\* : When this playlist is scheduled, in the format "YYYY-MM-DD HH:MM:SS" (24-hour time)
+Within the playlist element are one or more  statements that use the following parameters:
+- \*\*src\*\*: the video to be played. Can either be:
+- a stream within the same live application (use the stream name only)
+- an MP4 video file in the Wowza content directory (use \*mp4:filename.mp4\*)
+- A stream elsewhere (requires some additional modules)
+- \*\*start\*\* : The number of seconds into the video to start playing. If this is a live source, use the value \*\*-2\*\*.
+- \*\*length\*\* : The number of seconds to play the video. The value \*\*-1\*\* indicates to play until it ends.
+Using start/length is a useful way to introduce commercial breaks or intermissions into a stream. This example would show \*\*BigBuckBunny.mp4\*\* from the start, for 60 seconds, then cut to a commercial for the duration of the \*\*advertisement-1.mp4\*\* file. After the commercial, it would resume and play for 2 more minutes, play a 30-second commercial from \*\*advertisement-2.mp4\*\* and then plays the rest of the \*\*BigBuckBunny.mp4\*\* file. If the playlist set to repeat, this will loop.
 
 ```
 

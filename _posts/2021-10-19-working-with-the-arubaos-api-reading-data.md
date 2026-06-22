@@ -37,13 +37,10 @@ author:
 permalink: "/2021/10/19/working-with-the-arubaos-api-reading-data/"
 ---
 
-Another quick bit today - this is the basic framework for using the [REST API in ArubaOS](https://developer.arubanetworks.com/aruba-aos/docs/getting-started-aos8-restapi). Lots of info at the [Aruba Developer Hub](https://developer.arubanetworks.com/). This is primarily for executing **show** commands and getting the data back in a structured JSON format.
-
-However, be aware that not all **show** commands return structured JSON - some will return something vaguely XMLish, and some will return the regular text output inside a JSON wrapper (originally the **showcommand** API endpoint was just a wrapper for the actual commands and would just return the CLI output, as it still does for several commands)
-
-You can always go to **https://<controller IP>:4343/api** (after logging in) and get a Swagger doc for all the available API calls - although owing to system limitations, the description of those endpoints isn't generally there, but it can be found in the full [AOS8 API reference](https://developer.arubanetworks.com/aruba-aos/reference).
-
-This blog entry does not deal with sending data *to* the ArubaOS device.
+Another quick bit today - this is the basic framework for using the [REST API in ArubaOS](https://developer.arubanetworks.com/aruba-aos/docs/getting-started-aos8-restapi). Lots of info at the [Aruba Developer Hub](https://developer.arubanetworks.com/). This is primarily for executing \*\*show\*\* commands and getting the data back in a structured JSON format.
+However, be aware that not all \*\*show\*\* commands return structured JSON - some will return something vaguely XMLish, and some will return the regular text output inside a JSON wrapper (originally the \*\*showcommand\*\* API endpoint was just a wrapper for the actual commands and would just return the CLI output, as it still does for several commands)
+You can always go to \*\*https://:4343/api\*\* (after logging in) and get a Swagger doc for all the available API calls - although owing to system limitations, the description of those endpoints isn't generally there, but it can be found in the full [AOS8 API reference](https://developer.arubanetworks.com/aruba-aos/reference).
+This blog entry does not deal with sending data \*to\* the ArubaOS device.
 
 ```
 

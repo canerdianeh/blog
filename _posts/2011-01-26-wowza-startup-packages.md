@@ -29,30 +29,20 @@ author:
 permalink: "/2011/01/26/wowza-startup-packages/"
 ---
 
-[![]({{site.baseurl}}/assets/2011/01/logo_aws.gif)](http://blog.ianbeyer.com/files/2011/01/logo_aws.gif)Startup packages are one of the more useful features of [Wowza Media Server for EC2](http://wowzamedia.com/ec2.html "Wowza for Amazon EC2") - they allow you to custom-configure a system for rapid scaling and provisioning. Wowza provides several [starter packages](http://wowzamediasystems.s3.amazonaws.com/packagelist.html "Wowza EC2 Startup Packages") to build on.
-
-A startup package is a file (up to 16384 bytes in size) that's passed to the instance through the **--user-data-file** parameter on the API tools (if you're uploading it via the [AWS Web Consol](http://console.aws.amazon.com "Amazon Web Services Console")e, you'll need to [encode it to Base64](http://www.motobit.com/util/base64-decoder-encoder.asp "Base64 encoder/decoder") and paste it into the text box) . There are a few ways that the data can get into the instance, which Amazon [documents over here](http://docs.amazonwebservices.com/AmazonEC2/dg/2006-10-01/AESDG-chapter-instancedata.html "Using EC2 Instance Data"). For a generic EC2 instance, this can be anything, from text to binary data, depending on what the processing on the target instance is set up to do. In the case of Wowza, it's a zip file with a specific structure. Much of this is digested from the [Wowza for EC2 guide](http://www.wowzamedia.com/resources/WowzaMediaServerForEC2_UsersGuide.pdf "Wowza for Amazon EC2 User's Guide").
-
+[![]({{site.baseurl}}/assets/2011/01/logo\_aws.gif)](http://blog.ianbeyer.com/files/2011/01/logo\_aws.gif)Startup packages are one of the more useful features of [Wowza Media Server for EC2](http://wowzamedia.com/ec2.html "Wowza for Amazon EC2") - they allow you to custom-configure a system for rapid scaling and provisioning. Wowza provides several [starter packages](http://wowzamediasystems.s3.amazonaws.com/packagelist.html "Wowza EC2 Startup Packages") to build on.
+A startup package is a file (up to 16384 bytes in size) that's passed to the instance through the \*\*--user-data-file\*\* parameter on the API tools (if you're uploading it via the [AWS Web Consol](http://console.aws.amazon.com "Amazon Web Services Console")e, you'll need to [encode it to Base64](http://www.motobit.com/util/base64-decoder-encoder.asp "Base64 encoder/decoder") and paste it into the text box) . There are a few ways that the data can get into the instance, which Amazon [documents over here](http://docs.amazonwebservices.com/AmazonEC2/dg/2006-10-01/AESDG-chapter-instancedata.html "Using EC2 Instance Data"). For a generic EC2 instance, this can be anything, from text to binary data, depending on what the processing on the target instance is set up to do. In the case of Wowza, it's a zip file with a specific structure. Much of this is digested from the [Wowza for EC2 guide](http://www.wowzamedia.com/resources/WowzaMediaServerForEC2\_UsersGuide.pdf "Wowza for Amazon EC2 User's Guide").
 # File Contents
-
 A startup package for EC2 contains the following:
-
 - startup.xml (startup manifest)
 - tuning folder
 - wowza folder
 - Any other folders referenced in the startup manifest
-
 A startup package is limited to a maximum of 16KB.
-
-Startup activities are logged to **/usr/local/WowzaMediaServer/logs/wowzamediaserver\_startup.log**. This is a good place to look if it's not behaving as expected. The package is unpacked to **/opt/working**.
-
+Startup activities are logged to \*\*/usr/local/WowzaMediaServer/logs/wowzamediaserver\\_startup.log\*\*. This is a good place to look if it's not behaving as expected. The package is unpacked to \*\*/opt/working\*\*.
 ## Startup Manifest
-
 This file controls the startup processing for instantiating a Wowza server on Amazon EC2. It allows three commands: Install, Download, and RunScript.
-
 ### Download
-
-The <Download> command will download content from a web server and save it to the local Amazon instance. The <Download> command includes the following elements: URL, Data, Header, Destination, and Action:
+The  command will download content from a web server and save it to the local Amazon instance. The  command includes the following elements: URL, Data, Header, Destination, and Action:
 
 ```
 
@@ -66,7 +56,7 @@ The <Download> command will download content from a web server and save it to th
 </Download>
 ```
 
-The only two required elements are <URL> and <Destination>. To download a file from the url http://www.mycompany.com/myfile.zip, save it to the local machine at the location /opt/myfile.zip and unzip the file after download, the command is:
+The only two required elements are  and . To download a file from the url http://www.mycompany.com/myfile.zip, save it to the local machine at the location /opt/myfile.zip and unzip the file after download, the command is:
 
 ```
 
@@ -77,23 +67,15 @@ The only two required elements are <URL> and <Destination>. To download a file f
 </Download>
 ```
 
-When completed, the contents of the zip archive are located in **/opt**.
-
-One use of the <Download> command is to work around the 16kB startup package size limitation. For example, if you need to add several .jar files into the Wowza Server “lib” folder and these files push your startup package size over the 16kB limit, you might package these files into a separate zip archive. You can then host this zip archive on a web server and use the <Download> command to install the files into the Wowza Server “lib” folder.
-
+When completed, the contents of the zip archive are located in \*\*/opt\*\*.
+One use of the  command is to work around the 16kB startup package size limitation. For example, if you need to add several .jar files into the Wowza Server “lib” folder and these files push your startup package size over the 16kB limit, you might package these files into a separate zip archive. You can then host this zip archive on a web server and use the  command to install the files into the Wowza Server “lib” folder.
 It's important to remember that the zipfile path structure is critical. If it uses no paths, you'll need your destination to be where it ultimately lives, either in the staging area, or the absolute path to the Wowza install. When creating the zipfile with relative paths, create the path tree as if you were in the Wowza installation root.
-
 #### URL
-
-The <URL> is the URL of the file to be downloaded. The download can be performed over SSL by starting the url with https:// rather than http://. The url can also contain query parameters. The file will be downloaded using the GET method unless <Data> is specified.
-
+The  is the URL of the file to be downloaded. The download can be performed over SSL by starting the url with https:// rather than http://. The url can also contain query parameters. The file will be downloaded using the GET method unless  is specified.
 #### Data
-
 The Data is text data that will be included as part of the body of the HTTP request. You can use post data to send user name and password information to your web server so you can protect your content.
-
-#### Header: <Name> and <Value>
-
-The <Header> elements are name value pairs added to the header part of the HTTP request. An example would be:
+#### Header:  and 
+The  elements are name value pairs added to the header part of the HTTP request. An example would be:
 
 ```
 
@@ -104,16 +86,11 @@ The <Header> elements are name value pairs added to the header part of the HTTP 
 ```
 
 #### Destination
-
-The <Destination>element is the path to which the file will be saved (including the filename). This path can be relative or absolute. The base directory when calculating a relative file path, is the root directory of the startup package (the folder that contains the startup.xml file).
-
+The element is the path to which the file will be saved (including the filename). This path can be relative or absolute. The base directory when calculating a relative file path, is the root directory of the startup package (the folder that contains the startup.xml file).
 #### Action
-
-The <Action> element is the action performed after the file is downloaded. The action can either be UNZIP or INSTALL. If the action is UNZIP the downloaded file will be unzipped using the unzip command. If the action is INSTALL the downloaded file will be unzipped and the contents of the folder will be installed (copied) into the Wowza Server installation folder.
-
+The  element is the action performed after the file is downloaded. The action can either be UNZIP or INSTALL. If the action is UNZIP the downloaded file will be unzipped using the unzip command. If the action is INSTALL the downloaded file will be unzipped and the contents of the folder will be installed (copied) into the Wowza Server installation folder.
 ### Install
-
-The <Install> command will copy the contents of a folder into the Wowza Server installation folder. The <Install> command can either contain a single <Package> element or single <Folder> element.
+The  command will copy the contents of a folder into the Wowza Server installation folder. The  command can either contain a single  element or single  element.
 
 ```
 
@@ -138,12 +115,9 @@ The <Install> command will copy the contents of a folder into the Wowza Server i
 ```
 
 The Package path can reference an external URL, like http://wowzamediasystems.s3.amazonaws.com
-
 The Folder path can reference either a relative path (relative to the root of the startup package where Startup.xml is located) or an absolute path on the local file system.
-
 ### RunScript
-
-The <RunScript> command will execute a script on a running Amazon instance.
+The  command will execute a script on a running Amazon instance.
 
 ```
 
@@ -155,14 +129,7 @@ The <RunScript> command will execute a script on a running Amazon instance.
 ```
 
 #### Script
-
-The <Script> element is the path to the script file to be executed. This path can be relative or absolute. The base directory when calculating a relative file path, is the root directory of the startup package (the folder that contains the startup.xml file). This can refer to a script, or be a single-line command.
-
-Any files referenced in the script need absolute paths or a path relative to the startup package root.
-
-#### Param
-
-The <Param> elements are parameters that will be passed to the running script. For example the following <RunScript> command:
+The 
 
 ```
 

@@ -84,12 +84,9 @@ Then under JMXRemoteConfiguration (if enabled), change the IpAddress and RMIServ
 ```
 
 Likewise this one can be left on localhost so as not to expose JMX to the world.
-
 ### conf/VHost.xml
-
 Next stop is the VHost.xml configuration file which specifies where Wowza listens for actual streaming traffic.
-
-Each <HostPort> section will have an <IpAddress> block that defaults to \*:
+Each  section will have an  block that defaults to \\*:
 
 ```
 

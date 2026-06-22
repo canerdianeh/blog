@@ -37,75 +37,47 @@ image: "https://nerdian.ca/files/2017/04/lifechurch-tv.png"
 ---
 
 Today's post will be a brief tutorial on using [Bitmovin](https://bitmovin.com)'s excellent [HTML5 video player](https://bitmovin.com/html5-player/) with [Church Online Platform](http://churchonlineplatform.com).
-
 If you're a church that is wanting to go live, and you haven't discovered COP, it's a marvelous product. The fine folks on the [life.church](http://life.church) Digerati Team (who created the [Bible App](https://www.bible.com/app) and made it available on just about every platform known to mankind). It's a free hosted platform that lets you deliver church online. All you have to do is bring your own streaming provider and provide an embed code. You can use your provider's player, or you can use your own player. The Digerati team are also a client of mine, and I really enjoy working with them - they're talented, nerdy, and very good at what they do. (most recently, I helped them build out their Wowza Streaming Engine capability for automating the scheduling and delivery of simulated live events.)
-
 One of my favorite video players out there right now is from Bitmovin, and they provide a CDN-hosted player that provides excellent analytics (complete with API access for the especially nerdy), and usage is free for the first 5000 impressions (and pricing is quite reasonable as you scale up from there). For this reason alone, it's an excellent choice for churches getting started with streaming. Its other major benefit is that because it is written in HTML5 and Javascript, it will work on just about anything you can throw at it (for the really archaic devices, it still has a Flash component). It also is designed from the ground up to support the new [MPEG-DASH](http://www.streamingmedia.com/Articles/Editorial/What-Is-.../What-is-MPEG-DASH-79041.aspx) standard, but if you're using a streaming CDN or service that doesn't provide DASH, no big deal, as the player also supports HLS, even for Flash delivery for those 3 devices that still haven't discovered modern streaming technology or are running a particularly ancient version of Android. Added bonus, BitMovin's player also supports VR and 360 streaming (as does Wowza Streaming Cloud).
-
 For starters, you'll need to sign up for an account, which will give you player information. One thing you'll want to make sure you do is add your churchonline.org domain to the allowed domains for your license key. This is under Player/Overview:
-
 [![Bitmovin Player Domain Config]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.03.48-1024x559.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.03.48.png)
-
 If you forget to do this, the player will simply show an error telling you you need to do it.  This keeps someone from using your player key on their site, so be sure to use yourdomain.churchonline.org, not just churchonline.org.
-
 To put this in your COP page, go to the event where you wish to use the player, and go to the Video tab:
-
 [![ChurchOnline Event Settings]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.18.40-1024x564.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.18.40.png)
-
 When you go to the Embed menu, you will see code to put it on the page (under Default video embed code). This is a little more involved than your standard embed code.
-
 [![Bitmovin Embed Controls]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.13.37-1024x552.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.13.37.png)
-
 A couple of key things to note here with regards to COP:
-
-1. In order to put the <script> stuff in your <head> section, you'd need to create a custom theme in COP. This is not necessary (in fact, putting that script statement in the head that way doesn't work). What you'll need to do is simply put the <script> piece just above the rest of it in the default embed code section.
+1. In order to put the  stuff in your <head> section, you'd need to create a custom theme in COP. This is not necessary (in fact, putting that script statement in the head that way doesn't work). What you'll need to do is simply put the <script> piece just above the rest of it in the default embed code section.
 2. You'll need to edit the source section in that code. If all you're doing is HLS, you can remove the dash and progressive entries. Leave the HLS entry in place and put in the HLS URL provided by your streaming platform. In the case of Wowza Streaming Cloud, this is located at the bottom of the Overview tab of your streaming application under "Playback URLs".
 3. The "poster" entry is the image the player shows when you're not streaming any video.
-
 So, for my test stream, the embed code looks like this:
-
 [code]
-
-<script type="text/javascript" src="https://bitmovin-a.akamaihd.net/bitmovin-player/stable/7/bitmovinplayer.js"></script>
-
-<div id="player"></div>  
-<script type="text/javascript">  
-var conf = {  
-key: "d8XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX2e",  
-source: {  
-hls: "http://wowzaprod103-i.akamaihd.net/hls/live/######/########/playlist.m3u8",  
-poster: "http://dontfenceme.in/wp-content/uploads/2013/09/g-global-background.jpg"  
-}  
-};  
-var player = bitmovin.player("player");  
-player.setup(conf).then(function(value) {  
-// Success  
-console.log("Successfully created bitmovin player instance");  
-}, function(reason) {  
-// Error!  
-console.log("Error while creating bitmovin player instance");  
-});  
-</script>
-
-[/code]
-
-The console.log lines aren't necessary, but potentially useful when trying to debug why it can't instantiate the player.
-
-If you want to run a separate video when the doors aren't open, put that under the offline video embed code section. You can leave the mobile and low sections empty, as your stream is probably already adaptive from your streaming provider.
-
-Save it, and this is what you get:
-
-**[![BitMovin in ChurchOnline Platform]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-17.39.24-1024x546.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-17.39.24.png)**
-
-In order to remove the Bitmovin logo, edit the theme's CSS and add the following lines:
-
-[code]
-
-/\* Remove Bitmovin Logo on player \*/  
-.bmpui-ui-watermark {  
-display: none;  
+<script type="text/javascript" src="https://bitmovin-a.akamaihd.net/bitmovin-player/stable/7/bitmovinplayer.js">
+var conf = {
+key: "d8XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX2e",
+source: {
+hls: "http://wowzaprod103-i.akamaihd.net/hls/live/######/########/playlist.m3u8",
+poster: "http://dontfenceme.in/wp-content/uploads/2013/09/g-global-background.jpg"
 }
-
+};
+var player = bitmovin.player("player");
+player.setup(conf).then(function(value) {
+// Success
+console.log("Successfully created bitmovin player instance");
+}, function(reason) {
+// Error!
+console.log("Error while creating bitmovin player instance");
+});
 [/code]
-
+The console.log lines aren't necessary, but potentially useful when trying to debug why it can't instantiate the player.
+If you want to run a separate video when the doors aren't open, put that under the offline video embed code section. You can leave the mobile and low sections empty, as your stream is probably already adaptive from your streaming provider.
+Save it, and this is what you get:
+\*\*[![BitMovin in ChurchOnline Platform]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-17.39.24-1024x546.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-17.39.24.png)\*\*
+In order to remove the Bitmovin logo, edit the theme's CSS and add the following lines:
+[code]
+/\\* Remove Bitmovin Logo on player \\*/
+.bmpui-ui-watermark {
+display: none;
+}
+[/code]
 [![ChurchOnline Platform CSS Edit]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.29.27-1024x544.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.29.27.png)
