@@ -11,7 +11,13 @@ show_frame: true
 show_sidebar: false
 include:
   - _pages
-  
+
+navigation:
+  - {title: "About", url: "/about/"}
+  - {title: "The Lab", url: "/the-lab/"}
+  - {title: "Archive", url: "/archive/"}
+
+
 remote_theme: niklasbuschmann/contrast
 
 plugins:
