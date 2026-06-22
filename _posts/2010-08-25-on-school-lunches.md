@@ -38,7 +38,7 @@ On Tuesday, she turned 7, and we told her she could buy her lunch (so she wouldn
 
 At lunch, I looked around me at what all the other second-graders were eating. It was a sea of brown (although I'll admit, there wasn't a whole lot of color in our own lunch, but we eat a lot of fresh veggies at home).
 
-[![]({{site.baseurl}}/assets/2010/08/Calvin-at-Dinner-calvin-26-hobbes-145791_490_358-300x219.gif)](http://blog.ianbeyer.com/files/2010/08/Calvin-at-Dinner-calvin-26-hobbes-145791_490_358.gif)Tuesday's lunch menu at school was:
+[![]({{site.baseurl}}/assets/2010/08/Calvin-at-Dinner-calvin-26-hobbes-145791_490_358-300x219.gif)](http://nerdian.ca/files/2010/08/Calvin-at-Dinner-calvin-26-hobbes-145791_490_358.gif)Tuesday's lunch menu at school was:
 
 - Whole Wheat Pasta with Marinara Sauce & a "Bosco Stick"
 - Grilled Cheese Sandwich
@@ -88,12 +88,12 @@ So, let's break this down.
 
 **Juice**. A serving of this contains 28 grams of sugars, virtually all of it fructose, with no fiber to buffer it (except perhaps in the orange juice)
 
-[![]({{site.baseurl}}/assets/2010/08/060329_icky01.jpg)](http://blog.ianbeyer.com/files/2010/08/060329_icky01.jpg)So, we have a menu loaded with sugars and not-so-complex carbohydrates. The second-graders arrive at 11:30. By 11:45, they're being herded outside, where they have 10 minutes to run off all that sugar. They technically have the option to stay and finish their meal, but there's intense pressure from both their peers and from the lunchroom staff for them to get out and play. Net result is that the amount of waste is mind-boggling.
+[![]({{site.baseurl}}/assets/2010/08/060329_icky01.jpg)](http://nerdian.ca/files/2010/08/060329_icky01.jpg)So, we have a menu loaded with sugars and not-so-complex carbohydrates. The second-graders arrive at 11:30. By 11:45, they're being herded outside, where they have 10 minutes to run off all that sugar. They technically have the option to stay and finish their meal, but there's intense pressure from both their peers and from the lunchroom staff for them to get out and play. Net result is that the amount of waste is mind-boggling.
 
 In 15 minutes, these kids will practically inhale well over 100 grams of sugars and starches. They will then have 10 minutes to run it off before it's even had a chance to hit their system, followed by over three hours in the classroom, punctuated by 15 minutes of recess in the middle. And they wonder why kids get fat and inattentive. Even our school's nurse cringes at the school's lunches.
 
 And this is a pretty typical day on the menu. The district swears they're abiding by federal guidelines. The common thing on this menu is that it's virtually all made from four of the top five USDA-subsidized crops: wheat, corn, soy, cotton (Tobacco is the 5th).
 
-I think the U[![]({{site.baseurl}}/assets/2010/08/grosslunch.jpg)](http://blog.ianbeyer.com/files/2010/08/grosslunch.jpg)SDA overseeing the school lunch program (and overall nutritional policy) is not only a massive conflict of interest, but a primary cause behind the obesity epidemic. You can't have the people setting production policy and subsidies be the same ones overseeing policy related to its consumption. When ketchup (which contains a lot of HFCS) is considered a "vegetable", there's a problem.
+I think the U[![]({{site.baseurl}}/assets/2010/08/grosslunch.jpg)](http://nerdian.ca/files/2010/08/grosslunch.jpg)SDA overseeing the school lunch program (and overall nutritional policy) is not only a massive conflict of interest, but a primary cause behind the obesity epidemic. You can't have the people setting production policy and subsidies be the same ones overseeing policy related to its consumption. When ketchup (which contains a lot of HFCS) is considered a "vegetable", there's a problem.
 
 If the school lunch program and nutrition policy were overseen by health officials (like DHHS or the Surgeon General), I think we'd be a lot better off.

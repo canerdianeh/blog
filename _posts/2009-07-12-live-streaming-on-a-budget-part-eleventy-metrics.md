@@ -32,7 +32,7 @@ Fortunately, Wowza has a built-in mechanism for reporting the number of active s
 
 I currently have a VB Script (the code is horrid, because I suck at VB)  that connects to each of the streaming servers, parses the response into a numerical value, adds them up to get a total stream count. The script runs on a 5-second delay loop, keeps track of the peak, and gives me the following output, where the red area is the origin server, green is the repeaters, and blue is the iPhone streams. Windows streams are gleaned directly from Windows Media Services.
 
-[caption id="attachment\_217" align="alignleft" width="663" caption="Stream count output"][![Stream count output]({{site.baseurl}}/assets/2009/07/count.png)](http://blog.ianbeyer.com/files/2009/07/count.png)[/caption]
+[caption id="attachment\_217" align="alignleft" width="663" caption="Stream count output"][![Stream count output]({{site.baseurl}}/assets/2009/07/count.png)](http://nerdian.ca/files/2009/07/count.png)[/caption]
 
 That's all well and good, but how many actual people are watching? We know there are several people who watch this alone, but others do it in groups or with their family. Initially, when we benchmarked other churches, we were told that a ratio of about 1.8 people per stream was a pretty reliable guess. We went with that for a while, as we gathered our own data.
 

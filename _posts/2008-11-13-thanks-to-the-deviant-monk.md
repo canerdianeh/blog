@@ -23,6 +23,6 @@ author:
 permalink: "/2008/11/13/thanks-to-the-deviant-monk/"
 ---
 
-[![]({{site.baseurl}}/assets/2008/11/citrt.jpg)](http://blog.ianbeyer.com/files/2008/11/citrt.jpg)
+[![]({{site.baseurl}}/assets/2008/11/citrt.jpg)](http://nerdian.ca/files/2008/11/citrt.jpg)
 
 [deviantmonk.com](http://deviantmonk.com)

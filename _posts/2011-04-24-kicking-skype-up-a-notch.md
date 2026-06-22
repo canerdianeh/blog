@@ -39,8 +39,8 @@ On our end, we took Adam's MacBook Pro, and hooked up a Canon XL2 via FireWire f
 
 Here's what it looked like:
 
-[![]({{site.baseurl}}/assets/2011/04/IMAG0583-612x1024.jpg)](http://blog.ianbeyer.com/files/2011/04/IMAG0583.jpg)
+[![]({{site.baseurl}}/assets/2011/04/IMAG0583-612x1024.jpg)](http://nerdian.ca/files/2011/04/IMAG0583.jpg)
 
-[![]({{site.baseurl}}/assets/2011/04/IMAG0585-1024x612.jpg)](http://blog.ianbeyer.com/files/2011/04/IMAG0585.jpg)
+[![]({{site.baseurl}}/assets/2011/04/IMAG0585-1024x612.jpg)](http://nerdian.ca/files/2011/04/IMAG0585.jpg)
 
 The end result is a conference that looks and sounds excellent.

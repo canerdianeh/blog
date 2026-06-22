@@ -37,7 +37,7 @@ permalink: "/2019/11/08/another-cool-use-of-the-wlanpi/"
 image: "/assets/images/2019/11/IMG_7577.jpg"
 ---
 
-Recently, the nice people that employ me to be a wireless network engineer for them were kind enough to add a [WLANpi](http://wlanpi.com) to my [toolkit](https://blog.ianbeyer.com/2019/10/04/whats-in-that-survey-kit-fall-2019-edition/) (as well as that of several of my co-workers), and it is indeed a very handy gizmo for network engineering work.
+Recently, the nice people that employ me to be a wireless network engineer for them were kind enough to add a [WLANpi](http://wlanpi.com) to my [toolkit](https://nerdian.ca/2019/10/04/whats-in-that-survey-kit-fall-2019-edition/) (as well as that of several of my co-workers), and it is indeed a very handy gizmo for network engineering work.
 
 The other day, I found yet another useful trick I could do with it: Software repository. Sounds basic, because it is. But useful nonetheless. Necessity is the mother of invention, after all.
 

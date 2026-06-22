@@ -31,7 +31,7 @@ Here's the list of resources from this morning's presentation on Social Media 20
 
 - My twitter: [@ianbeyer](http://twitter.com/ianbeyer "Ian Beyer on Twitter")
 - Shane's twitter: [@srushik](http://twitter.com/srushik "Shane Rushik on Twitter")
-- [Slide Deck](http://blog.ianbeyer.com/files/2011/10/NACBA_SM201_Presentation.pdf "Social Media 201 Slide Deck")
+- [Slide Deck](http://nerdian.ca/files/2011/10/NACBA_SM201_Presentation.pdf "Social Media 201 Slide Deck")
 - [Anthony Coppedge, Twitter for Churches (e-book)](http://www.twitterforchurches.com "Twitter for Churches")
 - [ChurchMag: Crafting a SM policy](http://churchm.ag/social-media-policy "Crafting a Social Media Policy")
 - [10 Dos and Don'ts for Facebook Pages](http://www.entrepreneur.com/article/217391 "10 Dos and Dont's for Facebook Pages")

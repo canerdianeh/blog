@@ -31,6 +31,6 @@ Here in Kansas City, we're on the very edge of the eclipse path, and it was a be
 
 My crappy phone camera gave me neat lens flare showing the eclipse in progress next to the balloon:
 
-[![]({{site.baseurl}}/assets/2012/05/IMAG0532-1024x612.jpg "IMAG0532")](http://blog.ianbeyer.com/files/2012/05/IMAG0532.jpg)
+[![]({{site.baseurl}}/assets/2012/05/IMAG0532-1024x612.jpg "IMAG0532")](http://nerdian.ca/files/2012/05/IMAG0532.jpg)
 
-[![]({{site.baseurl}}/assets/2012/05/IMAG0537.jpg "IMAG0537")](http://blog.ianbeyer.com/files/2012/05/IMAG0537.jpg)
+[![]({{site.baseurl}}/assets/2012/05/IMAG0537.jpg "IMAG0537")](http://nerdian.ca/files/2012/05/IMAG0537.jpg)

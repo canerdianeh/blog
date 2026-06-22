@@ -26,7 +26,7 @@ permalink: "/2014/04/16/multi-tenant-hosting-for-wowza/"
 image: "/assets/images/2014/04/self-support-multi-tenant-225x300.jpeg"
 ---
 
-[![]({{site.baseurl}}/assets/2014/04/self-support-multi-tenant-225x300.jpeg)](http://blog.ianbeyer.com/files/2014/04/self-support-multi-tenant.jpeg)For most users, running Wowza Media Server/Wowza Streaming Engine (which I'll refer to as just "Wowza") are perfectly content running it out of the box as is on a dedicated server. Where it gets a little more interesting is when you have to co-exist with other server applications that want some of the same ports (I'm lookin' at YOU, web servers!).
+[![]({{site.baseurl}}/assets/2014/04/self-support-multi-tenant-225x300.jpeg)](http://nerdian.ca/files/2014/04/self-support-multi-tenant.jpeg)For most users, running Wowza Media Server/Wowza Streaming Engine (which I'll refer to as just "Wowza") are perfectly content running it out of the box as is on a dedicated server. Where it gets a little more interesting is when you have to co-exist with other server applications that want some of the same ports (I'm lookin' at YOU, web servers!).
 
 By default, Wowza binds itself to all available IP addresses on ports 1935 (RTMP, but will also take HTTP requests on that port), 8086 (for some basic management functions), 8083 and 8084 (for JMX), and with WSE4, 8087 (REST) and 8088 (WSE Manager). It won't bind itself to port 80 specifically *because* of the common problem of co-existing with web servers. If you have Wowza enabled for IPv6, it will also bind to all available IPv6 addresses on the same ports.
 
@@ -118,11 +118,11 @@ In the batch file (Windows) or the shell script (Linux/OSX), look for the line t
 
 If you've changed the REST API address from its default of \*, you'll get an error on the login screen:
 
-[![]({{site.baseurl}}/assets/2014/04/Screen-Shot-2014-04-16-at-11.50.17-AM-210x300.png)](http://blog.ianbeyer.com/files/2014/04/Screen-Shot-2014-04-16-at-11.50.17-AM.png)
+[![]({{site.baseurl}}/assets/2014/04/Screen-Shot-2014-04-16-at-11.50.17-AM-210x300.png)](http://nerdian.ca/files/2014/04/Screen-Shot-2014-04-16-at-11.50.17-AM.png)
 
 In this case, you'll need to tell the manager where to look for the server by clicking on the **[+] Server**link:
 
-[![Screen Shot 2014-04-16 at 11.51.37 AM]({{site.baseurl}}/assets/2014/04/Screen-Shot-2014-04-16-at-11.51.37-AM-300x292.png)](http://blog.ianbeyer.com/files/2014/04/Screen-Shot-2014-04-16-at-11.51.37-AM.png)
+[![Screen Shot 2014-04-16 at 11.51.37 AM]({{site.baseurl}}/assets/2014/04/Screen-Shot-2014-04-16-at-11.51.37-AM-300x292.png)](http://nerdian.ca/files/2014/04/Screen-Shot-2014-04-16-at-11.51.37-AM.png)
 
 (Tip: you can also use this to manage multiple Wowza Streaming Engine instances from a single installed manager)
 

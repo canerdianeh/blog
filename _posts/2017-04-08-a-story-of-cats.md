@@ -58,7 +58,7 @@ Here's a quick rundown. We're gonna get a tech lesson AND a history lesson all r
 
 #### Category 1 (pre-1980)
 
-[caption id="attachment\_1436" align="alignright" width="150"][![An IBM "Type 1" Token-Ring connector. Known colloquially as a "Boy George Connector" due to its ambiguous gender. ]({{site.baseurl}}/assets/2017/04/500003040p-03-02-150x150.jpeg)](http://blog.ianbeyer.com/files/2017/04/500003040p-03-02.jpeg) An IBM "Type 1" Token-Ring connector. Known colloquially as a "Boy George Connector" due to its ambiguous gender. *Photo: [Computer History Museum](http://www.computerhistory.org/revolution/networking/19/381/2187)*[/caption]
+[caption id="attachment\_1436" align="alignright" width="150"][![An IBM "Type 1" Token-Ring connector. Known colloquially as a "Boy George Connector" due to its ambiguous gender. ]({{site.baseurl}}/assets/2017/04/500003040p-03-02-150x150.jpeg)](http://nerdian.ca/files/2017/04/500003040p-03-02.jpeg) An IBM "Type 1" Token-Ring connector. Known colloquially as a "Boy George Connector" due to its ambiguous gender. *Photo: [Computer History Museum](http://www.computerhistory.org/revolution/networking/19/381/2187)*[/caption]
 
 This never officially existed, and was a retroactive term used to define "Level 1" cable offered by a major distributor. It is considered "voice grade copper", sufficient to run signals up to 1MHz, and not suitable for data of any sort (except telephone modems). You could probably meet category 1 requirements with a barbed wire fence. You laugh, but [it's been done. Extensively.](http://gizmodo.com/barbed-wire-fences-were-an-early-diy-telephone-network-1493157700)
 

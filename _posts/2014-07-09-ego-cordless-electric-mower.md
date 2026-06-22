@@ -28,7 +28,7 @@ image: "/assets/images/2014/07/mower_large.png"
 
 It's a clean, green, mowing machine!
 
-[![mower_large]({{site.baseurl}}/assets/2014/07/mower_large-300x209.png)](http://blog.ianbeyer.com/files/2014/07/mower_large.png)I'm going to veer off my usual topics here to give you my thoughts on a recently acquired tech toy of a different flavor: My lawnmower. This is NOT a sponsored post.
+[![mower_large]({{site.baseurl}}/assets/2014/07/mower_large-300x209.png)](http://nerdian.ca/files/2014/07/mower_large.png)I'm going to veer off my usual topics here to give you my thoughts on a recently acquired tech toy of a different flavor: My lawnmower. This is NOT a sponsored post.
 
 When we moved into our previous house almost 11 years ago, we went on a coupon-fueled shopping spree at Home Depot, and picked up your standard 4-stroke gas-powered mower. It worked well, but after a while, the tedium of dealing with oil and gas and all those moving parts makes you think "there's got to be a better way". We'd been eyeing electric mowers for a while, but either they were corded (obnoxious - chance of mowing the cord is high!), or had enough battery life to make you need a wagon full of spare batteries, and in neither case did they have enough oomph to cut grass that had gone more than about 12 hours since the last mowing.
 

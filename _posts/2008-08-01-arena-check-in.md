@@ -28,11 +28,11 @@ Now that a lot of the back end of our Arena Check-in system is in place and read
 
 This school year's theme is "Go Fish", so I set about seeing if I could come up with something fun, without hiring an external designer/illustrator to do something for us. Here's what I've got so far:
 
-[![Main Screen]({{site.baseurl}}/assets/2008/08/checkinmain-300x218.jpg)](http://blog.ianbeyer.com/files/2008/08/checkinmain.jpg)
+[![Main Screen]({{site.baseurl}}/assets/2008/08/checkinmain-300x218.jpg)](http://nerdian.ca/files/2008/08/checkinmain.jpg)
 
-[![Phone Lookup Screen]({{site.baseurl}}/assets/2008/08/phonelookup-300x218.jpg)](http://blog.ianbeyer.com/files/2008/08/phonelookup.jpg)
+[![Phone Lookup Screen]({{site.baseurl}}/assets/2008/08/phonelookup-300x218.jpg)](http://nerdian.ca/files/2008/08/phonelookup.jpg)
 
-[![Family Screen]({{site.baseurl}}/assets/2008/08/family-300x219.jpg)](http://blog.ianbeyer.com/files/2008/08/family.jpg)
+[![Family Screen]({{site.baseurl}}/assets/2008/08/family-300x219.jpg)](http://nerdian.ca/files/2008/08/family.jpg)
 
 Still a work in progress, haven't done the buttons yet (as anyone familiar with the default Arena theme has already spotted), but it's coming along.
 

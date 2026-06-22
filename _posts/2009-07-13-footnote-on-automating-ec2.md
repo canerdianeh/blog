@@ -27,7 +27,7 @@ author:
 permalink: "/2009/07/13/footnote-on-automating-ec2/"
 ---
 
-Yesterday was the first live test of our [EC2 automation](http://blog.ianbeyer.com/2009/07/08/live-streaming-on-a-budget-part-5-automating-ec2/ "Live Streaming on a Budget (Part 5) – Automating EC2"), and it worked beautifully. One thing I discovered was that when the Wowza servers shut down, Flash Media Encoder simply attempts to reconnect to the server until it succeeds. This is very helpful, since I can just leave the VT5 system on a loop or on the program feed, and as soon as the servers are ready, they'll start broadcasting.
+Yesterday was the first live test of our [EC2 automation](http://nerdian.ca/2009/07/08/live-streaming-on-a-budget-part-5-automating-ec2/ "Live Streaming on a Budget (Part 5) – Automating EC2"), and it worked beautifully. One thing I discovered was that when the Wowza servers shut down, Flash Media Encoder simply attempts to reconnect to the server until it succeeds. This is very helpful, since I can just leave the VT5 system on a loop or on the program feed, and as soon as the servers are ready, they'll start broadcasting.
 
 That way, if something happens and nobody shows up, we'll at least have something going on the stream.
 

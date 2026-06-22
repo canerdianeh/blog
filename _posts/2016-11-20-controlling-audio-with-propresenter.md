@@ -79,7 +79,7 @@ On the flip side, you can also use note on/off commands to control ProPresenter.
 
 Another approach you can take is to create a presentation in ProPresenter containing blank slides with the various functions you wish to use. Then you can copy these slides into presentations and add a Go To Next timer to them to automatically advance to the next slide. I would also recommend using slide labels and colors to clearly identify what each slide is doing:
 
-[![Screenshot 2016-11-20 13.47.55]({{site.baseurl}}/assets/2016/11/Screenshot-2016-11-20-13.47.55-300x198.png)](http://blog.ianbeyer.com/files/2016/11/Screenshot-2016-11-20-13.47.55.png)
+[![Screenshot 2016-11-20 13.47.55]({{site.baseurl}}/assets/2016/11/Screenshot-2016-11-20-13.47.55-300x198.png)](http://nerdian.ca/files/2016/11/Screenshot-2016-11-20-13.47.55.png)
 
 If you have controllable lighting and your lighting console also has MIDI capability, This comes in handy as well. And if you're *really* a one-man band, and like to do things like pads underneath certain worship elements, you can use this to trigger those as well. But if you get to that point, you may want to look into [QLab](https://figure53.com/qlab) to control all of them at the same time.
 

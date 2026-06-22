@@ -86,7 +86,7 @@ I mentioned earlier that Ekahau's data is stored mostly in JSON, which makes it 
 
 accessPoints.json:
 
-```
+```json
 
 {
    "accessPoints": [
@@ -130,7 +130,7 @@ accessPoints.json:
 
 tagKeys.json:
 
-```
+```json
 
 {
   "tagKeys": [
@@ -155,7 +155,7 @@ tagKeys.json:
 
 notes.json:
 
-```
+```json
 
 {
   "notes": [
@@ -185,7 +185,7 @@ notes.json:
 
 simulatedRadios.json:
 
-```
+```json
 
 {
   "simulatedRadios": [
@@ -306,4 +306,4 @@ Here is the big gnarly mind map of the Ekahau data file. It's probably still ver
 
 [![]({{site.baseurl}}/assets/2020/06/EkahauFileStructure-2500-496x1024.png)](http://nerdian.ca/files/2020/06/EkahauFileStructure.png)
 
-Resolution got smashed by Wordpress, so you can check out the [full resolution version](http://nerdian.ca/files/2020/06/EkahauFileStructure.png), or a [PDF version](http://nerdian.ca/files/2020/06/EkahauFileStructure.pdf).
+Resolution got smashed by Wordpress, so you can check out the [full resolution version]({{site.baseurl}}/assets/2020/06/EkahauFileStructure.png), or a [PDF version]({{site.baseurl}}/assets/2020/06/EkahauFileStructure.pdf).

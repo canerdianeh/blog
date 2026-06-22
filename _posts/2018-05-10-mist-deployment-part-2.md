@@ -45,7 +45,7 @@ image: "/assets/images/2018/05/DSC_0115.jpg"
 
 *Second in a series about our first deployment of a Mist Systems wireless network.*
 
-In my [last post](http://blog.ianbeyer.com/2018/05/08/mist-deployment-part-the-first/), I gave you an overview of the various components of the [Mist Wireless](http://mistsystems.com) system. This post will go into some of the design considerations pertaining to this particular project.
+In my [last post](http://nerdian.ca/2018/05/08/mist-deployment-part-the-first/), I gave you an overview of the various components of the [Mist Wireless](http://mistsystems.com) system. This post will go into some of the design considerations pertaining to this particular project.
 
 Because we’re now designing for more than just Wi-Fi, there are a few additional things to factor in when planning the network.
 

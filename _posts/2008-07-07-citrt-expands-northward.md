@@ -43,20 +43,20 @@ Naturally, no church visiti is complete without pictures from the facility:
 
 This is the projector set for one of the side screens. This thing is a monster. Hard to tell from the picture, but each one is about the size of a coffin. These are mounted in the tech booth at the back of the 2400-seat sanctuary. The throw on these is a good 200 feet, possibly more.
 
-[![CSC's projectors for one of the side screens]({{site.baseurl}}/assets/2008/07/projectors640-300x200.jpg)](http://blog.ianbeyer.com/files/2008/07/projectors640.jpg)
+[![CSC's projectors for one of the side screens]({{site.baseurl}}/assets/2008/07/projectors640-300x200.jpg)](http://nerdian.ca/files/2008/07/projectors640.jpg)
 
 The video control room:
 
-[![]({{site.baseurl}}/assets/2008/07/control6401-300x200.jpg)](http://blog.ianbeyer.com/files/2008/07/control6401.jpg)
+[![]({{site.baseurl}}/assets/2008/07/control6401-300x200.jpg)](http://nerdian.ca/files/2008/07/control6401.jpg)
 
 Video Switcher:
 
-[![]({{site.baseurl}}/assets/2008/07/switcher6402-300x200.jpg)](http://blog.ianbeyer.com/files/2008/07/switcher6402.jpg)
+[![]({{site.baseurl}}/assets/2008/07/switcher6402-300x200.jpg)](http://nerdian.ca/files/2008/07/switcher6402.jpg)
 
 A decorative waterfall in the narthex. The sculpture in the middle can be removed to turn it into a baptismal pool. The "chandeliers" nearby each have about 32 dimmer channels and are built to support stage lighting as well.
 
-[![]({{site.baseurl}}/assets/2008/07/waterfall1024-200x300.jpg)](http://blog.ianbeyer.com/files/2008/07/waterfall1024.jpg)
+[![]({{site.baseurl}}/assets/2008/07/waterfall1024-200x300.jpg)](http://nerdian.ca/files/2008/07/waterfall1024.jpg)
 
 The other side of the narthex:
 
-[![]({{site.baseurl}}/assets/2008/07/narthex1024-300x200.jpg)](http://blog.ianbeyer.com/files/2008/07/narthex1024.jpg)
+[![]({{site.baseurl}}/assets/2008/07/narthex1024-300x200.jpg)](http://nerdian.ca/files/2008/07/narthex1024.jpg)

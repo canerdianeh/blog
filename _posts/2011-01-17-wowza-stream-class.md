@@ -245,4 +245,4 @@ Video files can either be uploaded, or recorded on the server using a live-recor
 
 Once your playlist is built, you'll need to restart the Wowza service for it to read the new playlist in and schedule it internally.
 
-Update(July 18, 2001) : I've added a post about my Excel [playlist generator](http://blog.ianbeyer.com/wowza-stream-class-playlist-generator/ "Wowza Stream Class Playlist Generator").
+Update(July 18, 2001) : I've added a post about my Excel [playlist generator](http://nerdian.ca/wowza-stream-class-playlist-generator/ "Wowza Stream Class Playlist Generator").

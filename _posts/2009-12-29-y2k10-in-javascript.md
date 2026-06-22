@@ -26,7 +26,7 @@ author:
 permalink: "/2009/12/29/y2k10-in-javascript/"
 ---
 
-On our [live stream page](http://live.cor.org), we have a nifty little [javascript counter](http://blog.ianbeyer.com/code/client/js-countdown-timer/ "JavaScript Countdown Timer") that lets you know when the next service is.
+On our [live stream page](http://live.cor.org), we have a nifty little [javascript counter](http://nerdian.ca/code/client/js-countdown-timer/ "JavaScript Countdown Timer") that lets you know when the next service is.
 
 [Leo](http://leojohns.com/) noticed today that in Internet Explorer, it's counting down properly, while in [Firefox](http://firefox.com), it's saying the event is already happening. On a hunch, we changed the target date to 12/31, and it started working properly again.
 

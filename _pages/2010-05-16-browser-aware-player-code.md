@@ -25,7 +25,7 @@ author:
 permalink: "/code/client/browser-aware-player-code/"
 ---
 
-Note: [As of late 2011, there's a better way to do this now.](http://blog.ianbeyer.com/2011/08/24/browser-aware-player-code-revisited/)
+Note: [As of late 2011, there's a better way to do this now.](http://nerdian.ca/2011/08/24/browser-aware-player-code-revisited/)
 ![]({{site.baseurl}}/assets/2010/05/Player-flowchart-137x300.png "Player-flowchart")
 Code to insert a player inside a div (named \*videoframe\* in this case). This will present either an instance of JW Player version 5 (default), JW Player version 4 for PlayStation (which do not have Flash 10), an HTML5 video element in the case of iPhone/iPad devices, and a graphic (that looks like JW Player for a consistent UX) hyperlinked to an RTSP feed for Android/BlackBerry/WebOS devices or an MMS feed for IE Mobile devices. David Walsh also has a post about how to [do it with PHP](http://davidwalsh.name/detect-ipad "Browser Detection in PHP")
 

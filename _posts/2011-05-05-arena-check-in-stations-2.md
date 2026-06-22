@@ -24,4 +24,4 @@ author:
 permalink: "/2011/05/05/arena-check-in-stations-2/"
 ---
 
-I updated my [2008 post on Arena Check-In Stations](http://blog.ianbeyer.com/arena-check-in-stations/ "Arena Check-In stations") to add some information regarding the current technology refresh.
+I updated my [2008 post on Arena Check-In Stations](http://nerdian.ca/arena-check-in-stations/ "Arena Check-In stations") to add some information regarding the current technology refresh.

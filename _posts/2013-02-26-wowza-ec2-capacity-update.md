@@ -34,7 +34,7 @@ The test methodology was as follows:
 - Install the server-side piece of [Willow](http://www.solid-thinking.com/products/willow-wowza-media-server-management-made-easy/ "Willow for Wowza") (from [Solid Thinking Interactive](http://www.solid-thinking.com/ "Solid Thinking Interactive"))
 - Configure a 1Mbps stream in [Wirecast](http://www.nerdherd.net/wirecast "Wirecast Streaming Software")
 - Monitor the stream in [JWPlayer](http://longtailvideo.com "JW Player") 5 with the [Quality Monitor Plugin](http://www.longtailvideo.com/addons/plugins/123/QualityMonitor "JW Player Quality Monitor Plugin")
-- Configure the Wowza Load Test Tool on one of my [Wowza Hotrods](http://blog.ianbeyer.com/2013/01/31/supercharging-a-wowza-hotrod/ "Supercharging a Wowza Hotrod") located at Softlayer's Washington DC datacenter
+- Configure the Wowza Load Test Tool on one of my [Wowza Hotrods](http://nerdian.ca/2013/01/31/supercharging-a-wowza-hotrod/ "Supercharging a Wowza Hotrod") located at Softlayer's Washington DC datacenter
   - Server is 14 hops/2ms from us-east-1
 - Increase the load until:
   - the measured bandwidth on JW player drops below stream bandwidth
@@ -55,6 +55,6 @@ So that's the basic methodology. Here are the results:
 [table id=1 /]
 
 There are a couple of things to note here. Naturally, if you're not expecting a huge audience, stick to m1.small. But the best bang for the buck is the c1.medium (High-CPU Medium), which is a relatively new instance type, which gives you 4x the performance of a m1.small at less than 2x the price. The big surprise here was the m2.xlarge. It performs only marginally better than an m1.small at 4x the price.  
-All the instances that show 950 are effectively giving you the full benefit of the gigabit connection on that server and maxed out the interface long before the CPU maxes out. In the case of the c1.xlarge, there's lots of CPU to spare for things like transcoding and such if you're using a BYOL image. If you want to go faster, you'll need to roll your own [Cluster Quad](http://blog.ianbeyer.com/2012/02/09/streaming-on-amazons-superquad/ "Streaming on Amazon’s “SuperQuad”") or do a load-balanced set.
+All the instances that show 950 are effectively giving you the full benefit of the gigabit connection on that server and maxed out the interface long before the CPU maxes out. In the case of the c1.xlarge, there's lots of CPU to spare for things like transcoding and such if you're using a BYOL image. If you want to go faster, you'll need to roll your own [Cluster Quad](http://nerdian.ca/2012/02/09/streaming-on-amazons-superquad/ "Streaming on Amazon’s “SuperQuad”") or do a load-balanced set.
 
 Disclaimers: Your mileage may vary, these are just guidelines, although I think they're pretty close. I have not tested this anywhere but us-east-1, so if you're using one of amazon's other datacenters, you may get different results. I hope to test the other zones soon and see how the results compare.

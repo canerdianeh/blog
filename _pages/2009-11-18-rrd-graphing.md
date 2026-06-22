@@ -25,7 +25,7 @@ author:
 permalink: "/code/backend/rrd-graphing/"
 ---
 
-Live Graph ([Source RRD Database is here](http://blog.ianbeyer.com/code/stream-counter-rrd-structure "RRD File Structure")):
+Live Graph ([Source RRD Database is here](http://nerdian.ca/code/stream-counter-rrd-structure "RRD File Structure")):
 
 ```bash
 #!/bin/bash

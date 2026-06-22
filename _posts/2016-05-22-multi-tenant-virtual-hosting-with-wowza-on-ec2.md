@@ -39,7 +39,7 @@ That's a mouthful, isn't it?
 
 I recently needed to migrate a couple of Wowza Streaming Engine tenants on a baremetal server that was getting long in the tooth, and was getting rather expensive. These tenants were low-volume DVR or HTTP transmuxing customers, with one transcoding customer that required some more CPU power. But this box was idle most of the time. So I decided to move it over to AWS and fire up the box only when necessary. Doing this used to be a cumbersome process with the AWS command-line tools that were Java-based. The current incarnation of tools is quite intuitive and runs in Python, so there's not a lot of insane configuration and scripting to do.
 
-You may recall my [post from a few years back about multi-tenant virtual hosting](http://blog.ianbeyer.com/2014/04/16/multi-tenant-hosting-for-wowza/). I'm going to expand on this and describe how to do it within the Amazon EC2 environment, which has historically limited you to  a single IP address on a system.
+You may recall my [post from a few years back about multi-tenant virtual hosting](http://nerdian.ca/2014/04/16/multi-tenant-hosting-for-wowza/). I'm going to expand on this and describe how to do it within the Amazon EC2 environment, which has historically limited you to  a single IP address on a system.
 
 The first step to getting multiple network interfaces on EC2 is to create a Virtual Private Cloud (VPC) and start your EC2 instances within your VPC. "Classic" EC2 does not support multiple network interfaces.
 

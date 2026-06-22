@@ -30,7 +30,7 @@ permalink: "/2010/10/22/the-video-game-is-changing/"
 
 Nope. Not talking about your XBox or Playstation or even your Wii.
 
-A while back, I posted about why [Blockbuster is screwed](http://blog.ianbeyer.com/2010/06/13/blockbuster-is-screwed/ "Blockbuster is screwed."). The scene just got bleaker, and not just for Blockbuster. Now the entire Cable TV industry is facing a major conceptual shift.
+A while back, I posted about why [Blockbuster is screwed](http://nerdian.ca/2010/06/13/blockbuster-is-screwed/ "Blockbuster is screwed."). The scene just got bleaker, and not just for Blockbuster. Now the entire Cable TV industry is facing a major conceptual shift.
 
 Mark Melanson [blogged today](http://www.readwriteweb.com/archives/we_dont_need_no_stinkin_dvds_netflix_considers_str.php "We Don't Need No Stinkin' DVDs: Netflix Considers Streaming-Only in U.S.") about Netflix mulling over the idea of ditching the physical media distribution concept that they perfected. Netflix has already induced a lot of insomnia with the senior management at Blockbuster. The cable people need to start worrying for two reasons:
 

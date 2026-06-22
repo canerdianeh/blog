@@ -24,7 +24,7 @@ author:
 permalink: "/code/backend/stream-counter-rrd-structure/"
 ---
 
-Create RRD file ([can be graphed with this script](http://blog.ianbeyer.com/code/rrd-graphing "RRD Graphing Commands")):
+Create RRD file ([can be graphed with this script](http://nerdian.ca/code/rrd-graphing "RRD Graphing Commands")):
 
 ```
 

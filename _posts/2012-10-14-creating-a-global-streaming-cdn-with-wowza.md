@@ -24,7 +24,7 @@ author:
 permalink: "/2012/10/14/creating-a-global-streaming-cdn-with-wowza/"
 ---
 
-I've posted in the past about the various components involved in doing [edge](http://blog.ianbeyer.com/code/ec2/wowza-edge-startup-bash/ "Edge Server Startup Script (bash)")/[origin](http://blog.ianbeyer.com/code/ec2/ec2-wowza-origin-server-shutdown/ "Origin Server Shutdown Script") setups with Wowza, as well as [startup packages](http://blog.ianbeyer.com/2011/01/26/wowza-startup-packages/ "Inside Wowza Startup Packages") and [Route 53 DNS magic](http://blog.ianbeyer.com/2012/09/11/adding-ec2-to-route53/ "Adding EC2 instances to Route53"). In this post, I'll tie the various pieces together to put together a geographically-distributed CDN using Wowza.
+I've posted in the past about the various components involved in doing [edge](http://nerdian.ca/code/ec2/wowza-edge-startup-bash/ "Edge Server Startup Script (bash)")/[origin](http://nerdian.ca/code/ec2/ec2-wowza-origin-server-shutdown/ "Origin Server Shutdown Script") setups with Wowza, as well as [startup packages](http://nerdian.ca/2011/01/26/wowza-startup-packages/ "Inside Wowza Startup Packages") and [Route 53 DNS magic](http://nerdian.ca/2012/09/11/adding-ec2-to-route53/ "Adding EC2 instances to Route53"). In this post, I'll tie the various pieces together to put together a geographically-distributed CDN using Wowza.
 
 For the purposes of this hypothetical CDN, we'll do it all within EC2 (although there's no reason it has to be), with three edge servers in each availability zone.
 

@@ -29,6 +29,6 @@ author:
 permalink: "/2011/01/26/more-updated-code/"
 ---
 
-Updated the [Wowza Launch Script](http://blog.ianbeyer.com/code/ec2/wowza-origin-startup-bash/ "Wowza Origin Server Startup (bash)"). Changed it to be more friendly to a non-root user directory, as well as adding logic that makes the startup package on the fly, so that if you want to edit the contents, the next launch will send the current incarnation.
+Updated the [Wowza Launch Script](http://nerdian.ca/code/ec2/wowza-origin-startup-bash/ "Wowza Origin Server Startup (bash)"). Changed it to be more friendly to a non-root user directory, as well as adding logic that makes the startup package on the fly, so that if you want to edit the contents, the next launch will send the current incarnation.
 
 Stay tuned for a post soon on the anatomy of a Wowza startup package for EC2.

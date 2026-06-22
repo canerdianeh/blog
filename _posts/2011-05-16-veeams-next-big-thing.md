@@ -23,7 +23,7 @@ author:
 permalink: "/2011/05/16/veeams-next-big-thing/"
 ---
 
-[![Veeam]({{site.baseurl}}/assets/2011/05/veeam_logo.gif)](http://blog.ianbeyer.com/files/2011/05/veeam_logo.gif)[![Hyper-V]({{site.baseurl}}/assets/2011/05/Windows-Server-2008-Hyper-V-logo-v_2-300x133.png)](http://www.microsoft.com/windowsserver2008/en/us/hyperv-main.aspx)It's official - [Veeam](http://www.veeam.com "Veeam") is announcing this morning that version 6 of their award-winning backup/replication software will support Microsoft's [Hyper-V](http://www.microsoft.com/windowsserver2008/en/us/hyperv-main.aspx "Hyper-V") virtualization hypervisor. The new version is due out later this year.
+[![Veeam]({{site.baseurl}}/assets/2011/05/veeam_logo.gif)](http://nerdian.ca/files/2011/05/veeam_logo.gif)[![Hyper-V]({{site.baseurl}}/assets/2011/05/Windows-Server-2008-Hyper-V-logo-v_2-300x133.png)](http://www.microsoft.com/windowsserver2008/en/us/hyperv-main.aspx)It's official - [Veeam](http://www.veeam.com "Veeam") is announcing this morning that version 6 of their award-winning backup/replication software will support Microsoft's [Hyper-V](http://www.microsoft.com/windowsserver2008/en/us/hyperv-main.aspx "Hyper-V") virtualization hypervisor. The new version is due out later this year.
 
 ## What's Cool about Veeam and Hyper-V
 

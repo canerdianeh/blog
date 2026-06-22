@@ -46,7 +46,7 @@ Did I mention that 4K is an awful lot of pixels? It is a LOT of pixels. 8,294,40
 
 My biggest problem? Losing my mouse cursor. Gotta use a solid color background. That's OK, my GPU is probably just as glad it doesn't have to deal with an 8MP image.
 
-[caption id="attachment\_1283" align="aligncenter" width="620"][![X-Plane in its full 39" 4K Glory]({{site.baseurl}}/assets/2014/06/Screen-Shot-2014-06-19-at-12.32.29-PM-3-1024x576.png)](http://blog.ianbeyer.com/files/2014/06/Screen-Shot-2014-06-19-at-12.32.29-PM-3.png) X-Plane in its full 39" 4K Glory[/caption]
+[caption id="attachment\_1283" align="aligncenter" width="620"][![X-Plane in its full 39" 4K Glory]({{site.baseurl}}/assets/2014/06/Screen-Shot-2014-06-19-at-12.32.29-PM-3-1024x576.png)](http://nerdian.ca/files/2014/06/Screen-Shot-2014-06-19-at-12.32.29-PM-3.png) X-Plane in its full 39" 4K Glory[/caption]
 
 Bottom line, for under $400, this is a surprisingly good piece of hardware. Seiki may be considered an "off-brand" label, but don't forget that Vizio was in the same position when they started selling good HD televisions for dirt cheap. The only real downside I see right now is using a VGA port that is limited to 1920x1080 instead of putting a DisplayPort interface there instead. OK, Roku, When can I expect a 4K version of your box so I can watch Breaking Bad and House of Cards in their full 4K glory? Et tu, Chromecast?
 

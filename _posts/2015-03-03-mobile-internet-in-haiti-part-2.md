@@ -36,7 +36,7 @@ permalink: "/2015/03/03/mobile-internet-in-haiti-part-2/"
 image: "/assets/images/2015/03/aip4-flag-haiti.jpg"
 ---
 
-A while back, I posted about getting [mobile Internet in Haiti](http://blog.ianbeyer.com/2013/11/04/mobile-internet-in-haiti/ "Mobile Internet in Haiti"). As technology changes rapidly, especially when it comes to Haitian internet access, I figured I'd post an update, having just returned from there in late February.
+A while back, I posted about getting [mobile Internet in Haiti](http://nerdian.ca/2013/11/04/mobile-internet-in-haiti/ "Mobile Internet in Haiti"). As technology changes rapidly, especially when it comes to Haitian internet access, I figured I'd post an update, having just returned from there in late February.
 
 If you have a GSM-capable US phone (most Samsung Galaxy devices use software-defined radios and can speak CDMA or GSM fluently, simply by switching an option in the software), you'll need to unlock it for international use:
 

@@ -44,12 +44,12 @@ After much digging, I found out how to change interface priority. Here's the pro
 
 1. Open your network connection properties (XP: Via control panel or right-click on Network Places, then select Properties. Vista: Go to Network and Sharing Center and select "Manage Network Connections in the links on the left)
 
-[caption id="attachment\_77" align="aligncenter" width="500"][![XP Network Properties]({{site.baseurl}}/assets/2008/10/networkproperties.png)](http://blog.ianbeyer.com/files/2008/10/networkproperties.png) XP Network Properties[/caption]
+[caption id="attachment\_77" align="aligncenter" width="500"][![XP Network Properties]({{site.baseurl}}/assets/2008/10/networkproperties.png)](http://nerdian.ca/files/2008/10/networkproperties.png) XP Network Properties[/caption]
 
 2. On the menu bar (press Alt to show it in Vista), Select Advanced, then "Advanced Settings"
 
-[caption id="attachment\_78" align="aligncenter" width="404"][![Advanced Network Properties Dialog (XP)]({{site.baseurl}}/assets/2008/10/advanced.png)](http://blog.ianbeyer.com/files/2008/10/advanced.png) Advanced Network Properties Dialog (XP)[/caption]
+[caption id="attachment\_78" align="aligncenter" width="404"][![Advanced Network Properties Dialog (XP)]({{site.baseurl}}/assets/2008/10/advanced.png)](http://nerdian.ca/files/2008/10/advanced.png) Advanced Network Properties Dialog (XP)[/caption]
 
-3. Move the Wired LAN Connection (By Default, "Local Area Connection") to the top, followed by the wireless connection. Make sure that any VPN virtual adapters come after these, otherwise the VPN will only use the ones above it. This tends to be problematic if you're using split tunneling, as it will kill any network connection you have.[![]({{site.baseurl}}/assets/2008/10/advanced2.png)](http://blog.ianbeyer.com/files/2008/10/advanced2.png)
+3. Move the Wired LAN Connection (By Default, "Local Area Connection") to the top, followed by the wireless connection. Make sure that any VPN virtual adapters come after these, otherwise the VPN will only use the ones above it. This tends to be problematic if you're using split tunneling, as it will kill any network connection you have.[![]({{site.baseurl}}/assets/2008/10/advanced2.png)](http://nerdian.ca/files/2008/10/advanced2.png)
 
 4. Hit OK, and you're good to go.

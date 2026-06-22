@@ -45,7 +45,7 @@ Live streaming has been a "thing" for some time. I work with many churches to he
 
 Several software encoder platforms support multiple outputs. The easiest among these is probably [Telestream's Wirecast](http://primary.telestream.net/wirecast/) software. (The free/open-source [Open Broadcast Studio](https://obsproject.com) does this as well, but I don't have much experience with it, and I prefer the Wirecast interface, which is much more polished.) With Wirecast, it's merely a matter of adding the additional outputs to the various streaming services that are supported. The downside to this approach is that you'll need more bandwidth, as you are sending the same stream multiple times.
 
-[![Screenshot 2017-04-16 09.56.42]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-09.56.42-1024x450.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-16-09.56.42.png)
+[![Screenshot 2017-04-16 09.56.42]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-09.56.42-1024x450.png)](http://nerdian.ca/files/2017/04/Screenshot-2017-04-16-09.56.42.png)
 
 ### Method 2:
 
@@ -57,7 +57,7 @@ This is a vendor-specific approach that integrates with [Teradek](http://www.ter
 
 In this example, I'm taking an input stream from the Live::Air Solo app on my iPhone, and sending it to [Wowza Streaming Clou](http://cloud.wowza.com)d, and Facebook Live, all while recording the incoming stream:
 
-[![Screenshot 2017-04-16 07.10.22]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-07.10.22-1024x554.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-16-07.10.22.png)
+[![Screenshot 2017-04-16 07.10.22]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-07.10.22-1024x554.png)](http://nerdian.ca/files/2017/04/Screenshot-2017-04-16-07.10.22.png)
 
 This is a simple drag and drop operation: Drag a source on the left into the workspace, and then drag one or more destinations from the left - this can be:
 
@@ -65,11 +65,11 @@ Teradek decoders (this is great for a multisite church scenario)
 
 Channels (which are external stream destinations):
 
-[![Screenshot 2017-04-16 09.49.05]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-09.49.05-1024x510.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-16-09.49.05.png)
+[![Screenshot 2017-04-16 09.49.05]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-09.49.05-1024x510.png)](http://nerdian.ca/files/2017/04/Screenshot-2017-04-16-09.49.05.png)
 
 Groups (a combination of the above):
 
-[![Screenshot 2017-04-16 09.50.31]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-09.50.31-1024x315.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-16-09.50.31.png)
+[![Screenshot 2017-04-16 09.50.31]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-09.50.31-1024x315.png)](http://nerdian.ca/files/2017/04/Screenshot-2017-04-16-09.50.31.png)
 
 If you click the "Auto" box on the outputs, it will start that output automatically when the stream is available from the input.
 
@@ -77,7 +77,7 @@ When you create stream destinations for social sites, it will authenticate you a
 
 You can manage a lot of inputs and outputs this way. This example from Teradek's marketing department shows the scale:
 
-[![core-management-platform-user-interface_e811873e-7cfb-4514-a465-1467d487d8d7]({{site.baseurl}}/assets/2017/04/core-management-platform-user-interface_e811873e-7cfb-4514-a465-1467d487d8d7-1024x527.jpg)](http://blog.ianbeyer.com/files/2017/04/core-management-platform-user-interface_e811873e-7cfb-4514-a465-1467d487d8d7.jpg)
+[![core-management-platform-user-interface_e811873e-7cfb-4514-a465-1467d487d8d7]({{site.baseurl}}/assets/2017/04/core-management-platform-user-interface_e811873e-7cfb-4514-a465-1467d487d8d7-1024x527.jpg)](http://nerdian.ca/files/2017/04/core-management-platform-user-interface_e811873e-7cfb-4514-a465-1467d487d8d7.jpg)
 
 2. Wowza Streaming Engine/Streaming Cloud
 
@@ -85,19 +85,19 @@ Similar to Core, but not tied to a specific vendor, Wowza Streaming Engine provi
 
 Similarly, Wowza Streaming Cloud also offers this capability under the "Advanced Menu":
 
-[![Screenshot 2017-04-16 10.07.49]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-10.07.49-1024x515.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-16-10.07.49.png)
+[![Screenshot 2017-04-16 10.07.49]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-10.07.49-1024x515.png)](http://nerdian.ca/files/2017/04/Screenshot-2017-04-16-10.07.49.png)
 
 From there, you can create a stream target:
 
-[![Screenshot 2017-04-16 10.08.02]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-10.08.02-300x164.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-16-10.08.02.png)
+[![Screenshot 2017-04-16 10.08.02]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-10.08.02-300x164.png)](http://nerdian.ca/files/2017/04/Screenshot-2017-04-16-10.08.02.png)
 
 Once that target is created, simply go into a transcoder output and add it (you can also create a target directly from there):
 
-[![Screenshot 2017-04-16 10.12.26]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-10.12.26-941x1024.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-16-10.12.26.png)
+[![Screenshot 2017-04-16 10.12.26]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-10.12.26-941x1024.png)](http://nerdian.ca/files/2017/04/Screenshot-2017-04-16-10.12.26.png)
 
 As with Core, you can add multiple destinations to a transcoder output - Generally speaking you'll want to send your best output to places like FB Live, YouTube, etc, as they do their own internal transcoding.
 
-[![Screenshot 2017-04-16 10.13.31]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-10.13.31-300x136.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-16-10.13.31.png)
+[![Screenshot 2017-04-16 10.13.31]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-16-10.13.31-300x136.png)](http://nerdian.ca/files/2017/04/Screenshot-2017-04-16-10.13.31.png)
 
 ### Method 3:
 

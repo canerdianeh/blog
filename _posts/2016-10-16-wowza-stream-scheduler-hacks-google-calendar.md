@@ -66,7 +66,7 @@ A quick recap of the structure of the stream scheduler's XML Schema:
 - \*\*start\*\*: The offset (in seconds) from the beginning of the file where playback is to begin.
 - \*\*length\*\*: Play duration (in seconds) from the \*\*start\*\* point. A value of \*\*-1\*\* will play to the end of the file. A value of \*\*-2\*\* indicates that this is a live stream.
 - Once the end of this item is reached, it will move to the next element in the playlist. If there is no more content it will either loop (if \*\*repeat\*\* is set to true) or stop. If there is nothing further on the schedule, the stream will unpublish and stop. If this is not a repeating playlist, It's generally a good idea to put a buffer video (a number of minutes of black video or a logo works just fine) at the end of it to fill any gaps to the next playlist.
-So, the schedule is pretty straightforward, but it can get tedious to build. I previously posted about a [way to generate this with a spreadsheet in Excel](http://blog.ianbeyer.com/2011/07/18/wowza-stream-class-playlist-generator/). This is clunky, but can save a lot of typing, and is good for repeating events.
+So, the schedule is pretty straightforward, but it can get tedious to build. I previously posted about a [way to generate this with a spreadsheet in Excel](http://nerdian.ca/2011/07/18/wowza-stream-class-playlist-generator/). This is clunky, but can save a lot of typing, and is good for repeating events.
 But this lacked a good visual interface. As I was working on a project for a client to translate a schedule generated from their video content management system into the Wowza Stream Scheduler's XML, it occurred to me that there was another structured schedule format that could be translated easily into XML: iCal. This calendar format is defined in [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt) and is widely used by many calendaring systems.
 Unfortunately, iCal is not XML to begin with (iCal/RFC2445 predates XML by a decade), which would be WAY too easy. Here is a sample of iCal data out of Google Calendar that contains two events (Google \*used\* to make their calendar shares available in XML but it seems that is no longer the case):
 [code]
@@ -287,11 +287,11 @@ $dom->save('streamschedule.smil'); // save to file
 ```
 
 For the purposes of this last section, I've created some additional events to add a secondary stream:
-[![Schedule Overview]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.25.18-300x185.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.25.18.png)
-[![11am Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.45-300x182.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.45.png)
-[![11am Alternate Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.29-300x179.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.29.png)
-[![Noon Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.55-300x183.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.55.png)
-[![Event Broadcast]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.20.08-300x181.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.20.08.png)
+[![Schedule Overview]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.25.18-300x185.png)](http://nerdian.ca/files/2016/10/Screenshot-2016-10-16-13.25.18.png)
+[![11am Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.45-300x182.png)](http://nerdian.ca/files/2016/10/Screenshot-2016-10-16-13.19.45.png)
+[![11am Alternate Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.29-300x179.png)](http://nerdian.ca/files/2016/10/Screenshot-2016-10-16-13.19.29.png)
+[![Noon Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.55-300x183.png)](http://nerdian.ca/files/2016/10/Screenshot-2016-10-16-13.19.55.png)
+[![Event Broadcast]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.20.08-300x181.png)](http://nerdian.ca/files/2016/10/Screenshot-2016-10-16-13.20.08.png)
 The iCal looks like this:
 [code]
 BEGIN:VCALENDAR

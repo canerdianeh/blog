@@ -29,7 +29,7 @@ author:
 permalink: "/2011/01/26/wowza-startup-packages/"
 ---
 
-[![]({{site.baseurl}}/assets/2011/01/logo\_aws.gif)](http://blog.ianbeyer.com/files/2011/01/logo\_aws.gif)Startup packages are one of the more useful features of [Wowza Media Server for EC2](http://wowzamedia.com/ec2.html "Wowza for Amazon EC2") - they allow you to custom-configure a system for rapid scaling and provisioning. Wowza provides several [starter packages](http://wowzamediasystems.s3.amazonaws.com/packagelist.html "Wowza EC2 Startup Packages") to build on.
+[![]({{site.baseurl}}/assets/2011/01/logo\_aws.gif)](http://nerdian.ca/files/2011/01/logo\_aws.gif)Startup packages are one of the more useful features of [Wowza Media Server for EC2](http://wowzamedia.com/ec2.html "Wowza for Amazon EC2") - they allow you to custom-configure a system for rapid scaling and provisioning. Wowza provides several [starter packages](http://wowzamediasystems.s3.amazonaws.com/packagelist.html "Wowza EC2 Startup Packages") to build on.
 A startup package is a file (up to 16384 bytes in size) that's passed to the instance through the \*\*--user-data-file\*\* parameter on the API tools (if you're uploading it via the [AWS Web Consol](http://console.aws.amazon.com "Amazon Web Services Console")e, you'll need to [encode it to Base64](http://www.motobit.com/util/base64-decoder-encoder.asp "Base64 encoder/decoder") and paste it into the text box) . There are a few ways that the data can get into the instance, which Amazon [documents over here](http://docs.amazonwebservices.com/AmazonEC2/dg/2006-10-01/AESDG-chapter-instancedata.html "Using EC2 Instance Data"). For a generic EC2 instance, this can be anything, from text to binary data, depending on what the processing on the target instance is set up to do. In the case of Wowza, it's a zip file with a specific structure. Much of this is digested from the [Wowza for EC2 guide](http://www.wowzamedia.com/resources/WowzaMediaServerForEC2\_UsersGuide.pdf "Wowza for Amazon EC2 User's Guide").
 # File Contents
 A startup package for EC2 contains the following:
@@ -314,9 +314,9 @@ In my Wowza directories, I have:
     - **Application.xml** (defining the live application)
 - **content**directory
   - **ipad.smil** ( multi-bitrate stream selection for [iOS devices](http://apple.com "Apple"))
-  - **mobile.smil** (defining where the [Roku](http://roku.com "Roku") stream goes - this abstracts a potentially changing stream name, as well as giving me a way to track Roku traffic using [this perl stats collection script](http://blog.ianbeyer.com/code/backend/wowza-metrics-perl/ "Wowza stats collector with RRD (perl)"))
-  - **streamschedule.smil** (defines the schedule for the [Stream Class module](http://blog.ianbeyer.com/2011/01/17/wowza-stream-class/ "Using the Wowza Stream Class"))
+  - **mobile.smil** (defining where the [Roku](http://roku.com "Roku") stream goes - this abstracts a potentially changing stream name, as well as giving me a way to track Roku traffic using [this perl stats collection script](http://nerdian.ca/code/backend/wowza-metrics-perl/ "Wowza stats collector with RRD (perl)"))
+  - **streamschedule.smil** (defines the schedule for the [Stream Class module](http://nerdian.ca/2011/01/17/wowza-stream-class/ "Using the Wowza Stream Class"))
   - Additional material is pulled from S3 in the aforementioned script
 - **lib** directory (empty mount point)
 
-To start my Wowza instances, I create the startup package file and tree structure, and then call this [startup script](http://blog.ianbeyer.com/code/ec2/wowza-origin-startup-bash/ "Wowza Origin Server Startup (bash)") that packs up the zip file and fires off the instance.
+To start my Wowza instances, I create the startup package file and tree structure, and then call this [startup script](http://nerdian.ca/code/ec2/wowza-origin-startup-bash/ "Wowza Origin Server Startup (bash)") that packs up the zip file and fires off the instance.

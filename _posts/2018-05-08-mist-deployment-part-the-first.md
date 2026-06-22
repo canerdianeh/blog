@@ -92,4 +92,4 @@ When the subscription expires, Mist won’t shut off the AP the way Meraki does,
 
 [Mist Product Information](https://www.mist.com/resources/?resourcelib_category=product-information)
 
-**Up Next:** [The Design](http://blog.ianbeyer.com/2018/05/10/mist-deployment-part-2/)
+**Up Next:** [The Design](http://nerdian.ca/2018/05/10/mist-deployment-part-2/)

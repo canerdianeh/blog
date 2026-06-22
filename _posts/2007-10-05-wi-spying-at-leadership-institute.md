@@ -45,4 +45,4 @@ I've been keeping an eye on our new wireless (SonicPoints!), and noticed somethi
 
 I'm guessing that it's probably a combination of bluetooth from all the cell phones in the room along with different RF dispersion patterns because the room filled up with a lot of very wet objects (humans) which absorbs 2.4GHz quite readily.
 
-[![]({{site.baseurl}}/assets/2007/10/LI-Session-1-300x226.png "LI Session 1")](http://blog.ianbeyer.com/files/2007/10/LI-Session-1.png)
+[![]({{site.baseurl}}/assets/2007/10/LI-Session-1-300x226.png "LI Session 1")](http://nerdian.ca/files/2007/10/LI-Session-1.png)

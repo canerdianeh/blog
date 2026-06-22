@@ -72,9 +72,9 @@ I've built a bit of smarts into this script, since I don't want to break things 
 Running the script spits out this for each row in the CSV that it considers an update:
 
 ```json
-Update object id XXXXXXXXXXXXXXX_5666694473318400
-object update passed initial sanity checks and will be placed on 11th Floor.
-Updating existing object with payload:
+# Update object id XXXXXXXXXXXXXXX_5666694473318400
+# object update passed initial sanity checks and will be placed on 11th Floor.
+# Updating existing object with payload:
 {
   "id": "XXXXXXXXXXXXXXX_5666694473318400",
   "name": "Huddle Space",
@@ -92,7 +92,8 @@ Updating existing object with payload:
   "email": "",
   "url": ""
 }
-Object ID XXXXXXXXXXXXXXX_5666694473318400 named Huddle Space updated on map XXXXXXXXXXXXXXXX
+# Object ID XXXXXXXXXXXXXXX_5666694473318400 named Huddle Space updated on map XXXXXXXXXXXXXXXX
+
 ```
 
 If it doesn't find an id and determines that an object needs to be created, it goes down like this:
@@ -185,7 +186,7 @@ Of course, the script doesn't have to spit out all that output, but it's handy t
 
 So, without further ado, here's the script. This has not been debugged extensively, so use at your own risk. If you break your environment, you probably should have tested it in the lab first.
 
-```json
+```python
 #!/usr/bin/python3
 
 # Aruba Meridian Placemark Import from CSV

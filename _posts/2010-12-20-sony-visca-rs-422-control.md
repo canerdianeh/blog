@@ -64,38 +64,38 @@ This is where it got sticky. We have an 8-conductor homerun cable from each came
 
 Due to the annoyance factor of having to re-terminate Mini-DIN connectors, I opted for the RS-422 port which uses a [Phoenix](http://www.phoenixcontact.com/ "Phoenix Contact") screw terminal (Part # 1840434 in case you need to order one - Sony wants an obscene amount of money for them, they're dramatically cheaper at an electronics supplier like [Mouser](http://mouser.com "Mouser Electronics")). RS-422 also has the advantage of much longer signal path due to its balanced signal. Since we're also adding a new location, I wanted to be able to wire it up with standard Category 6 twisted-pair cabling. This cable also has eight conductors, making it ideal for the task. In terms of flexibility, RJ-45 is king in the twisted-pair world, so I had do design a means of daisy-chaining my VISCA ports via ordinary patch cords.
 
-At first, I was a little baffled by the wiring of VISCA, since the RM-BR300 connector pinout is exactly backwards from that of the one on the cameras, and the documentation provided is a little confusing. Fortunately, the Sony POSC was quick to help and they e-mailed me a [wiring diagram for this specific application](http://blog.ianbeyer.com/files/2010/12/EVI-D70.jpg "wiring EVI-D70 RS-422 to RM-BR300") (and were kind enough to allow me to post it. I translated that into two main components, a breakout box and a standard cable, that would work on either the controller or the cameras.
+At first, I was a little baffled by the wiring of VISCA, since the RM-BR300 connector pinout is exactly backwards from that of the one on the cameras, and the documentation provided is a little confusing. Fortunately, the Sony POSC was quick to help and they e-mailed me a [wiring diagram for this specific application](http://nerdian.ca/files/2010/12/EVI-D70.jpg "wiring EVI-D70 RS-422 to RM-BR300") (and were kind enough to allow me to post it. I translated that into two main components, a breakout box and a standard cable, that would work on either the controller or the cameras.
 
 To make the cable, I simply took a patch cord off the shelf, lopped one end off, and terminated it on the Phoenix connector:
 
-[![]({{site.baseurl}}/assets/2010/12/Cable-300x179.jpg)](http://blog.ianbeyer.com/files/2010/12/Cable.jpg)
+[![]({{site.baseurl}}/assets/2010/12/Cable-300x179.jpg)](http://nerdian.ca/files/2010/12/Cable.jpg)
 
 The wiring is as follows:
 
-[![]({{site.baseurl}}/assets/2010/12/VISCA-RJ45.png)](http://blog.ianbeyer.com/files/2010/12/VISCA-RJ45.png)
+[![]({{site.baseurl}}/assets/2010/12/VISCA-RJ45.png)](http://nerdian.ca/files/2010/12/VISCA-RJ45.png)
 
 Now, you'll notice my wiring diagram shows the orange pair on the first two, and the picture shows green. This is because I found out (after much frustration of tracing signals) that the patch cord I grabbed happened to be wired for 568A rather than the more common 568B. Simply swap orange and green if this is the case.
 
 Once I got the cables sorted out, I then replicated Sony's wiring diagram with a handful of data jacks. The connections go like this:
 
-[![]({{site.baseurl}}/assets/2010/12/visca-rj45-breakout.png)](http://blog.ianbeyer.com/files/2010/12/visca-rj45-breakout.png)
+[![]({{site.baseurl}}/assets/2010/12/visca-rj45-breakout.png)](http://nerdian.ca/files/2010/12/visca-rj45-breakout.png)
 
 I used bits I had on the shelf, but I would recommend using a different jack color for the control input so you don't get it confused. Once I got it wired up, this is what I had (I colored the control jack black with a Sharpie):
 
-[![]({{site.baseurl}}/assets/2010/12/Jacks-300x179.jpg)](http://blog.ianbeyer.com/files/2010/12/Jacks.jpg)
+[![]({{site.baseurl}}/assets/2010/12/Jacks-300x179.jpg)](http://nerdian.ca/files/2010/12/Jacks.jpg)
 
 Even if this install only has three cameras, I wired it up for five, to fill a six-way biscuit box that I had on the shelf (these are Lucent/Avaya components):
 
-[![]({{site.baseurl}}/assets/2010/12/OpenBox-300x179.jpg)](http://blog.ianbeyer.com/files/2010/12/OpenBox.jpg)
+[![]({{site.baseurl}}/assets/2010/12/OpenBox-300x179.jpg)](http://nerdian.ca/files/2010/12/OpenBox.jpg)
 
 .. and put the lid on it with some labels:
 
-[![]({{site.baseurl}}/assets/2010/12/ClosedBox-300x179.jpg)](http://blog.ianbeyer.com/files/2010/12/ClosedBox.jpg)
+[![]({{site.baseurl}}/assets/2010/12/ClosedBox-300x179.jpg)](http://nerdian.ca/files/2010/12/ClosedBox.jpg)
 
 As for the hookup, set the DIP switches on the bottom of the controller and the cameras to use RS-422 and either 9600 or 38400 bps, and hook them up. Note that they must be in sequence, or the whole chain will be broken if you skip a slot. Plug a camera into #1, it will be #1 on the controller after they self-enumerate on startup, in order of closest to farthest on the chain. Connecting a camera will cause the controller to re-initialize.
 
 Action Shot:
 
-[![]({{site.baseurl}}/assets/2010/12/Operational-300x179.jpg)](http://blog.ianbeyer.com/files/2010/12/Operational.jpg)
+[![]({{site.baseurl}}/assets/2010/12/Operational-300x179.jpg)](http://nerdian.ca/files/2010/12/Operational.jpg)
 
 I used a biscuit box, but you could also use a modular patch panel to do the same thing. I hope to use a second category 6 run with an [S-Video termination](http://www.panduit.com/Products/ProductOverviews/ProductSearch/index.htm?Nao=10&Ns=P_ItemSortOrder&Ne=4000008&R=CJSVIW&sid=128713C94B32&lastNodeId=ss_prod_coppersolutions&N=5000001%201876%203000136 "Panduit CJSVIW") on it (2 pairs) and power (other 2 pairs) so that the whole system can run off a standard 2-cable pull.

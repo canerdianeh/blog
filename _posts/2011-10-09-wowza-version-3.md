@@ -31,7 +31,7 @@ author:
 permalink: "/2011/10/09/wowza-version-3/"
 ---
 
-**[\*\* UPDATED INFORMATION : 6 November 2011 \*\*](http://blog.ianbeyer.com/wowza-v3-for-ec2/ "Wowza Media Server V3 for Amazon EC2")**
+**[\*\* UPDATED INFORMATION : 6 November 2011 \*\*](http://nerdian.ca/wowza-v3-for-ec2/ "Wowza Media Server V3 for Amazon EC2")**
 
 After many months of hard work, the team at Wowza put the finishing touches on the latest major release of Wowza Media Server. The new version adds a couple of key features in the form of licensed add-ons:
 

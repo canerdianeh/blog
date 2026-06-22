@@ -28,10 +28,10 @@ My eldest, Faith (who will be \*gasp\* FIVE next month) showed from a very early
 
 Today, she proved it. She begged us to go on the EuroBungy ride at the Stampede. 10 bucks later, she was harnessed up:
 
-[![]({{site.baseurl}}/assets/2008/07/faith-harness-200x300.jpg)](http://blog.ianbeyer.com/files/2008/07/faith-harness.jpg)
+[![]({{site.baseurl}}/assets/2008/07/faith-harness-200x300.jpg)](http://nerdian.ca/files/2008/07/faith-harness.jpg)
 
 And not too long after, she was flying:
 
-[![]({{site.baseurl}}/assets/2008/07/faith-flying-199x300.jpg)](http://blog.ianbeyer.com/files/2008/07/faith-flying.jpg)
+[![]({{site.baseurl}}/assets/2008/07/faith-flying-199x300.jpg)](http://nerdian.ca/files/2008/07/faith-flying.jpg)
 
 She absolutely loved it, and followed it up with a trip on one of the kiddie coasters. She'll be moving up to the big stuff before too long. We've been saying for years that she'll be a coaster junkie by the time she's six.

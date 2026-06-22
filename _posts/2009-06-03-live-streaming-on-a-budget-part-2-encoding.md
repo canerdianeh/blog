@@ -28,7 +28,7 @@ author:
 permalink: "/2009/06/03/live-streaming-on-a-budget-part-2-encoding/"
 ---
 
-If you missed it, [go back to Part 1](http://blog.ianbeyer.com/2009/06/03/live-streaming-on-a-budget-part-1-genesis/ "Live Streaming On a Budget (Part 1) – Genesis") to see how we got here.
+If you missed it, [go back to Part 1](http://nerdian.ca/2009/06/03/live-streaming-on-a-budget-part-1-genesis/ "Live Streaming On a Budget (Part 1) – Genesis") to see how we got here.
 
 As I mentioned previously, Flash video was a key functional requirement of the project due to its cross-platform ability and its near ubiquity in the browser. This was a solution that wouldn't require most of our audience to download anything extra to their machine.
 

@@ -42,7 +42,7 @@ Note: Because these scripts are run from cron, you'll need to put all your envir
 
 I have 6 separate versions of the startup and termination scripts, one for each server I need to start. I could roll it into one big script, but putting them in their own individual ones not only lets me do an individual machine manually, I can run them all in parallel from cron, which shortens the startup time.
 
-The [startup script](http://blog.ianbeyer.com/code/ec2/wowza-origin-startup-bash/ "Wowza Origin Server Startup (bash)") functions as follows:
+The [startup script](http://nerdian.ca/code/ec2/wowza-origin-startup-bash/ "Wowza Origin Server Startup (bash)") functions as follows:
 
 1. Assign environment variables for EC2 and for the machine parameters
 2. Launch machine with ec2-run-instances, redirect output to a temporary file\*
@@ -56,7 +56,7 @@ The [startup script](http://blog.ianbeyer.com/code/ec2/wowza-origin-startup-bash
 
 \* The original scripts use /tmp/a, which is fine, but I had to make each script do its own temporary file since all 6 were running simultaneously and I ran into problems with getting the right Instance IDs set.
 
-The [shutdown script](http://blog.ianbeyer.com/code/ec2/ec2-wowza-origin-server-shutdown/ "Origin Server Shutdown Script") works like this:
+The [shutdown script](http://nerdian.ca/code/ec2/ec2-wowza-origin-server-shutdown/ "Origin Server Shutdown Script") works like this:
 
 1. Query AWS for all running instances
 2. Issue EC2 termination call

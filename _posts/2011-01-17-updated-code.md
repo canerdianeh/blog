@@ -31,6 +31,6 @@ author:
 permalink: "/2011/01/17/updated-code/"
 ---
 
-Updated the code for the [Wowza statistics collector](http://blog.ianbeyer.com/code/wowza-metrics-perl "Wowza Statistics Collector"). Command-line options, parsing stream names, a little cleanup.
+Updated the code for the [Wowza statistics collector](http://nerdian.ca/code/wowza-metrics-perl "Wowza Statistics Collector"). Command-line options, parsing stream names, a little cleanup.
 
 Also updated the RRD pages to reflect the new file I created.

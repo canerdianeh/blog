@@ -53,4 +53,4 @@ Not only were we excited at the prospect of a software company that was willing 
 
 We now had a platform, it was time to start looking at how we were going to encode the video and get it up there.
 
-Continue on to [Part 2: Encoding](http://blog.ianbeyer.com/2009/06/03/live-streaming-on-a-budget-part-2-encoding/ "Live Streaming On a Budget (Part 2) – Encoding")
+Continue on to [Part 2: Encoding](http://nerdian.ca/2009/06/03/live-streaming-on-a-budget-part-2-encoding/ "Live Streaming On a Budget (Part 2) – Encoding")

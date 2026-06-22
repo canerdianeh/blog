@@ -23,6 +23,6 @@ author:
 permalink: "/2012/01/02/wowza-architecture-diagrams/"
 ---
 
-I've [posted a couple of diagrams](http://blog.ianbeyer.com/arch/wowza/ "Wowza Architecture") of Wowza's architecture relating to repeaters and load balancing.
+I've [posted a couple of diagrams](http://nerdian.ca/arch/wowza/ "Wowza Architecture") of Wowza's architecture relating to repeaters and load balancing.
 
 There's also some additional information in the [Wowza Media Server 3 Overview](http://www.wowza.com/resources/WowzaMediaServer3_Overview.pdf "Wowza Media Server 3 Overview").

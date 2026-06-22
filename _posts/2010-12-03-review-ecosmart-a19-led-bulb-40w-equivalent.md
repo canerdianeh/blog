@@ -28,7 +28,7 @@ author:
 permalink: "/2010/12/03/review-ecosmart-a19-led-bulb-40w-equivalent/"
 ---
 
-[![EcoSmart A19 LED Bulb]({{site.baseurl}}/assets/2010/12/85578b77-6e40-4edc-bb16-25ce9c3fbf6e_300-150x150.jpg)](http://www.homedepot.com/h_d1/N-5yc1vZ1xjl/R-202188260/h_d2/ProductDisplay?langId=-1&storeId=10051&catalogId=10053)I've [posted before](http://blog.ianbeyer.com/2010/02/22/energy-efficient-lighting-led-bulbs/ "Energy-Efficient Lighting: LED Bulbs") about LED lighting, and consider myself an early adopter.
+[![EcoSmart A19 LED Bulb]({{site.baseurl}}/assets/2010/12/85578b77-6e40-4edc-bb16-25ce9c3fbf6e_300-150x150.jpg)](http://www.homedepot.com/h_d1/N-5yc1vZ1xjl/R-202188260/h_d2/ProductDisplay?langId=-1&storeId=10051&catalogId=10053)I've [posted before](http://nerdian.ca/2010/02/22/energy-efficient-lighting-led-bulbs/ "Energy-Efficient Lighting: LED Bulbs") about LED lighting, and consider myself an early adopter.
 
 Recently, [Home Depot](http://homedepot.com "The Home Depot") significantly expanded their selection of LED bulbs beyond the Philips brand that I've been using for a few years, mostly in my kitchen track lights (GU10 formfactor). I've been quite happy with those, and I only have two more halogens left in the track that seem to be hanging on, knowing their fate should they burn out.
 
@@ -48,7 +48,7 @@ While this bulb is listed as a 40W equivalent, because of the directionality of 
 
 In the ceiling fan application (four bulbs), it lights up the large master bedroom quite nicely and dimming is not only smooth and flicker-free, but quiet. The overall consumption of  35W is a dramatic improvement over the set of 75W halogens that used to be in there.
 
-[caption id="attachment\_474" align="alignright" width="150" caption="This is the packaging for eight bulbs. The tiles are 12" across."][![]({{site.baseurl}}/assets/2010/12/CIMG4221-150x150.jpg)](http://blog.ianbeyer.com/files/2010/12/CIMG4221.jpg)[/caption]
+[caption id="attachment\_474" align="alignright" width="150" caption="This is the packaging for eight bulbs. The tiles are 12" across."][![]({{site.baseurl}}/assets/2010/12/CIMG4221-150x150.jpg)](http://nerdian.ca/files/2010/12/CIMG4221.jpg)[/caption]
 
 My only real gripe about these bulbs is the logical disconnect between the "eco-smart" name and the ridiculous amount of packaging they come in. The bulb itself is in a plastic clamshell that is not coded for recylcing (but is likely PET), which is then encased in a fairly convoluted cardboard box big enough for a PAR38. These then come four each in a corrugated cardboard tray for retail display. I haven't been able to confirm it, but the boxes look like they may use the same box die for all their bulbs, and swap out the plastic shell for the appropriate one. At least it's not your typical wound-inducing plastic retail shell. If I needed to return these to the store, it looks simple enough to repackage them such that they can be resold.
 
