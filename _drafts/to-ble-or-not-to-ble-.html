@@ -1,0 +1,94 @@
+---
+layout: post
+title: To BLE, or not to BLE...
+date:
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags: []
+meta:
+  _publicize_twitter_user: "@CaNerdIan"
+  _edit_last: '2'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>One of the interesting aspects of being a wireless LAN engineer in this day and age is that the job description is expanding to include a whole host of Internet of Things (IoT) functions and capabilities, which involves learning a whole new set of RF behaviours, frame structures, and so forth. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>I've started to see "IoT" morph from "Internet of Things" to "Information/Operational Technology", which conveniently still initializes to "IOT". If you're not familiar with "Operational Technology", or "OT", this is an emerging term that refers to all the various technical and networked stuff that falls outside the realm of traditional Information Technology.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Information Technology includes things like:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>User Credentials</li>
+<li>Data storage </li>
+<li>Collaboration tools (email, CRM, etc)</li>
+<li>Internet Access</li>
+<li>Applications</li>
+<li>Data Security</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>Meanwhile, Operational Technology shows up where technology interfaces with the real world:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Physical Security (building access, alarms, etc)</li>
+<li>Biometrics</li>
+<li>Observation (cameras, environmental sensors)</li>
+<li>Energy and environmental Management (HVAC, air quality, pollution)</li>
+<li>Traffic Management</li>
+<li>Navigation</li>
+<li>Audio-Visual Systems</li>
+<li>Industrial Automation</li>
+<li>... and so on. </li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>In many cases, data from OT feeds into IT systems, where it can then become an input to or an output from information technology (such as using and identity management system to manage access, either to networks, or physical spaces, or both). As such, business functions that have traditionally dealt with the physical world have been dragged into the IT world... sometimes willingly, sometimes not. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>While it's tempting as a wireless LAN engineer to say "Wi-Fi All the Things!", many of these OT systems don't lend themselves especially well to Wi-Fi. Sensors often need to run on extremely low power, unattended, for long periods of time. We're talking situations where every single microwatt counts. You might be needing to run something off a battery for years at a time because it's located somewhere that is difficult to access for maintenance. And in most cases, the amount of data they need to transmit at any given time is very small, which means Wi-Fi comes with a significant amount of overhead.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>A veritable buffet of low-power connectivity options exist for these specialized applications, covering a variety of frequencies. Many are defined in IEEE 802.15 (especially in 802.15.4). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>One of the most common ones is Bluetooth, which in version 5 has a mode called "Low Energy" (better known as BLE). For the most part, these types of devices only need to chirp out a few dozen bytes of data a few times an hour at most, and let devices with bigger power supplies listen for those chirps, and relay them elsewhere. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>A common consumer use of these is the Tile product, whose devices use a small battery, and chirp out a code about once an hour (or when the button is pressed), and listen for a response. Mobile devices like the iPhone are constantly listening for these beacons. For the most part, they simply ignore them, unless they have an app installed that tells the device to do something when it sees a particular code (one common form is a code called "major/minor", where the major code identifies the type of device, and the minor code identifies the individual device - many BLE-aware mobile apps look first for the major to trigger further processing.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In the example of Tile, your mobile device's Tile app is constantly listening for the Major code, and when it sees it, it reports the minor code along with the location of the phone back to the Tile servers, which will then send a response to the phone. If you left your Tile tagged device at the airport, the multitude of devices that see it can then tell you its location, and you can request the device make a sound so that someone can find it and turn it in. (in practice, this doesn't work as well as the Tile marketing would say, but the concept is solid). Apple uses a similar method to track peripherals like AirPods. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Another emerging use of  BLE in the enterprise space is "blue dot" location services - one one hand, for providing GPS-like navigation ("wayfinding") within the facility (office building, shopping mall, etc) where GPS signals are generally degraded (and also not accurate enough - GPS is only accurate to within about 5 meters outdoors, which isn't terribly useful for indoor navigation to the restroom. BLE location multilaterates based on signal strength of multiple received beacons and can get within about 30 centimeters if you have sufficient beacon density, but more typically is about 1 meter. Not only is this good for indoor wayfinding, but also for emerging contact tracing solutions that will allow broader re-opening from the COVID-19 pandemic. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>So there are two key pieces to the BLE puzzle: Beacons, which send out a Bluetooth broadcast, and Scanners, which listen for those signals. In the Tile case, the Tile itself is the beacon, mobile devices act as the scanners, in conjunction with their location services. Indoor wayfinding uses beacons deployed throughout the facility and the mobile device is also the scanner. For contact tracing and asset tracking applications (contact tracing is essentially a highly customized form of asset tracking), the beacon is on the asset or person, and the scanners are deployed in the environment in fixed/known locations. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Enter the Aruba solution: BLE-enabled access points. The entire 3XX series access points (802.11ac) have integrated BLE, and the 5XX access points (802.11ax) have integrated BLE and ZigBee. Integrated BLE radios can also be found on a few other enterprise vendors, includng Mist (which takes a very different approach to BLE) and Cisco. </p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>

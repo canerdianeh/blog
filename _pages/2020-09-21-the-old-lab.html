@@ -1,0 +1,414 @@
+---
+layout: page
+title: The Old Lab.
+date: 2020-09-21 18:56:03.000000000 -05:00
+type: page
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '2'
+  _cs_replacements: a:1:{s:7:"sidebar";s:7:"sidebar";}
+  _thumbnail_id: '1789'
+  _last_editor_used_jetpack: block-editor
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/the-old-lab/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>I often get asked about what's in The Lab. It's always somewhat fluid, but I'll update this page accordingly. This is the lab as it stood prior to January 2021 when I moved. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>The Rack.</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:image {"id":1808,"sizeSlug":"large"} --></p>
+<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2020/09/IMG_4114-496x1024.png" alt="" class="wp-image-1808"></figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>The rack itself is a <a rel="noreferrer noopener" href="https://amzn.to/3hN52M5" target="_blank">StarTech.com 25U open-frame server rack</a>.  Contents (top to bottom)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 25 Front</strong>: Brocade VDX 6740 Leaf Switch (SW-AGMAN)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>48 SFP+ 10-gigabit ports (Ethernet/Fiberchannel)</li>
+<li>4 QSFP+ 40-gigabit ports (Ethernet/Fiberchannel)</li>
+<li>Dual Power Supplies</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>This switch is my 10-gigabit backbone. Annoyance: Brocade would ship these (at a list price of $50,000) with only 24 of the SFP+ ports licensed for 10Gbps Ethernet. So it's really a 24-port switch and the four 40Gbps ports are decorative, unless I cough up the price of a small car to turn them on. When Broadcom bought Brocade and sold it off for parts, the NetworkOS datacenter switch line went to Extreme Networks, while the FastIron campus switch line and Ruckus Wireless went to Arris, and ultimately CommScope. </em></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 25 Rear</strong>: <a href="https://amzn.to/3kuObQ6" target="_blank" rel="noreferrer noopener">Tripp-Lite rackmount PDU</a> (non-UPS)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>For plugging in random stuff like monitors. </em></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 24: </strong>Panduit <a rel="noreferrer noopener" href="https://amzn.to/3cnnxWC" target="_blank">CPP24WBLY Modular Patch Panel</a>.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Cat 6 jacks are <a rel="noreferrer noopener" href="https://amzn.to/2FUKHY4" target="_blank">Panduit CJ688TGOR</a> </li>
+<li>Couplers are <a rel="noreferrer noopener" href="https://amzn.to/35UJN91" target="_blank">Panduit PCM-F3</a>
+</li>
+<li>First 8 ports are tie lines to the structured wiring enclosure in my office (more on that later). </li>
+<li>2 ports go to the wall plate by my desk. </li>
+<li>2 ports go to the AP on my office ceiling. </li>
+<li>2 ports go to the garage, one for the AP, and one for my FlightFeeder. </li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>Yes, Panduit is considerably more expensive than the cheap jacks you can get from Monoprice or amazon. But they are incredibly reliable and most of these jacks are recycled/reused from other jobs. They also take about half the time to terminate. My supplier for these for almost 20 years has been Accu-Tech in Kansas City. </em></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>This modular system originated at Sprint when they were building their HQ campus in Overland Park, Kansas in the late 1990s. The patch panel holds six modular furniture (cubicle) inserts that have 4 jacks each. As luck would have it, the standard data knockout for modular furniture fits perfectly 6 across in a single rack space. Sprint also needed to be able to put two UTP/Cat5e outlets and one double-wide SC fiber outlet in each cubicle. So this system was designed to fit them all together, and required considerably less tooling. The jacks are also compact enough that you can also get a 48-port modular panel that fits in 1U, which makes data center people happy. </em></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 23</strong>: HPE ProCurve 3800M PoE+ switch (SW-IVEL)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>48 PoE+ gigabit copper ethernet</li>
+<li>4 10-gigabit SFP+</li>
+<li>Linked to SW-AGMAN via dual 10G LACP Trunk</li>
+<li>Aruba 10GBase-SR Optics, OM4 optical patch</li>
+<li>Linked to SW-AGMAN via dual 10G LACP Trunk</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 21</strong>: Vertiv Avocent LRA185 Rack Console (with Avocent SV240 KVM on the back side)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 20</strong>: Aruba 7005 Mobility Controller (MC-NEIL)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 19</strong>: Aruba 7005 Mobility Controller (MC-KENZIE)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 18</strong>: Aruba 7005 Mobility Controller (MC-TAVISH)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>ArubaOS 8.7.1.0</li>
+<li>Clustered, controlling the home WLAN</li>
+<li>Managed by Mobility Master</li>
+<li>Linked to SW-IVEL via 2x Gigabit LACP/Port Channel. </li>
+<li>Powered via PoE</li>
+<li>RAP termination on MC-TAVISH</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 17: </strong>HP DL360 (Gen 7) server (ANGUS)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>General purpose remote desktop</li>
+<li>Windows 10</li>
+<li>2x Intel Xeon X5660 @2.8GHz (12 cores/24 threads)</li>
+<li>32GB RAM</li>
+<li>8x 300GB SAS10K HDD (2 in RAID1, 6 in RAID5)</li>
+<li>Dual Power Supplies</li>
+<li>Dual-Port QLogic BCM57810 10G Ethernet
+<ul>
+<li>fs.com 10GBase-SR optical modules</li>
+<li>Connected to SW-AGMAN via OM4</li>
+</ul>
+</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 16</strong>: HP DL360 (Gen7) server (ROTO)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Router/Gateway</li>
+<li>pfSense</li>
+<li>2x Intel Xeon X5660 @2.8GHz (12 cores/24 threads)</li>
+<li>24GB RAM</li>
+<li>4x 300GB SAS10K HDD (RAID10)</li>
+<li>Dual Power Supplies</li>
+<li>Integrated 4-port 1Gbps NIC
+<ul>
+<li>Connected to Internet</li>
+</ul>
+</li>
+<li>Dual-Port QLogic BCM57810 10G Ethernet
+<ul>
+<li>fs.com 10GBase-SR optical modules</li>
+<li>Connected to SW-AGMAN via OM4</li>
+<li>20Gbps LACP trunk with VLANs</li>
+</ul>
+</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 15</strong>: HP DL360 (Gen 8) server (VM-OOSE)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Virtualization Host</li>
+<li>VMWare vSphere 7.0</li>
+<li>2 x Intel Xeon E5-2640 @ 2.5GHz (24 Logical Processors)</li>
+<li>64GB RAM</li>
+<li>8 x 300GB SAS10K HDD (RAID6)</li>
+<li>16GB Internal USB (OS)</li>
+<li>Dual Power Supplies</li>
+<li>Dual-Port QLogic BCM57810 10G Ethernet
+<ul>
+<li>fs.com 10GBase-SR optical modules</li>
+<li>Connected to SW-AGMAN via OM4</li>
+</ul>
+</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 13/14</strong>: HP DL380 (Gen8) server (VM-INAL)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Virtualization Host</li>
+<li>VMWare vSphere 7.0</li>
+<li>2 x Intel Xeon E5-2660 @ 2.2GHz (32 Logical Processors)</li>
+<li>128GB RAM</li>
+<li>5 x 2TB SAS7.2K HDD (RAID5)</li>
+<li>16GB Internal USB (OS)</li>
+<li>Dual Power Supplies</li>
+<li>Dual-Port QLogic BCM57810 10G Ethernet
+<ul>
+<li>fs.com 10GBase-SR optical modules</li>
+<li>Connected to SW-AGMAN via OM4</li>
+</ul>
+</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 8-12</strong>: HPE ML110 (Gen 10) server (VM-PYRE)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Virtualization Host</li>
+<li>VMWare vSphere 7.0</li>
+<li>Intel Xeon Silver 4110 @ 2.1GHz (16 Logical Processors)</li>
+<li>16GB RAM</li>
+<li>NVidia M2090 Server GPU (512 cores)</li>
+<li>2 x 6TB SAS7.2K HDD (RAID1)</li>
+<li>1 x 10TB SATA HDD (JBOD)</li>
+<li>1 x 14TB SATA HDD (JBOD)</li>
+<li>16GB Internal USB (OS)</li>
+<li>Dual Power Supplies</li>
+<li>Dual-Port QLogic BCM57810 10G Ethernet
+<ul>
+<li>fs.com 10GBase-SR optical modules</li>
+<li>Connected to SW-AGMAN via OM4</li>
+</ul>
+</li>
+<li><a rel="noreferrer noopener" href="https://amzn.to/32RYkjM" target="_blank">NavePoint Server Rails</a></li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 6</strong>: Dell Poweredge R210 (NM-ROD)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Network Monitoring</li>
+<li>Ubuntu Linux</li>
+<li>Intel Xeon quad core somethingorother</li>
+<li>8GB</li>
+<li>512GB Samsung EVO 950 SATA SSD</li>
+<li>InfluxDB/Grafana/Telegraf</li>
+<li>Dual-port integrated gigabit NIC</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 4/5</strong>: <a rel="noreferrer noopener" href="https://amzn.to/3mA9fGC" target="_blank">CyberPower OR2200LCDRT2U</a> (UPS-CALE)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>2200VA Backup power (Leg A/Blue)</li>
+<li><a rel="noreferrer noopener" href="https://amzn.to/3cqEXBx" target="_blank">RMCARD205 Remote Management/SNMP Interface</a></li>
+<li>Dedicated 120V/20A circuit</li>
+<li><a href="https://amzn.to/32RYkjM" target="_blank" rel="noreferrer noopener">NavePoint Server Rails</a></li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Slot 1/2</strong>: <a rel="noreferrer noopener" href="https://amzn.to/3mA9fGC" target="_blank">CyberPower OR2200LCDRT2U</a> (HICC-UPS)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>2200VA Backup power (Leg B/Red)</li>
+<li><a rel="noreferrer noopener" href="https://amzn.to/3cqEXBx" target="_blank">RMCARD205 Remote Management/SNMP Interface</a></li>
+<li><a rel="noreferrer noopener" href="https://amzn.to/32PTWBH" target="_blank">CyberPower ENVIROSENSOR environmental sensor</a></li>
+<li>Dedicated 120V/20A circuit</li>
+<li><a href="https://amzn.to/32RYkjM" target="_blank" rel="noreferrer noopener">NavePoint Server Rails</a></li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:heading --></p>
+<h2>The Can.</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:image {"id":1784,"sizeSlug":"large"} --></p>
+<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2020/09/65197850-5007-451E-B1FB-5BB707A26FA9-576x1024.png" alt="" class="wp-image-1784"><br />
+<figcaption>Lives in my office, feeds everything in the house. </figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>The wiring "can" is a <a rel="noreferrer noopener" href="https://amzn.to/2RMJ8OC" target="_blank">Leviton 28" structured residential wiring enclosure</a>. The top two patch panels are <a rel="noreferrer noopener" href="https://amzn.to/3iMqn9T" target="_blank">Leviton 476TM-624 Twist and Mount</a> (Cat6). Left panel goes to various places in the house. Right panel has the ties to the lab rack and to the other wiring enclosure. Why no Panduit? Because they don't make any frames for these types of enclosures. Boo! </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Power is <a rel="noreferrer noopener" href="https://amzn.to/35WTALy" target="_blank">Leviton 47605-PSC Power Supply</a>, which provides surge protection on two outlets and 40W of 12V DC power. Sadly, it does not provide backup power. It is hardwired to a dedicated 120V/20A circuit. I replaced the standard lid with a hinged lid. If you're building a new one of these, get the 42". 28" gets used up way fast. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The switch is a <a rel="noreferrer noopener" href="https://amzn.to/2G2c5Dp" target="_blank">Ruckus ICX 7150-C12P-2X10G PoE+ switch</a> (link goes to 2x1G model). 12 ports of PoE+, 2 non-PoE ports, and 2 SFP+ ports (with fs.com optics, and 20G LACP trunk to SW-AGMAN via a pair of 15m OM4 patch cables. It is attached to the enclosure by way of a <a rel="noreferrer noopener" href="https://amzn.to/2ZWUMuy" target="_blank">Keeper MG magnetic gun mount</a>, which is screwed into the enclosure, and holds the switch in place magnetically. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>The Other Can.</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:image {"id":1785,"sizeSlug":"large"} --></p>
+<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2020/09/DECD2F35-6430-4C7F-8E13-4C25410C997B-576x1024.png" alt="" class="wp-image-1785"></figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>This wiring enclosure is a Commercial Electric 14" enclosure (Home Depot). It contains a pair of Uniprise (CommScope) 8-port patch panels that feed the bedrooms on the far end of the house. This was installed mainly to avoid having to pull 16 more cables into my office enclosure. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Switch is a HP ProCurve 1810-8G, powered by PoE from the main wiring can. Only thing on it right now is the front door camera, a Ubiquiti G3 camera. Outlet has built in surge protection.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Around the House</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Wireless:</strong></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>
+<a href="https://www.arubanetworks.com/products/networking/access-points/510-series/">Aruba AP-515</a> (AP-PEAL, AP-OGEE)</li>
+<li>
+<a href="https://www.arubanetworks.com/products/networking/access-points/310-series/">Aruba AP-315</a> (AP-OSTATE, AP-PLAUSE, AP-TITUDE, AP-HORISM)</li>
+<li>
+<a href="https://www.arubanetworks.com/products/networking/access-points/303h/">Aruba AP-303H</a> (AP-TERYX, AP-PETIZER, AP-EX)</li>
+<li>
+<a rel="noreferrer noopener" href="https://capenetworks.com/" target="_blank">Aruba UXI Sensor</a> (NO-CAPES)</li>
+<li>
+<a rel="noreferrer noopener" href="https://www.arubanetworks.com/en-au/products/location-services/aruba-beacons/" target="_blank">Aruba Beacons</a> (Beaconator, CanadianBeacon, BeaconAndEggs, BeaconLettuceTomato, SmokedBeacon, CuredBeacon)</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:heading --></p>
+<h2>Virtual Servers</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Aruba Mobility <s>Masters</s>Conductors (MM-GOOD, MM-BOPP)</li>
+<li>Aruba Mobility <s>Controller</s> Members (MC-HAMMER, MC-NUGGET, MC-LAREN)</li>
+<li>Aruba ClearPass Policy Manager (CP-TAIN, CP-YBARA)</li>
+<li>Aruba AirWave Management Platform (AMP-HIBIAN)</li>
+<li>Aruba Analytics and Location Engine (ALE-HOUSE)</li>
+<li>VMWare VCenter (VC-TORY)</li>
+<li>
+<a rel="noreferrer noopener" href="https://plex.tv" target="_blank">Plex Media Server</a> (GUERNSEY)</li>
+<li>Active Directory Domain Services (AD-IOS, AD-HD)</li>
+<li>Active Directory Certificate Services (TEARGAS)</li>
+<li>
+<a href="https://northsec.tech/introduction-to-t-pot-the-all-in-one-honeypot/">T-Pot</a> (honeypot)</li>
+<li>HPE Integrated Management Center (IMC-OMING)</li>
+<li>GNS (GNS-LINGER)</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:image {"id":1798,"sizeSlug":"large"} --></p>
+<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2020/09/86D6E7B1-2561-49C0-871B-431D2857CF14-1024x768.jpeg" alt="" class="wp-image-1798"><br />
+<figcaption>The Office.</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:heading --></p>
+<h2>The Office.</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Desk
+<ul>
+<li>IKEA Adjustable height frame</li>
+<li>36"x72"x1U Boos solid maple butcher block top</li>
+<li>Built-in Qi charger</li>
+<li>Lacing Bars</li>
+<li>12 outlet Power Strip</li>
+</ul>
+</li>
+<li>Mac Notebook:
+<ul>
+<li>MacBook Pro 13" (2019)</li>
+<li>Intel Core i5 (quad) @ 2.4GHz</li>
+<li>16GB RAM</li>
+<li>250GB SS Storage</li>
+<li>2x LG 27UK850 4K displays (via Type C DisplayPort+USB 3.1)</li>
+</ul>
+</li>
+<li>Windows Notebook:
+<ul>
+<li>Surface Book (2016)</li>
+<li>Core i7 Quad</li>
+<li>16GB</li>
+<li>Surface Dock</li>
+<li>Windows 10</li>
+</ul>
+</li>
+<li>Network:
+<ul>
+<li>Aruba 2930F-8G PoE+ switch (SW-EDEN)</li>
+<li>8 1GBase-T gigabit copper Ethernet ports</li>
+<li>2 10-gigabit SFP+ ports</li>
+<li>Linked to SW-AGMAN via 2x10G</li>
+<li>fs.com 10GBase-SR Optics, OM4 optical patch</li>
+</ul>
+</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Audio-Visual:
+<ul>
+<li>iConnectivity iConnectAUDIO 4+ Audio Interface (USB)</li>
+<li>Logitech c920 USB Camera</li>
+<li>JBL LSR305 Studio Monitors</li>
+<li>Azden SGM1000 Shotgun Mic</li>
+</ul>
+</li>
+<li>Monitoring Dashboard
+<ul>
+<li>Raspberry Pi 4 with PoE Hat</li>
+<li>Dual Dell 23" FHD Displays</li>
+</ul>
+</li>
+<li>Software:
+<ul>
+<li>Ekahau Pro</li>
+<li>Visio</li>
+<li>Office 365</li>
+<li>Adobe Creative Cloud</li>
+<li>GNS</li>
+<li>Iris</li>
+<li>ZOC Terminal</li>
+<li>Notepad++</li>
+<li>Edge</li>
+<li>Spyder Elite (display color calibration)</li>
+</ul>
+</li>
+</ul>
+<p><!-- /wp:list --><br />
+</body></html></p>

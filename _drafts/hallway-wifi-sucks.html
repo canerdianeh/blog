@@ -1,0 +1,196 @@
+---
+layout: post
+title: Hallway-Based Hotel Wi-Fi (and why it sucks)
+date:
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags: []
+meta:
+  _publicize_twitter_user: "@CaNerdIan"
+  _thumbnail_id: '1811'
+  _edit_last: '2'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>One of the most common places we use Wi-Fi outside our own homes is when traveling and staying in a hotel. If you've traveled at all, you've probably also discovered that the quality of the Wi-Fi at hotels is literally and figuratively all over the map. Some hotels have great Wi-Fi, others have Wi-Fi so bad that it's essentially unusable. I've seen well engineered systems with access points from enterprise vendors in every room, and I've seen consumer devices dangling by a patch cable in the hallway. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Part of this stems from hospitality Wi-Fi being an infrastructure amenity that isn't easily monetized, and whose fiscal benefit isn't typically found in the first layer or two of the accounting onion - you've got to dig deep to find and calculate ROI (how do you put a dollar figure on guest satisfaction?)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Many hotels, even in the big brand chains, are operated by independent operators (although some of these operators themselves have large portfolios that span all the major brands). And so, to them, Wi-Fi is just another infrastructure expense, like the elevator or the water heater - It costs you money, but doesn't generate revenue, at least not directly. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>I won't get into the whole aspect (and controversy) of using captive portals and other means of monetizing wifi service in hospitality - this is already long enough as it is and I'm just dealing with the physical layer (and a bit of the fiscal layer)... </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:quote --></p>
+<blockquote class="wp-block-quote">
+<p><em>WiFi is extremely important to business travelers. According to Motorola Solutions’, a recent study reveals that over 90% of business travelers want WiFi access in their rooms, while a third stated they would not return to a hotel that did not meet this expectation. Poor quality internet service could translate into a painful loss of business.</em></p>
+<p><em>Leisure travelers also greatly value WiFi and connectivity. One in three people travelling for leisure purposes would not return to a hotel with poor internet access.</em></p>
+<p><cite>--<a href="https://socialhospitality.com/2014/08/hotel-wifi/" data-type="URL" data-id="https://socialhospitality.com/2014/08/hotel-wifi/">Why Wi-Fi Availability is Key to Guest Satisfaction, <em>Social Hospitality,</em> August 2014</a></cite>
+</p></blockquote>
+<p><!-- /wp:quote --></p>
+<p><!-- wp:paragraph --></p>
+<p>Because it's a cost center, many operators want to spend as little as possible on providing this Wi-Fi. The old adage of "You Get What You Pay For" certainly applies here. Because Wi-Fi is quite tolerant of bad implementation, there are a whole lot of consultants out there with good general IT skills (and a minimal to nonexistent understanding of the myriad intricacies of wireless networking) who are more than happy to offer up a cheap Wi-Fi installation for a hotel, where the only design consideration is "can you meet this (usually grossly unrealistic) price point?", and who end up getting a Wi-Fi system that works great when testing it with nobody in the building - and then when reality sets in, the consultant is nowhere to be found. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>As wireless engineers (you're more than just an installer if you're doing engineering, and have more value to add to the project, which means you can charge more!), it is vital that we manage expectations with clients. When the local hotel says "Our Wifi sucks, can you fix it for $5000?", merely replacing the existing hardware with whatever the installer knows and likes (often Ubiquiti's UniFi platform because it's cheap), under the idea that the problem with the existing wifi is merely that the hardware sucks and the last guy chose the wrong vendor... But without actually digging into <em>why</em> the wifi sucks, because that part is a lot harder and requires a lot more skill and knowledge. This type of consultant is a major reason why the big chains not only have brand standards for Wi-Fi performance, but also have a very short list of approved installation contractors - they're familiar with the brand standards, and have engineers that understand how to implement them. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Typically, when hotel wifi sucks, it's because of one simple error: </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>All the access points are in the hallways</em>.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This keeps the AP count down (and by extension, hardware, cabling, and management costs). To the uninitiated, this seems like a reasonable approach - put one AP in the hall and you can cover 8-12 rooms? Design is the easiest thing in the world: Put one in the hall every 8-12 rooms, count the number of rooms and divide by 8, add a few for common areas, and boom, you have just designed their network, given them a bill of materials, and can start deploying them as soon as they're ready. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>But here's the problem</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>Hallway designs don't work</em>. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Pretty much every major Wi-Fi vendor has a validated reference design for hospitality, and none of them are a hallway design. Why?</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>Your client devices aren't in the hallway!</em></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>OK, they are, but very briefly. Most of the time, your client devices are in the rooms or the common areas. So, why wouldn't you put your access points there? You'll still need one or two in the halls, for when the users are in the halls, but putting one every 50 feet to cover the 8 rooms on either side of the hall means that your hallways will be full of wifi - so you've got to back off on your emitted signal from the AP. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>No big deal, the signal goes through the walls, right? Stop and consider the design of virtually every hotel room ever: The room is about 10 feet wide, and on the hallway, that 10 feet consists of a 3' steel door in a steel frame (you hope it's steel!), and the wall of the bathroom. Inside that (usually 1-hour+ fire-rated) wall is usually a bunch of plumbing and other mechanical stuff, mostly made of metal and containing water, and then above the sink, a giant mirror, sometimes sitting on a tiled wall. If you recall, a mirror is a giant sheet of glass with a coating of reflective metal on the back side. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The next stop for the signals that do make it through this gauntlet is the shower - where it encounters more tile, another wall, before finally making it into the space where the guest is with their iPhone. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>So what's the big deal, the iPhone is still getting signal, right? Let's look at the link budget... For the purposes of this little exercise, let's assume for this example that the  AP is operating at a forward power of 16dBm and has a 4dBi antenna gain (a fairly common setup with antennas that are vertically directional and horizontally omnidirectional). Values used are a guesstimate - you should <em>always</em> measure in the field as part of your design process. The propagation environment is complex enough that even a modeling tool such as Ekahau isn't going to give you a very good approximation. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The distance from the AP to the client sitting on the bed watching Netflix is approximately 5 metres. This gives us a free space path loss of about 60dB. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The shower wall attenuates about 3dB (typical wall construction with drywall on one side and fiberglass insulation. The marble tile, cement board backer, and tile adhesive on the shower side of the wall add another 8dB. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The mirror is about 15dB. Another 8dB for the tile and backer behind it, and another 10dB for the fire rated wall and mechanical inside it. The steel door is going to be roughly equal to the bathroom wall. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>We'll assume the room HVAC is a PTAC unit below the window, outside of the path - but know that sometimes they are located between the bathroom and the rest of the room. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>So, let's run the numbers:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>EIRP: +20dBm (20dBm)</li>
+<li>FSPL: -60dB (-40dBm)</li>
+<li>Bathroom Exterior Wall/Door: -33dB (-73dBm)</li>
+<li>Bathroom Shower Wall: -11dB (-84dBm)</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>Whoops... We've got a total path loss of 104dB here (!). Need to dial up the AP to max power of 30dBm (plus 4dB gain) to get within the -70dBm we want. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>And then, our guest's iPhone is sending return signals to the AP at an EIRP of 18dBm through the same path. So the AP is seeing the return signal at the antenna at -86dBm, and getting antenna gain to bring the RSSI up to -82dBm (that also increases the noise floor!). Just barely above the CCA threshold. No biggie, they're watching Netflix, which involves only a little bit of control data going up, so the resulting low upstream bandwidth isn't a big deal... right? </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Meanwhile, in the hallway, you need to go <em>600 metres</em> to equal the same 104dB of path loss in clear air - which means that the 7 other APs in the hall are raising the noise floor. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>But wait, there's more. Don't forget that in the room across the hall there is also a guest with a MacBook who is trying to do work. Her MacBook is plugged in and can put out more power on the WiFi, and so her upstream is a little better, since she's not constrained by batter power to the degree that the iPhone across the hall is. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Let's go back to WiFi 101 for a second: what's the FIRST thing that happens when a device wishes to transmit on the wifi channel?</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>The device listens to see if the channel is clear</em></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The MacBook is getting ready to transmit, and listens on the channel... The iPhone across the hall is in the middle of transmitting a TCP acknowledgement to Netflix. The iPhone is doing its best to transmit at its full power, but the MacBook can't hear it because there's 200dB of signal loss between it and the iPhone. All while another guest is walking down the hall with an Android device that's trying to associate - Both the MacBook and the Android device determine the channel is clear, and start transmitting. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>And now, our poor AP, it's getting 3 signals at once, which garbles all of them, the frames fail the checksum, and the AP does not acknowledge any of the frames, so the dance starts again. We have a rather nasty <a href="https://en.wikipedia.org/wiki/Hidden_node_problem">Hidden Node problem</a>. Now, all the airtime on the channel is getting filled with endless retransmits (which aren't able to coordinate airtime access), and no useful data is getting through. Netflix starts buffering, the MacBook is having trouble maintaining its VPN connection, and the Android device can't associate. All this looks to the user like the WiFi Sucks. <em>Because it does</em>. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>So let's turn to best practices for hotel design. This involves putting an access point in every room or every other room (depending on how the building is put together - some hotels have concrete walls between rooms, others are stick-built, so you can often get away with one every other room or so. Each room has its own channel (and overlapping channels are far enough away that you get channel reuse). Each AP inside the room can operate at a much lower power, as can the clients (which also saves battery on mobile devices!). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>So, let's stop trying to cover hotel rooms from the halls, okay? It doesn't work. About the only advantage is that it's cheap. But if it's cheap and doesn't work, it's actually really expensive because you're paying money something that doesn't actually work. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This same general concept also applies to apartment complexes and college dorms. <em>Put your access points where the client devices are.</em></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>TL;DR:</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>If you're a hotel operator</strong> and the consultant is suggesting a hallway design, find a new consultant - a hallway system is going to cost you money without delivering what you expect. Understand that wifi is going to cost more upfront than you want it to, but a well engineered wifi system pays off big: your reviews are usually going to be better, stays will likely be longer, and you'll attract more business. And you'll spend less time screwing with it. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>If you're a consultant/installer</strong>, stop leading with hallway designs. Sure, it's a quick and easy sale - but your repeat business and reputation is going to suffer once the client figures out that you built a crap system. Do the engineering - even a value-grade platform like Ubiquiti can be successful, <em>if you do the engineering</em>. The engineering is far more important than whose boxes you put up (and a properly engineered system informs whose boxes you need). If you don't know how to do the engineering, farm it out to someone who does, or learn the skills. <a href="https://cwnp.com" data-type="URL" data-id="https://cwnp.com">CWNA and CWDP</a> are a good start, along with any vendor validated reference designs. Work with your vendor - they also have an interest in your deployment being successful, because their name is on it too. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>If all else fails, you can atone for a lot of RF engineering sins with a really fat internet pipe. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":4} --></p>
+<h4>A word about hardware</h4>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Virtually every vendor (except those dealing only in consumer space) has an access point designed specifically for hospitality applications:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Aruba has had a hospitality AP in its lineup for almost as long as the company has been around, in every generation since 802.11g: 93H (g), 105H (n), 205H (acW1), 303H (acW2), 503H (ax), and 505H(ax). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Ruckus has had them since 802.11ac. They have the H510, the H320, and the oddball C110, which is built for a very specific use case in hotels that have coaxial TV cable to the rooms but no Ethernet (or ability to run new data in anything remotely a cost-effective manner). It uses a built in DOCSIS cable modem as its backhaul to the network). Interestingly enough, Ruckus' efforts relating to cable TV infrastructure long predates their acquisition by CPE manufacturer Arris. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Meraki and Cisco have a few (although I have minimal exposure to those), and Cisco likely has some TV cable based APs since they've been a quiet player in the cable game since they acquired Scientific Atlanta a long time ago. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Even prosumer player Ubiquiti has been in the hospitality AP game for a while (they've always been a player in hospitality, and are often found in hotels with badly designed wireless because of their price points). Their first attempts at a wall plate AP (now EOL) were... not great. The first generation of Ubiquiti's 802.11ac In-Wall APs were reportedly designed by the Ruckus hospitality team which went over to Ubiquiti, and that's a pretty solid offering, if their installers could simply understand the need for getting out of the hallways and into the rooms, and convince hotel operators of this. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>One enterprise holdout that does not currently offer a hospitality AP is Juniper/Mist, which is moderately surprising - but they aren't currently focused on that market segment which is largely dominated by Ruckus and Aruba. I don't know offhand if Extreme/Aerohive has a hospitality model as I haven't spent a lot of quality time with their lineup, but I assume they do. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>These APs are generally designed to be mounted low (at outlet height, where the data jack is), and usually have a hemispherical antenna pattern (facing into the room, for obvious reasons - and most have a metal mounting plate or heat sink on the back), and some have a slight electrical uptilt. These types of APs usually also have a built-in switch and/or passthru ports that allow connection of IPTV and IP phones (and some ports will even supply PoE). Aruba lets you manage each of these ports just like an SSID, either bridged to a local VLAN (static or dynamic), or tunneled back to the controller (in the same way that Aruba switches can do user-based or port-based tunneling). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":4} --></p>
+<h4>Additional Reading</h4>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p><a href="https://www.arubanetworks.com/resources/technical-guidance/">Aruba Technical Guidance</a> (validated designs, etc)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><a href="https://www.cisco.com/c/en/us/solutions/enterprise/validated-design-program/networking_solutions_products_genericcontent0900aecd80601e22.html">Cisco Validated Designs</a></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>

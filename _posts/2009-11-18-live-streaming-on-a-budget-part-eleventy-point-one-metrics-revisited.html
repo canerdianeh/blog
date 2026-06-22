@@ -1,0 +1,37 @@
+---
+layout: post
+title: Live Streaming on a Budget (Part eleventy point one) – Metrics Revisited
+date: 2009-11-18 13:58:49.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Internet Campus
+- streaming
+- Wowza
+tags: []
+meta:
+  _edit_last: '1'
+  dsq_thread_id: '217877522'
+  s2mail: 'yes'
+  _googl_shortlink: http://goo.gl/7ORgR
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2009/11/18/live-streaming-on-a-budget-part-eleventy-point-one-metrics-revisited/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body></p>
+<p>Back in July, I made a<a title="Live Streaming on a Budget (Part eleventy) – Metrics" href="http://blog.ianbeyer.com/2009/07/12/live-streaming-on-a-budget-part-eleventy-metrics/" target="_blank"> post about metrics</a> and a cheesy VB Script that got the job done, but wasn't particularly elegant. I've since improved on this due to load balancing (I <a title="Live Streaming on a budget: Wowza Load Balancing (Part … um.. how many is it now?)" href="http://blog.ianbeyer.com/2009/09/27/live-streaming-on-a-budget-wowza-load-balancing-part-um-how-many-is-it-now/" target="_blank">posted about that</a> in September).</p>
+<p>I've since then learned a bunch about <a href="http://oss.oetiker.ch/rrdtool/">RRDTool</a>, and have put together a script that pulls the XML data, groks it, and then populates an RRD. The net result is that I get a graph like this:</p>
+<p style="text-align: center;"><img class="aligncenter size-full wp-image-257" src="{{site.baseurl}}/assets/2009/11/streams-200911151215.png" alt="streams-200911151215" width="572" height="361"></p>
+<p style="text-align: left;">This graph gives me the following information: The iPhone stream count (with a 10:1 vertical exaggeration), the Flash stream count, and the total viewer count, which is the sum of Flash and iPhone streams, multiplied by a factor of 1.7 (which we've found reasonably reflects how many actual people are watching, versus streams. Then the vertical red line shows the time the peak occurred, and the horizontal line shows the level of that peak. The actual peak numbers are listed on the bottom. The RRD and the graph are set up to take into account Windows streams, just as soon as I find a good way to pull that data from WMI via perl.</p>
+<p style="text-align: left;">The general operation is as follows: There's a <a title="Wowza stats collector with RRD (perl)" href="http://blog.ianbeyer.com/code/backend/wowza-metrics-perl/" target="_blank">script</a> that's started in a cron job 10 minutes after the servers are spun up, and it polls the origin server every 10 seconds for its counts and populates the RRD. There's another cron job that runs every minute to <a title="RRD Graphing Script (bash)" href="http://blog.ianbeyer.com/code/backend/rrd-graphing/" target="_blank">generate a current graph</a>, which is then displayed on a page with <a title="Image refresh (javascript)" href="http://blog.ianbeyer.com/code/client/js-image-refresh/" target="_blank">some javascript</a> that refreshes the image in realtime. Then, at 12:15 and 6:30, there's another cron job that takes a snapshot of the previous two hours, puts it into a web-accessible directory, and appends an HTML file with a link for easy access later.</p>
+<p style="text-align: left;">All of the metrics scripts, automation scripts, and graphing tools live on a linux virtual machine that runs on our central campus.</p>
+<p style="text-align: left;">This is big improvement over dumping a vbscript into a CSV and then graphing manually with Excel. This happens automatically, in real time, without me being there.</p>
+<p></body></html></p>

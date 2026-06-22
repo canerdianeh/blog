@@ -1,0 +1,38 @@
+---
+layout: post
+title: High-Availability firewall on the cheap!
+date: 2008-06-17 16:23:27.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- networking
+tags:
+- BSD
+- firewall
+- pfSense
+meta:
+  dsq_thread_id: '217877551'
+  _googl_shortlink: http://goo.gl/pOjSj
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2008/06/17/high-availability-firewall-on-the-cheap/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>I now have a profound appreciation for <a href="http://www.bsd.org/">BSD</a>.</p>
+<p>Yesterday, our <a href="http://www.pfsense.org">pfSense</a> firewall at <a href="http://www.1102grand.com">1102 Grand</a> suddenly went silent and the panel on <a href="http://www.whatsupgold.com/">WhatsUp</a> for that site went all red. Not good. I went down to the cage after small group last night and found the machine to have just simply locked up cold. I suspect hardware, since pfSense/BSD didn't log a thing about it going dark.</p>
+<p>It became quite clear that this setup was... suboptimal. <a title="Clif Guy ALL THE TIME!" href="http://www.clifguy.com">Clif</a>'s shooting for 99.99% on this new setup. I can't be racing off to the datacenter every time the firewall machine decides to take a holiday from reality. <a href="http://officecurmudgeon.com/">Brian</a> and I quickly determined that we needed not only a <a href="http://www.corpsys.com/store/prodinfo.asp?number=EPCR2">remote power control unit</a>, but some sort of high-availability solution that wasn't going to <a href="http://www.barackobama.com">empty our wallet</a> like a pair of <a href="http://sonicwall.com/us/products/NSA_4500.html">NSA 4500</a>s would. (sorry <a title="Mark Moreno" href="http://christsitguy.spaces.live.com/">Mark</a>, we simply don't have that kind of money) We already had a spare, identical machine at the datacenter doing duty as a hardware spare and development server, and another one just like it in inventory at the Central Campus. I grabbed the extra machine and went back 1102 Grand for the second time in 12 hours, with a quick stop at <a href="http://www.microcenter.com">Micro Center</a> for some <a title="Linksys!" href="http://www.linksys.com/servlet/Satellite?c=L_Product_C2&amp;childpagename=US%2FLayout&amp;cid=1129151689795&amp;pagename=Linksys%2FCommon%2FVisitorWrapper&amp;lid=8979522279B11">cheap NICs</a> and a red <a href="http://en.wikipedia.org/wiki/Ethernet_crossover_cable">crossover cable</a>.</p>
+<p>Fortunately, pfSense has high availability capability built in, thanks to BSD's CARP and pfSync. CARP allows me to set up virtual IPs on both firewalls and synchronize between them with pfSync. The extra NICs were for a dedicated sync/heartbeat link between the two boxes. I'm still a little fuzzy on the technical details of how this works, but it works... Convergence/Failover time is 3 seconds or less, and everything is synchronized between the two machines, including state and session information. I had it all set up, and hit the reset button on the primary firewall... and nary a ping was dropped.<br />
+The setup involves giving each machine its own LAN and WAN addresses (and a unique address on the other zones as well) and then creating a CARP virtual IP on that interface. The virtual IP is the one used as the gateway and as the NAT address. All rules and configs (including IPSEC Tunnels!) is mirrored on the second box.</p>
+<p>Reference material:</p>
+<p><a title="pfSync/CARP" href="http://www.countersiege.com/doc/pfsync-carp/" target="_blank">Excellent documentation</a> on the process from the folks at <a href="http://www.countersiege.com/">Countersiege</a>.</p>
+<p>Some <a href="http://www.openbsd.org/faq/pf/carp.html">background</a> from the <a href="http://www.openbsd.org">OpenBSD</a> folks.</p>
+<p>A few good <a href="http://devwiki.pfsense.org/CARPConfigurationSyncTroubleShooting?show_comments=1#comments">tips</a> here. These proved to be crucial.</p>
+<p></body></html></p>

@@ -1,0 +1,32 @@
+---
+layout: nav_menu_item
+title: ''
+date: 2011-12-29 04:51:20.000000000 -06:00
+type: nav_menu_item
+parent_id: '940'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _menu_item_type: post_type
+  _menu_item_menu_item_parent: '991'
+  _menu_item_object_id: '412'
+  _menu_item_object: page
+  _menu_item_target: ''
+  _menu_item_classes: a:1:{i:0;s:0:"";}
+  _menu_item_xfn: ''
+  _menu_item_url: ''
+author:
+  login: admin
+  email: ian@nerdherd.net
+  display_name: Site Administrator
+  first_name: Site
+  last_name: Administrator
+permalink: "/2011/12/29/754/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>Code to insert a player inside a div (named videoframe in this case). This will present either an instance of JW Player version 5 (default), JW Player version 4 for PlayStation (which do not have Flash 10), an HTML5 video element in the case of iPhone/iPad devices, and a graphic (that looks like JW Player for a consistent UX) hyperlinked to an RTSP feed for Android/BlackBerry/WebOS devices or an MMS feed for IE Mobile devices. David Walsh also has a post about how to do it with PHP // Browser-aware video player for JW Player and Wowza // V0.2 – June 2, 2010 // (c)2010 Ian Beyer // Released under the GPL var agent=navigator.userAgent.toLowerCase(); var is_iphone = (agent.indexOf(‘iphone’)!=-1); var is_ipad = (agent.indexOf(‘ipad’)!=-1); var is_playstation = (agent.indexOf(‘playstation’)!=-1); var is_safari = (agent.indexOf(‘safari’)!=-1); var is_iemobile = (agent.indexOf(‘iemobile’)!=-1); var is_blackberry = (agent.indexOf(‘blackberry’)!=-1); var is_android = (agent.indexOf(‘android’)!=-1); var is_webos = (agent.indexOf(‘webos’)!=-1); if (is_iphone) { html5Player();} else if (is_ipad) { html5Player(); } else if (is_android) { rtspPlayer(); } else if (is_webos) { rtspPlayer(); } else if (is_blackberry) { rtspPlayer(); } else if (is_iemobile) { windowsPlayer(); } else if (is_playstation) { oldJWPlayer(); } else { newJWPlayer(); } function html5Player() { var player=document.getElementById(“player”) player.innerHTML=’’+ ‘’; } function rtspPlayer()…</p>
+<p></body></html></p>

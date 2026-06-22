@@ -1,0 +1,256 @@
+---
+layout: post
+title: Setting Up an Aruba AP for Surveying
+date:
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags: []
+meta:
+  _last_editor_used_jetpack: block-editor
+  _publicize_twitter_user: "@CaNerdIan"
+  _edit_last: '2'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>It's been a while since I've had to do an actual AP-on-a-Stick (APoS) survey, but now that I'm going back out into the field to do this sort of thing, here's the step by step setup for setting up an Aruba AP for a survey. (And stay tuned for my semi-regular feature of what actually goes into my survey kit!)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Step 0: Hardware Selection</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Ideally, you want to survey with the same model of AP/Antenna you plan on deploying - but that may not always be an option due to supply chain constraints, or a bunch of other factors. Just make sure that your survey makes a not of the differences in coverage between deployed and surveyed AP models, and make sure you do a validation survey after the fact.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>As long-time readers are probably aware, I'm a stickler for good mounting solutions at Layer 0, and so whatever AP you get to survey, make sure that you have a way to mount it fairly cleanly. I'm a big fan of the Wi-Fi Stand and a Manfrotto lighting tripod for basic office surveys. For warehouses, things get a little bit trickier, because, while really big tripods that can reach 10-15m are available, they're a little unwieldy, and I prefer mounting the survey APs to structure using magnets. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>You will also need some kind of battery that can provide sufficient PoE to the access point. I've recently acquired the MaxxWave survey battery which is very similar to existing 26400mAh USB batteries that I already had, but with different electronics. The MaxxWave battery appears to be identical in manufacture to the one that is being sold by Ventev, but for a significantly lower price. I had previously used the AccelTex battery, but the MaxxWave unit has the distinct advantage of being smaller, and able to charge/power over a Type C PD connection, which I already carry with me, so it reduces the size of my loadout. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>From a setup standpoint, the specific AP model won't make much of a difference - the process is basically the same for any Aruba AP.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Step 1: Booting the AP in standalone mode</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>For the purposes of a survey, you'll want to set up the AP in standalone mode, which is a specialized version of Instant that suppresses and rejects controller discovery frames so that it doesn't attempt to join an existing Instant cluster or have other APs join it. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>To boot an Aruba AP into Standalone mode, connect the requisite console cable to it and open your favorite terminal application (I'm a fan of ZOC) to the device, with 9600/N/8/1 and turn off all the extraneous RS232 stuff - don't need any handshaking, flow control, etc. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:group --></p>
+<div class="wp-block-group">
+<!-- wp:columns --></p>
+<div class="wp-block-columns">
+<!-- wp:column {"width":"100%"} --></p>
+<div class="wp-block-column" style="flex-basis:100%">
+<!-- wp:group --></p>
+<div class="wp-block-group">
+<!-- wp:group {"style":{"color":{"gradient":"linear-gradient(135deg,rgb(252,185,0) 0%,rgba(255,106,0,0.98) 100%)"}}} --></p>
+<div class="wp-block-group has-background" style="background:linear-gradient(135deg,rgb(252,185,0) 0%,rgba(255,106,0,0.98) 100%)">
+<!-- wp:paragraph {"align":"center"} --></p>
+<p class="has-text-align-center"><strong>Note: </strong></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"align":"center"} --></p>
+<p class="has-text-align-center">The AP-345, AP-303H, and all indoor 5XX series APs use the orange JY728A cable with a Micro-B connector on the AP side.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"align":"center"} --></p>
+<p class="has-text-align-center"><strong>This is NOT a USB connection</strong>, (the USB to serial TTL interface is in the cable on the oversized Type A end) and regular Micro-B USB cables <strong>will not work.  </strong></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"align":"center"} --></p>
+<p class="has-text-align-center">Outdoor 560 and 570 series APs use a USB connection via Type C connector, and a Type A-Type C USB cable is included in the box with the AP.</p>
+<p><!-- /wp:paragraph -->
+</div>
+<p><!-- /wp:group --></p>
+<p><!-- wp:group {"style":{"color":{"background":"#06dce5"}},"textColor":"black"} --></p>
+<div class="wp-block-group has-black-color has-text-color has-background" style="background-color:#06dce5">
+<!-- wp:paragraph {"align":"center"} --></p>
+<p class="has-text-align-center">Tip:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"align":"center"} --></p>
+<p class="has-text-align-center">Most Aruba APs with integrated Bluetooth radios also have the ability to create a console connection over Bluetooth. If you find yourself without a console cable, <a href="https://community.arubanetworks.com/blogs/colinjoseph-hpe1/2020/10/16/how-to-connect-to-the-console-of-an-aruba-ap-over-bluetooth-using-android-and-aruba-utilities">this is how you can connect to an Aruba AP's console via Bluetooth</a></p>
+<p><!-- /wp:paragraph -->
+</div>
+<p><!-- /wp:group --></p>
+<p><!-- wp:paragraph --></p>
+<p>Upon applying power to the AP, the boot loader will come up. When prompted, press Enter to stop the boot loader. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:group --></p>
+<div class="wp-block-group">
+<!-- wp:group {"style":{"color":{"background":"#2d2d2d"}},"textColor":"vivid-green-cyan"} --></p>
+<div class="wp-block-group has-vivid-green-cyan-color has-text-color has-background" style="background-color:#2d2d2d">
+<!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>[SERIAL/DIRECT] CONNECTED TO PORT /dev/cu.usbserial-DM01PF6L (9600-8N1)</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>HELO<br>5.0202-1.0.38-161.122<br>CPU0<br>L1CD<br>MMUI<br>MMU8<br>CODE<br>ZBBS<br>MAIN<br>NVRAM memcfg 0x41527<br>MCB chksum 0xa2becbd7, config 0x41527<br>DDR3-1600 CL11 total 1024MB 2 16bits part[s] %1 SSC</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>DDR test done successfully<br>Loading image 0…<br>Validating image 0…<br>Uncompressing image 0…<br>Booting image 0…</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>APBoot 2.4.1.18 (build 67717)<br>Built: 2018-11-09 at 14:43:46</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>Model: AP-51x<br>DRAM: 1 GiB<br>NAND: ECC BCH-8, ONFI, Manuf ID: 0xef, Chip ID: 0xf1 (Winbond W29N01HV), page size: 2048, OOB size: 64, device size: 128 MiB<br>PCIE1: link up<br>PCIE2: link up<br>Power: 802.3af POE<br>In: serial<br>Out: serial<br>Err: serial<br>Net: eth0<br>Radio: bcm43694#0, bcm43694#1<br>Reset: cold<br>FIPS: passed</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong><code>Hit &lt;enter&gt; to stop autoboot: 0</code></strong></p>
+<p><!-- /wp:paragraph -->
+</div>
+<p><!-- /wp:group --></p>
+<p><!-- wp:paragraph --></p>
+<p>Once you've reached the apboot prompt, factory reset the AP:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:group {"style":{"color":{"background":"#2d2d2d"}},"textColor":"vivid-green-cyan"} --></p>
+<div class="wp-block-group has-vivid-green-cyan-color has-text-color has-background" style="background-color:#2d2d2d">
+<!-- wp:paragraph --></p>
+<p><code>apboot&gt; <strong>factory_reset</strong></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>Clearing state…<br>Checking OS image and flags</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>Image is signed; verifying checksum… passed<br>Preserving image partition 0<br>Erasing UBIFS …<br>donePurging environment…<br>preserving os_partition (0)<br>Writing to UBI… done</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>Writing to redundant UBI… done</code></p>
+<p><!-- /wp:paragraph -->
+</div>
+<p><!-- /wp:group --></p>
+<p><!-- wp:paragraph --></p>
+<p>Print the environment variables to make sure that it has in fact been reset:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:group {"style":{"color":{"background":"#2d2d2d"}},"textColor":"vivid-green-cyan"} --></p>
+<div class="wp-block-group has-vivid-green-cyan-color has-text-color has-background" style="background-color:#2d2d2d">
+<!-- wp:paragraph --></p>
+<p><code>apboot&gt; <strong>printenv</strong></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>autoload=n<br>autostart=yes<br>baudrate=9600<br>boardname=Laphroaig<br>bootargs=console=ttyS0,9600n8 rdinit=/sbin/init ubi.mtd=pdata ubi.mtd=aos<br>bootcmd=boot ap<br>bootdelay=2<br>bootfile=arm64.ari<br>ethaddr=bc:9f:e4:c3:2a:76<br>mtddevname=aos<br>mtddevnum=3<br>mtdids=nand0=nand0<br>mtdparts=mtdparts=nand0:3m(apboot),512k(panic-dump),2m(pdata),-(aos)<br>os_partition=0<br>partition=nand0,3<br>servername=aruba-master</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code>Environment size: 411/65531 bytes</code></p>
+<p><!-- /wp:paragraph -->
+</div>
+<p><!-- /wp:group --></p>
+<p><!-- wp:paragraph --></p>
+<p>Now, set the environment to standalone and save the updated environment variables, and boot the AP. While you're in here, might as well go ahead and set up some of the other basics. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:group {"style":{"color":{"background":"#2d2d2d"}},"textColor":"vivid-green-cyan"} --></p>
+<div class="wp-block-group has-vivid-green-cyan-color has-text-color has-background" style="background-color:#2d2d2d">
+<!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code><em>apboot&gt; </em></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>setenv standalone_mode 1</strong></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>setenv disable_prov_ssid 1</strong></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>saveenv</strong></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code><em>Saving Environment to UBI…<br>Writing to UBI… done</em></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>boot ap</strong></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code><em>Booting OS partition 0</em></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"cyan-bluish-gray"} --></p>
+<p class="has-cyan-bluish-gray-color has-text-color"><code><em>&lt;Boot Stuff&gt;</em></code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph {"textColor":"luminous-vivid-amber"} --></p>
+<p class="has-luminous-vivid-amber-color has-text-color"><code>User:</code></p>
+<p><!-- /wp:paragraph -->
+</div>
+<p><!-- /wp:group -->
+</div>
+<p><!-- /wp:group -->
+</div>
+<p><!-- /wp:group --></p>
+<p><!-- wp:paragraph --></p>
+<p>Once you've gotten to the login prompt, wait a bit longer for the AP to finish doing its thing or you'll get a message saying the CLI isn't ready yet.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Log in using admin/admin or admin/serial # (if the first set doesn't work)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Step 2: Configuring the AP </h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Since we're already on the console, there's no reason not to configure the AP from here or mess with the WebUI. We disabled the provisioning SSID in the bootloader so we can start with a clean config. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Start by setting up the IP and removing the wired setmeUp config:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:group {"style":{"color":{"background":"#2b2b2b"}},"textColor":"luminous-vivid-amber"} --></p>
+<div class="wp-block-group has-luminous-vivid-amber-color has-text-color has-background" style="background-color:#2b2b2b">
+<!-- wp:paragraph --></p>
+<p><code>ip-address 172.18.19.20 255.255.255.0 172.18.19.1 1.1.1.1 arubanetworks.com</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code>config terminal</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code>enet0-port-profile default_wired_port_profile<br>enet1-port-profile default_wired_port_profile<br>no wired-port-profile wired-SetMeUp<br>no wlan access-rule wired-SetMeUp</code></p>
+<p><!-- /wp:paragraph -->
+</div>
+<p><!-- /wp:group --></p>
+<p><!-- wp:paragraph --></p>
+<p>Then create the SSIDs:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:group {"style":{"color":{"background":"#2b2b2b"}},"textColor":"luminous-vivid-amber"} --></p>
+<div class="wp-block-group has-luminous-vivid-amber-color has-text-color has-background" style="background-color:#2b2b2b">
+<!-- wp:paragraph --></p>
+<p><code><strong>wlan access-rule Survey_5GHz</strong><br>index 2<br>rule any any match any any any permit<br>exit</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>wlan access-rule Survey_2GHz</strong><br>index 3<br>rule any any match any any any permit<br>exit</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>arm</strong><br>wide-bands 5ghz<br>80mhz-support<br>band-steering-mode disable<br>air-time-fairness-mode default-access<br>client-aware<br>g-channels 6<br>a-channels 44<br>max-tx-power 15<br>min-tx-power 9<br>exit</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>rf dot11g-radio-profile</strong><br>max-tx-power 9<br>min-tx-power 9<br>disable-arm-wids-functions on<br>scanning-disable<br>no spectrum-monitor<br>exit</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>rf dot11a-radio-profile</strong><br>max-tx-power 15<br>min-tx-power 15<br>disable-arm-wids-functions on<br>scanning-disable<br>no spectrum-monitor<br>exit</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>wlan ssid-profile Survey_5GHz</strong><br>enable<br>index 0<br>type employee<br>essid Survey_5GHz<br>wpa-passphrase "aruba123"<br>opmode wpa2-psk-aes<br>max-authentication-failures 0<br>vlan guest<br>rf-band 5.0<br>captive-portal disable<br>dtim-period 1<br>broadcast-filter arp<br>a-min-tx-rate 12<br>a-beacon-rate 12<br>dmo-channel-utilization-threshold 90<br>local-probe-req-thresh 0<br>max-clients-threshold 64<br>exit</code></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><code><strong>wlan ssid-profile Survey_2GHz<br></strong>enable<br>index 1<br>type employee<br>essid Survey_2GHz<br>wpa-passphrase "aruba123"<br>opmode wpa2-psk-aes</code><br><code>max-authentication-failures 0<br>vlan guest<br>rf-band 2.4<br>captive-portal disable</code><br><code>dtim-period 1<br>broadcast-filter none<br>g-min-tx-rate 12<br>g-beacon-rate 12<br>dmo-channel-utilization-threshold 90<br>local-probe-req-thresh 0<br>max-clients-threshold 64<br>exit</code></p>
+<p><!-- /wp:paragraph -->
+</div>
+<p><!-- /wp:group -->
+</div>
+<p><!-- /wp:column -->
+</div>
+<p><!-- /wp:columns -->
+</div>
+<p><!-- /wp:group --><br />
+</body></html></p>

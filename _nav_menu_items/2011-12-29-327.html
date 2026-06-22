@@ -1,0 +1,32 @@
+---
+layout: nav_menu_item
+title: ''
+date: 2011-12-29 04:51:13.000000000 -06:00
+type: nav_menu_item
+parent_id: '948'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _menu_item_type: post_type
+  _menu_item_menu_item_parent: '990'
+  _menu_item_object_id: '266'
+  _menu_item_object: page
+  _menu_item_target: ''
+  _menu_item_classes: a:1:{i:0;s:0:"";}
+  _menu_item_xfn: ''
+  _menu_item_url: ''
+author:
+  login: admin
+  email: ian@nerdherd.net
+  display_name: Site Administrator
+  first_name: Site
+  last_name: Administrator
+permalink: "/2011/12/29/327/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>This perl script connects to a Wowza origin server and the connectioncounts.xml HTTPProvider function and extracts current connection counts at an interval specified on the command line (defaults every 10 seconds). Commandline options to write to an RRD file and silent operation. RRD file used in this example is described over here. This can be graphed with these commands. #!/usr/bin/perl use strict; # use module use XML::Simple; use Data::Dumper; use LWP::UserAgent; use Getopt::Std; use RRDs; my $interval=0; my $rrd_file=”/var/rrd/streams-2011.rrd”; our($opt_r,$opt_q,$opt_i,$opt_s); getopts(‘rqi:s:’); # Command-line options: # # -i Specifies polling interval # -q Silent operation (for running in a cron job) # -r Outputs to RRD # -s Specifies server to poll # Set default interval if (!$opt_i) { $interval = 10; } else { $interval = $opt_i; } !$opt_s &amp;&amp; die(‘Please specify a server to query’); while (1) { my $ua = new LWP::UserAgent; $ua-&gt;timeout(10); # Set up connection my $wowza_url = “http://$opt_s:1935/connectioncounts.xml”; my $wowza_request = new HTTP::Request GET =&gt; $wowza_url; my $wowza_result = $ua-&gt;request($wowza_request); # create object my $hlssum = 0; my $rtspsum = 0; my $flashsum = 0; my $iphonesum = 0; my @streamcount = 0; my %namecount = 0; if($wowza_result-&gt;is_success) { my $wowza_xml = new XML::Simple; my…</p>
+<p></body></html></p>

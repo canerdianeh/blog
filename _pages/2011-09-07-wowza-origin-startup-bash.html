@@ -1,0 +1,137 @@
+---
+layout: page
+title: Wowza Origin Server Startup (bash)
+date: 2011-09-07 18:48:34.000000000 -05:00
+type: page
+parent_id: '272'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '1'
+  wp_plus_one_redirect: ''
+  _wp_page_template: default
+  dsq_thread_id: '407769231'
+  _googl_shortlink: http://goo.gl/mXJiK
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: admin
+  email: ian@nerdherd.net
+  display_name: Site Administrator
+  first_name: Site
+  last_name: Administrator
+permalink: "/code/ec2/wowza-origin-startup-bash/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>[bash]<br />
+#!/bin/bash</p>
+<p>export JAVA_HOME=/usr<br />
+export EC2_HOME=/opt/ec2/tools<br />
+export amiid="ami-5a649833"<br />
+export config_loc="$HOME/amazon"<br />
+export config="origin"</p>
+<p>export var_loc="$HOME/var"<br />
+export key="keypair"<br />
+export zone="us-east-1c"<br />
+export group="Wowza"<br />
+export ip="11.22.33.44"</p>
+<p>#     The variables that start with the name EC2 are used by the Tools API. They are the directory where you downloaded your Tools installation and the key and cert files provided to you by Amazon when you created your instance. The other variables are used by the shell commands in this example, and include:<br />
+#<br />
+#    * &lt;strong&gt;amiid&lt;/strong&gt;: Amazon Image ID<br />
+#    * &lt;strong&gt;key&lt;/strong&gt;: Key name associated with this instance<br />
+#    * &lt;strong&gt;zone&lt;/strong&gt;: The zone in which this instance was created<br />
+#    * &lt;strong&gt;group&lt;/strong&gt;: The security group associated with this instance<br />
+#    * &lt;strong&gt;ip&lt;/strong&gt;:  The Elastic IP address to associate with the instance<br />
+#  * &lt;strong&gt;config_loc&lt;/strong&gt;: the location where your startup package config directories are located<br />
+# * &lt;strong&gt;config:&lt;/strong&gt; the name of the directory containing the startup package for this instance<br />
+# * &lt;strong&gt;var_loc:&lt;/strong&gt; the location of the directory containing temporary data for these scripts</p>
+<p>echo Starting ${config} server</p>
+<p># zip up the config directory for sending to amazon as user data.<br />
+# Zip file must not exceed 16K.</p>
+<p>if [ -f ${var_loc}/${config}.zip ]<br />
+then<br />
+rm ${var_loc}/${config}.zip<br />
+fi</p>
+<p>cd ${config_loc}/${config}</p>
+<p>zip -ru9 ${var_loc}/${config}.zip *</p>
+<p>ls -la ${var_loc}/${config}.zip</p>
+<p>#    Now it's time to start the instance, and then loop until it is running.<br />
+#</p>
+<p># Steps:<br />
+# 1) Start the instance<br />
+# 2) Capture the output so that we can grab the INSTANCE ID field and use it to determine when the instance is running</p>
+<p>echo Launching AMI ${amiid}<br />
+${EC2_HOME}/bin/ec2-run-instances ${amiid} --user-data-file ${var_loc}/${config}.zip -t m1.small -k ${key} --group ${group} --monitoring &amp;gt; ${var_loc}/${config}.ec2<br />
+if [ $? != 0 ]; then<br />
+echo Error starting instance for image ${amiid}<br />
+exit 1<br />
+fi</p>
+<p># Now that the instance has and ID, we need to capture and save it to a file</p>
+<p>export iid=`cat ${var_loc}/${config}.ec2 | grep INSTANCE | cut -f2`</p>
+<p>echo ${iid} &amp;gt; ${var_loc}/${config}.iid</p>
+<p>#<br />
+# Loop until the status changes to .running.<br />
+#<br />
+sleep 30<br />
+echo Starting instance ${iid}</p>
+<p># Define the string we're looking for from ec2-describe-instances to determine running status</p>
+<p>export RUNNING="running"</p>
+<p># Set the running flag to false. As soon as it's running, we'll change the value in the while loop, causing it to exit and move on.</p>
+<p>export done="false"</p>
+<p>while [ $done == "false" ]<br />
+do<br />
+export status=`${EC2_HOME}/bin/ec2-describe-instances ${iid} | grep INSTANCE | cut -f6`<br />
+if [ $status == ${RUNNING} ]; then<br />
+export done="true"<br />
+else<br />
+echo Waiting...<br />
+sleep 10<br />
+fi<br />
+done</p>
+<p># Now that the instance is running, we can tag it with all kinds of stuff.<br />
+${EC2_HOME}/bin/ec2-create-tags ${iid} --tag user=`whoami` --tag origin=0 --tag Name=Wowza Origin</p>
+<p># Capturing the startup IP</p>
+<p>export startip=`${EC2_HOME}/bin/ec2-describe-instances ${iid} | grep INSTANCE | cut -f17`<br />
+echo Instance ${iid} is running at ${startip}</p>
+<p># If you need to attach an EBS volume, this is the place to do it. Uncomment the requisite lines and be sure to define the variables.</p>
+<p>#    Now we have the running instance ID, which we will use going forward. We next attach the EBS volume to the running instance, associating a device name. After we attach the volume, we wait until its status indicates that it is attached.</p>
+<p>#<br />
+# Attach the volume to the running instance<br />
+#<br />
+#    echo Attaching volume ${vol_name}<br />
+#    ${EC2_HOME}/bin/ec2-attach-volume ${vol_name} -i ${iid} -d ${device_name}<br />
+#    sleep 15</p>
+<p>#<br />
+# Loop until the volume status changes<br />
+# to "attached"<br />
+#<br />
+#    export ATTACHED="attached"<br />
+#    export done="false"<br />
+#    while [ $done == "false" ]<br />
+#    do<br />
+#    export status=`${EC2_HOME}/bin/ec2-describe-volumes | grep ATTACHMENT | grep ${iid} | cut -f5`<br />
+#    if [ $status == ${ATTACHED} ]; then<br />
+#    export done="true"<br />
+#    else<br />
+#    echo Waiting...<br />
+#    sleep 10<br />
+#    fi<br />
+#    done<br />
+#    echo Volume ${vol_name} is attached<br />
+#</p>
+<p>## END EBS SECTION</p>
+<p>#    Now we associate the Elastic IP address with the running instance. This capability is important in an environment where instances are being started and stopped at various points for scalability reasons, so these operations will happen with no interruption for the user.</p>
+<p>#<br />
+# Associate the Elastic IP with the instance<br />
+# After this operation we just sleep a bit to let Amazon catch up.<br />
+#<br />
+echo Associating elastic IP address ${ip}<br />
+${EC2_HOME}/bin/ec2-associate-address ${ip} -i ${iid}<br />
+sleep 30</p>
+<p>echo ${iid} &amp;gt; ~/var/wowza_current_instance_${ip}</p>
+<p>echo Image ${amiid} instance ${iid} is ready to go!<br />
+[/bash]</p>
+<p></body></html></p>

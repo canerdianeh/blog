@@ -1,0 +1,217 @@
+---
+layout: post
+title: Browser-aware player code, revisited again
+date: 2012-10-29 17:46:52.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Code
+- streaming
+- Wowza
+tags: []
+meta:
+  _edit_last: '2'
+  _syntaxhighlighter_encoded: '1'
+  dsq_thread_id: '906284334'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2012/10/29/browser-aware-player-code-revisited-again/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>It's the code snippet that just won't go away. I've updated the code for some additional functionality. This version takes server, port, and stream parameters via the URL, parses them in javascript, and then queries a streamcheck HTTPProvider on the server to see if a stream by that name is currently published. If it is, it will load the player, otherwise load a message, and check periodically to see if the stream is published, and load the player if the state changes to true, and unload it if it changes to false, returning to the message. The player is designed to scale to fit whatever window it's in, so make an IFRAME of whatever size you want the player, and you're off and running<br />
+[html]<br />
+&lt;IFRAME SRC="player.html?streamer=wowza.nhicdn.net&amp;port=1935&amp;app=live&amp;stream=livestream" WIDTH="640" HEIGHT="360" SCROLLING="NO" /&gt;<br />
+[/html]</p>
+<p><img src="{{site.baseurl}}/assets/2012/10/Screen-Shot-2012-10-29-at-6.38.37-PM-300x172.png" alt="" title="Screen Shot 2012-10-29 at 6.38.37 PM" width="300" height="172" class="aligncenter size-medium wp-image-1178"><br />
+Without further ado, here's the code:</p>
+<p>[js]</p>
+<p>&lt;body style="margin: 0px; background: black; color: white; font-family: sans-serif;"&gt;<br />
+&lt;div id="videoframe" style="text-align: center;font-size: 14;"&gt;The video stream is currently offline. Playback will resume as soon as a stream is available.&lt;/div&gt;<br />
+&lt;script type="text/javascript" src="/assets/jw5/jwplayer.js"&gt;&lt;/script&gt;<br />
+&lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;<br />
+&lt;script type='text/javascript' src='https://www.google.com/jsapi'&gt;&lt;/script&gt;</p>
+<p>&lt;SCRIPT type="text/javascript"&gt;<br />
+// Browser-aware video player for JW Player and Wowza</p>
+<p>plwd=self.innerWidth;<br />
+plht=self.innerHeight;<br />
+// var debugwindow=document.getElementById("debug")<br />
+// debugwindow.innerHTML='&lt;P&gt;Dimensions: '+plwd+'x'+plht+'&lt;/P&gt;';<br />
+var streamer=getUrlVars()["streamer"];<br />
+var app=getUrlVars()["app"];<br />
+var port=getUrlVars()["port"];<br />
+var stream=getUrlVars()["stream"];<br />
+var server=streamer+':'+port+'/'+app;</p>
+<p>var agent=navigator.userAgent.toLowerCase();<br />
+var is_iphone = (agent.indexOf('iphone')!=-1);<br />
+var is_ipad = (agent.indexOf('ipad')!=-1);<br />
+var is_ipod = (agent.indexOf('ipod')!=-1);<br />
+var is_playstation = (agent.indexOf('playstation')!=-1);<br />
+var is_safari = (agent.indexOf('safari')!=-1);<br />
+var is_blackberry = (agent.indexOf('blackberry')!=-1);<br />
+var is_android = (agent.indexOf('android')!=-1);<br />
+var streamstatus = false;<br />
+var prevstatus = false;<br />
+var curstatus = false;</p>
+<p>streamcheck();<br />
+setInterval(function(){streamcheck()},10000);</p>
+<p>function streamcheck() {<br />
+            $.ajax({<br />
+              type: "GET",<br />
+              url: "http://"+streamer+":8086/streamcheck?stream="+stream,<br />
+             dataType: "json",<br />
+             success: function(result){<br />
+		curstatus = Boolean(result);<br />
+		//if (result === "true") { curstatus = true;}<br />
+		//if (result === "false") { curstatus = false;}<br />
+		if (curstatus == prevstatus) {<br />
+		} else {<br />
+		if (curstatus) {<br />
+			if (is_iphone || is_ipad || is_ipod) { iOSPlayer("videoframe",plwd,plht,server,stream);}<br />
+			else if (is_blackberry) { rtspPlayer("videoframe",plwd,plht,server,stream);}<br />
+			else { flashPlayer("videoframe",plwd,plht,server,stream); }<br />
+			console.log("Changed from false to true");<br />
+		} else {<br />
+			var vframe=document.getElementById("videoframe")<br />
+			if (is_iphone || is_ipad || is_ipod || is_blackberry) {<br />
+			} else {<br />
+				jwplayer("videoframe").remove();<br />
+			}<br />
+			vframe.innerHTML = 'The video stream is currently offline. Playback will resume as soon as a stream is available.';</p>
+<p>			console.log("Changed from true to false");<br />
+		}</p>
+<p>		}<br />
+			prevstatus = curstatus;<br />
+		}<br />
+           });<br />
+}</p>
+<p>function getUrlVars() {<br />
+    var vars = {};<br />
+    var parts = window.location.href.replace(/[?&amp;]+([^=&amp;]+)=([^&amp;]*)/gi, function(m,key,value) {<br />
+        vars[key] = value;<br />
+    });<br />
+    return vars;<br />
+}</p>
+<p>function iOSPlayer(container,width,height,server,stream)<br />
+{<br />
+var player=document.getElementById(container)<br />
+player.innerHTML='&lt;VIDEO controls '+<br />
+'HEIGHT="'+height+'" '+<br />
+'WIDTH="'+width+'" '+<br />
+'title="Live Stream"&gt;'+<br />
+'&lt;SOURCE SRC="http://'+server+'/'+stream+'/playlist.m3u8"&gt; '+<br />
+'&lt;/video&gt;';<br />
+}</p>
+<p>function rtspPlayer(container,width,height,server,stream)<br />
+{<br />
+var player=document.getElementById(container)<br />
+player.innerHTML='&lt;A HREF="rtsp://'+server+'/'+stream+'"&gt;'+<br />
+'&lt;IMG SRC="poster-play.png" '+<br />
+'ALT="Start Mobile Video" '+<br />
+'BORDER="0" '+<br />
+'HEIGHT="'+height+'" '+<br />
+'WIDTH="'+width+'"&gt;'+<br />
+'&lt;/A&gt;';<br />
+}</p>
+<p>function flashPlayer(container,wide,high,server,stream)<br />
+{<br />
+jwplayer(container).setup({<br />
+		height: high,<br />
+		width: wide,<br />
+		streamer: 'rtmp://'+server,<br />
+		file: stream,<br />
+		autostart: true,<br />
+		stretching: 'uniform'<br />
+		});</p>
+<p>}</p>
+<p>&lt;/SCRIPT&gt;<br />
+&lt;/BODY&gt;<br />
+[/js]</p>
+<p>The code for the streamcheck module is as follows:</p>
+<p>[java]<br />
+package net.nerdherd.wms.http;</p>
+<p>import java.io.*;<br />
+import java.util.Iterator;<br />
+import java.util.List;<br />
+import java.util.Map;</p>
+<p>import com.wowza.wms.application.IApplicationInstance;<br />
+import com.wowza.wms.http.*;<br />
+import com.wowza.wms.logging.*;<br />
+import com.wowza.wms.vhost.*;</p>
+<p>public class StreamCheck extends HTTProvider2Base {</p>
+<p>    	public void onHTTPRequest(IVHost vhost, IHTTPRequest req, IHTTPResponse resp) {<br />
+		StringBuffer report = new StringBuffer();<br />
+		StringBuffer streamlist = new StringBuffer();<br />
+		if (!doHTTPAuthentication(vhost, req, resp))<br />
+			return;</p>
+<p>		Map&lt;String, List&lt;String&gt;&gt; params = req.getParameterMap();</p>
+<p>		String stream = "";<br />
+		boolean status = false;<br />
+		boolean listing = false;</p>
+<p>		if (req.getMethod().equalsIgnoreCase("post")) {<br />
+			req.parseBodyForParams(true);<br />
+		}</p>
+<p>		if (params.containsKey("stream"))<br />
+			stream = params.get("stream").get(0);</p>
+<p>		try<br />
+		{<br />
+				if (vhost != null)<br />
+				{</p>
+<p>					List&lt;String&gt; appNames = vhost.getApplicationNames();<br />
+					Iterator&lt;String&gt; appNameIterator = appNames.iterator();<br />
+					while (appNameIterator.hasNext())<br />
+					{<br />
+						try {<br />
+	                        String Name = appNameIterator.next();</p>
+<p>	                        IApplicationInstance NowApp = vhost.getApplication(Name).getAppInstance("_definst_");<br />
+	                        List&lt;String&gt; PublishedNames = NowApp.getPublishStreamNames();<br />
+	                        Iterator&lt;String&gt; ThisPublished = PublishedNames.iterator();<br />
+	                        if ( PublishedNames.size()&gt;0 )<br />
+	                                {<br />
+	                                while ( ThisPublished.hasNext() )<br />
+	                                        {<br />
+	                                        try {<br />
+	                                                String NowPublished = ThisPublished.next();</p>
+<p>	                                                	if (NowPublished.equals(stream)){<br />
+	                                                		status = true;<br />
+	                                                	}</p>
+<p>	                                                 } catch (Exception e) {}<br />
+	                                        }</p>
+<p>	                                }</p>
+<p>	                        } catch (Exception e) {report.append(e.toString()); }<br />
+	                        }<br />
+					}</p>
+<p>		}<br />
+		catch (Exception e)<br />
+		{<br />
+			WMSLoggerFactory.getLogger(HTTPServerVersion.class).error("StreamCheck: " + e.toString());<br />
+			e.printStackTrace();<br />
+		}</p>
+<p>		if (!listing) {<br />
+			if (status){<br />
+				report.append("true");<br />
+		    } else {<br />
+		    	report.append("false");<br />
+		    }<br />
+		}</p>
+<p>		try {<br />
+			resp.setHeader("Content-Type", "text/plain");<br />
+			resp.setHeader("Access-Control-Allow-Origin","*");<br />
+			OutputStream out = resp.getOutputStream();<br />
+			byte[] outBytes = report.toString().getBytes();<br />
+			out.write(outBytes);<br />
+		} catch (Exception e) {<br />
+			WMSLoggerFactory.getLogger(null).error(<br />
+					"MediaCasterHTTP: " + e.toString());<br />
+		}</p>
+<p>	}<br />
+}</p>
+<p>[/java]</p>
+<p></body></html></p>

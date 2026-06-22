@@ -1,0 +1,93 @@
+---
+layout: post
+title: KRACKs in your WiFi
+date:
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: private
+categories:
+- Church IT
+- IT
+- networking
+- Wireless
+tags: []
+meta:
+  _edit_last: '2'
+  _thumbnail_id: '1469'
+  _wpas_done_all: '1'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2017/10/16/kracks-in-your-wifi/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body></p>
+<p>The IT world is waking up this morning to news that there is a fundamental and critical flaw in WPA2, the encryption and security mechanism that is used throughout the wifi world. It's known as a <strong>K</strong>ey <strong>R</strong>einstallation <strong>A</strong>tta<strong>CK</strong>, or KRACK. It was discovered back in March by Mathy VanHoef, who is a security researcher that seems to make a living by poking holes in wifi security. Vendors were notified in July, and the information was embargoed until this morning. VanHoef has created a website <a href="https://www.krackattacks.com/">detailing the KRACK vulnerability</a>.</p>
+<p>This is not a flaw with a particular vendor's implementation, but rather a flaw in the underlying mechanism itself, which means that any standards-compliant implementation of 802.11 likely suffers from this.</p>
+<p>In short, if you have wi-fi devices, you're affected. It seems Linux and Android 6.0+ are particularly sensitive to this.</p>
+<p>So, what are the implications?</p>
+<p>This flaw allows an attacker to decrypt most or all of the data sent over your wifi. Maybe. This is pretty serious stuff. But...</p>
+<p><a href="http://blog.ianbeyer.com/files/2017/10/dontpanic.png"><img class="aligncenter size-full wp-image-1468" src="{{site.baseurl}}/assets/dontpanic.png" alt="dontpanic" width="720" height="501"></a></p>
+<p>No, really. This isn't nearly as huge a deal as it's being portrayed in the media (big shocker there... "WIFI security back to the stone age!!!" makes for better ratings than "Fixable flaw found in wifi".</p>
+<h2>The good news</h2>
+<ul>
+<li>If you're running encryption at the upper application layers, such as HTTPS, etc, all an attacker is going to be able to decrypt are further encrypted communications. Just make sure you pay close attention to certificate authenticity. Essentially, treat your network communications as if you were on the public wifi at Starbucks. Which you should be doing already.</li>
+<li>An attacker has to be in proximity to your network. This does not open you up to Russian hackers and every script kiddie on the Internet. So in order to exploit this vulnerability, the attacker has to be close enough that chasing them off with a shotgun or a dog (or rabbit) full of sharp pointy teeth is within the realm of valid countermeasures.</li>
+<li>This attack DOES NOT COMPROMISE YOUR NETWORK KEY (your wifi password). This is especially important to understand. There are, however, other vulnerabilities that could allow an attacker to compromise a pre-shared key, especially if it's a weak one.</li>
+<li>While this may be a fundamental vulnerability in the way WPA2 works, it is fixable without having to develop an entirely new system. Which means that patches should be coming fast and furious.</li>
+<li>Because this vulnerability was disclosed to vendors a few months ago, many of them already have patches ready to go. Lawrence Abrams of Bleeping Computer is maintaining a <a href="https://www.bleepingcomputer.com/news/security/list-of-firmware-and-driver-updates-for-krack-wpa2-vulnerability/">list of who has released KRACK patches</a>. Ubiquiti released a beta patch a day prior to the announcement. Aruba Networks had one ready to go the day of the announcement for all customers, not just those under maintenance agreements. BSD quietly patched it months ago.</li>
+</ul>
+<p> </p>
+<h2>What you need to do about it</h2>
+<ul>
+<li>As with any computer system, KEEP IT UPDATED. This cannot be emphasized enough.</li>
+<li>Don't forget to patch <em>everything</em> that connects to your Wi-Fi: Tablets, any smart home devices (thermostats, control panels, TVs, voice based assistants such as Alexa, etc. All your Internet of Things... things.)</li>
+<li>Treat wireless networks as if they were public wifi. You should have already been doing this. If you can use a VPN tunnel, do so. This will further encrypt your traffic. Make sure you use HTTPS for any sensitive website interactions, and make sure any e-mail clients are using encrypted methods of sending and receiving (email accounts and passwords sent in the clear are particularly juicy data for an attacker). This is a good practice to get into even if your wifi is locked down.</li>
+<li>
+<span style="color: #bd0606;"><strong>BEWARE OF SHADY VPN SERVICES</strong></span> and others offering easy fixes for cheap. Several have been known to sniff your traffic on their end, because now you conveniently send all your traffic through them and they no longer have to get on your network in order to see your data.</li>
+<li>If it's your home wifi? Relax. You're just not that interesting of a target. Sorry. Besides, you probably already have far bigger holes in your network than this one opens up. You don't know who has your preshared key. Which brings me to...</li>
+<li>Make sure your pre-shared keys (aka, your wifi passwords) are rotated regularly, and are strong. 14 or 15 characters is generally enough to thwart most brute-force attacks. 8 is not. This is not an issue with KRACK per se, but rather with general security posture.</li>
+<li>Don't trust wireless payment terminals (such as those Ziosk tablets you see in many large chain restaurants - although most Ziosk deployments use Aruba APs, and should be patched quickly, it may take a while for the restaurants to get this deployed). But you should have been suspicious of these already. KRACK doesn't make this worse.</li>
+<li>If you have the ability to use WPA2-Enterprise, do so. WPA2-Enterprise is still vulnerable to this attack, but the nature of WPA2-Enterprise helps mitigate other vulnerabilities and dictionary-based attacks. Everyone has their own username and password to authenticate, and then the authentication server sends a new and unique master key for the wifi encryption.</li>
+<li>If you are still using any of the following security methods on your Wi-Fi, stop and switch to WPA2-AES or WPA2-Enterprise:
+<ul>
+<li>WEP (this was broken over a decade ago)</li>
+<li>WPA (relatively easy to capture the network key)</li>
+<li>WPA2 with TKIP</li>
+</ul>
+</li>
+<li>This is a <a href="https://routersecurity.org/wepwpawpa2.php">helpful guide to securing your wireless network</a> from routersecurity.org.</li>
+</ul>
+<h2>If you are a business using Wi-Fi</h2>
+<ul>
+<li>If you are processing payment information over a wireless network (PayPal, Stripe, Square, or any of a number of tablet-based point-of-sale systems), <strong><span style="color: #bd0606;">STOP</span></strong>. This vulnerability is almost certainly problematic for PCI-DSS compliance. If you can, turn off the Wi-Fi and run this over a wire until your infrastructure can be patched. (Yes, you <em>can</em> run wired Ethernet to an iPad!)</li>
+<li>Same if you're processing PHI and fall under HIPAA regulations.</li>
+<li>If you offer a private staff network, use WPA2-Enterprise. Pre-shared keys have a habit of spreading rapidly in the wild</li>
+<li>Make sure all your devices (Infrastructure AND clients) are patched. Tracking this won't be fun. You may decide that this is also good time to do an inventory of your hardware, and track what wifi chipsets they use.</li>
+<li>Do a security audit of your network. It is usually worth hiring an outside firm to run a full audit and penetration test on your infrastructure. You should be doing this already.</li>
+<li>As a general rule, always operate under the assumption that your network has already been penetrated. Keep important and valuable data and systems under lock and key (both physical locks as well as software locks), even if you've figuratively (and literally) locked the front door.</li>
+<li>Invest in an intrusion protection/detection system for your wireless and wired networks. The network should assume the endpoints have been compromised, and the endpoints should assume the network has been compromised.</li>
+</ul>
+<p> </p>
+<h2>Quick Links</h2>
+<ul>
+<li><a href="http://www.revolutionwifi.net/revolutionwifi/2017/10/wpa2-krack-vulnerability-getting-information">Revolution WiFi on KRACK Vulnerability</a></li>
+<li><a href="https://community.ubnt.com/t5/UniFi-Updates-Blog/FIRMWARE-3-9-3-7537-for-UAP-USW-has-been-released/ba-p/2099365">Ubiquiti UniFi firmware 3.9.3.7537</a></li>
+<li><a href="http://www.arubanetworks.com/assets/alert/ARUBA-PSA-2017-007_FAQ_Rev-1.pdf">Aruba Networks Security Bulletin</a></li>
+<li><a href="https://documentation.meraki.com/zGeneral_Administration/Support/802.11r_Vulnerability_(CVE%3A_2017-13082)_FAQ">Cisco Meraki Security Bulletin</a></li>
+<li><a href="http://blog.mojonetworks.com/wpa2-vulnerability">Mojo Networks Blog on KRACK vulnerability</a></li>
+</ul>
+<p></body></html></p>

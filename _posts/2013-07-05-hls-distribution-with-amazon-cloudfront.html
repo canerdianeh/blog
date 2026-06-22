@@ -1,0 +1,36 @@
+---
+layout: post
+title: HLS distribution with Amazon CloudFront
+date: 2013-07-05 09:36:17.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Cloud Computing
+- streaming
+- Wowza
+tags:
+- AWS
+- CDN
+- CloudFront
+meta:
+  _edit_last: '2'
+  _wpas_done_all: '1'
+  dsq_thread_id: '1469728013'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2013/07/05/hls-distribution-with-amazon-cloudfront/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>I've blogged extensively about Wowza RTMP distribution with edge/origin and load balancing, but streaming distribution is moving more to HTTP-based systems such as Apple's HTTP Live Streaming (known inside Wowza as "cupertino"), Adobe's HTTP Dynamic Streaming (Wowza: "sanjose"), and Microsoft's Smooth Streaming (Wowza: "smooth"). Future trends suggest a move to MPEG-DASH, which is a standard based on all three proprietary methods (I'll get into DASH in a future post as the standard coalesces - we're talking bleeding edge here). The common element in all of them, however, is that they use HTTP as a distribution method, which makes it much easier to leverage CDNs that are geared towards non-live content on HTTP. One of these CDNs is Amazon's <a title="Amazon CloudFront" href="http://aws.amazon.com/cloudfront/" target="_blank">CloudFront</a> service. With edges in 41 locations around the world and 12 cents a gigabyte for transfer (pricing may vary by region), it's a good way to get into an HTTP CDN without paying a huge amount of money or committing to a big contract with a provider like Akamai.</p>
+<p>On the player side, JW Player V6 now supports HLS, and you can do Adobe HDS with the Strobe Media Player.</p>
+<p>With the 3.5 release, Wowza Media Server can now act as an HTTP caching origin for any HTTP based CDN, including CloudFront. Doing so is exceedingly simple. First, <a title="How to configure Wowza Media Server as an HTTP caching origin" href="http://www.wowza.com/forums/content.php?457" target="_blank">configure your Wowza server as an HTTP caching origin</a>, and then create a CloudFront distribution (use a "download" type rather than a streaming type - it seems counterintuitive, but trust me on this one!), and then under the origin domain name, put the hostname of your Wowza server. You can leave the rest as defaults, and it will work. It'll take Amazon a few minutes to provision the distribution, but once it's ready, you'll get a URL that looks something like "d1ed7b1ghbj64o.cloudfront.net". You can verify that the distribution is working by opening a browser to that address, and you should see the Wowza version information. Put that same CloudFront URL in the player URL in place of the Wowza server address, and your players will now start playing from the nearest CloudFront edge cache.</p>
+<p>See? Easy.</p>
+<p></body></html></p>

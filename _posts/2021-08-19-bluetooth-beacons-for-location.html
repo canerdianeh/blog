@@ -1,0 +1,136 @@
+---
+layout: post
+title: Bluetooth Beacons for Location
+date: 2021-08-19 15:24:06.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Aruba
+- IoT
+- Location Tech
+- networking
+- Wireless
+tags:
+- BLE
+- location services
+meta:
+  _last_editor_used_jetpack: block-editor
+  _publicize_twitter_user: "@CaNerdIan"
+  _wpas_done_all: '1'
+  _thumbnail_id: '1862'
+  spay_email: ''
+  _wpas_mess: |-
+    #Blogged: Bluetooth Beacon Placement for #LocationServices
+
+    #ArubaMeridian
+  _wpas_is_tweetstorm: ''
+  _edit_last: '2'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2021/08/19/bluetooth-beacons-for-location/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>It's not uncommon for architects and interior designers to get on us wireless guys for cluttering up their aesthetic, so I always try to get on their good side whenever possible. They don't tend to complain about "necessary" stuff like light switches and fire alarms, but for some reason, they never see network infrastructure as "necessary". </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>I'm going to lay out a technical explanation about why we place BLE beacons where we do, while trying to be sensitive to the aesthetic considerations. (See also: <a href="https://nerdian.ca/2019/09/06/hiding-in-plain-sight/" data-type="post" data-id="1615">Hiding In Plain Sight</a>). Aruba's best practices for beacon deployment are documented here: <a href="https://docs.meridianapps.com/hc/en-us/articles/360040136073-Location-Beacon-Deployment-Guide">Location Beacon Deployment Guide – Meridian Platform Documentation (meridianapps.com)</a></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list {"ordered":true} --></p>
+<ol>
+<li>
+<strong>Near The Floor</strong>. Sometimes, the wall finish is such that using adhesives or screws is practically a capital offense. It could be fabric, glass, metal, or whatever. At that point, you'll usually have a baseboard upon which to mount them, just make sure it's not going to get damaged by floor cleaning processes. Another reason to go close to the floor is to use the floor to create a shadow when deploying near an open hole like an atrium or a stairwell. You don't generally want your beacons from one floor being visible on another, as that can really confuse a map that is not aware of floor holes. It's also important to always place a beacon near every “portal” at each floor (doors from stairwells, elevator lobbies, and so forth) so the app knows when you’ve changed floors and to switch maps when navigating. </li>
+<li>
+<strong>On The Wall</strong>. I'll explain in a minute why you want your beacons as close to the user as possible. What this generally means is that you want to go on the wall most of the time. In terms of spacing, you should generally be within 3-4m of a beacon anywhere in the building. Being closer to your beacons will improve accuracy, and greater beacon density will reduce latency (but only to a point, it typically takes 2-5 seconds for the app to get a new fix because it has to listen for all the beacons it can hear) .</li>
+<li>
+<strong>On The Ceiling</strong>. Suboptimal, but works in a pinch. Suboptimal mainly because even standing directly under the beacon, you're usually at least 2m away from it. </li>
+</ol>
+<p><!-- /wp:list --></p>
+<p><!-- wp:image {"align":"center","id":1860,"sizeSlug":"full","linkDestination":"media"} --></p>
+<div class="wp-block-image">
+<figure class="aligncenter size-full"><a href="https://nerdian.ca/files/2021/08/but-why.jpg"><img src="{{site.baseurl}}/assets/2021/08/but-why.jpg" alt="" class="wp-image-1860"></a></figure>
+</div>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>Now for the engineering reasons behind all this: It all comes back to the old friend that wireless engineers everywhere love and cherish: <strong>free space path loss</strong>. Except here, we're making constructive use of it. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Determining distance based on triangulation of beacon RSSI is optimal within about 0-4 metres due to the inverse square law of RF propagation. Typically, the calibrated output of the beacons is 0dBm (1mW). They operate in the 2.4GHz band on a 2MHz advertisement channel tucked between Wi-Fi channels 1 and 6, as well as one just past channel 11, and another one just below channel 1. My colleague Joel Crane <a href="https://www.mist.com/documentation/12-bluetooth-low-energy/">explained BLE frequencies in 60 seconds </a>(when he was at Mist, now he's at <a href="https://hamina.com">Hamina</a> after a brief stint back at <a href="https://metageek.net">Metageek</a>)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>There’s also some variability between receiver devices in terms of their sensitivity and even based on internal antenna configuration and how the device is held/oriented, so let’s just assume it’s +/- 3dB for the purposes of this example because it makes the math simpler. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":1861,"width":840,"height":498,"sizeSlug":"large","linkDestination":"media"} --></p>
+<figure class="wp-block-image size-large is-resized"><a href="https://nerdian.ca/files/2021/08/fspl-v3_1_orig-1.png"><img src="{{site.baseurl}}/assets/2021/08/fspl-v3_1_orig-1-1024x608.png" alt="" class="wp-image-1861" width="840" height="498"></a><br />
+<figcaption>Free Space Path Loss, Illustrated by my good friend and colleague François at <a href="https://semfionetworks.com/blog/free-space-path-loss-diagrams/">Semfio Networks</a></figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>When the receiving device sees a BLE beacon, it then determines its distance from that beacon based on the RSSI (and uses the beacon’s ID to correlate it with the device’s placement on the map). When it sees a beacon at -35dBm, it knows it’s under a metre away. If it sees it at -55dBm, that could be anywhere between 4 and 8 metres away. So the farther you get from the beacon, the wider that margin of error becomes. Any walls that get between can also add 3dB or more of attenuation depending on the materials used. (just like they do with Wi-Fi, since we’re dealing with the same RF frequencies, just at about 1/1000 the power). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Below 1 metre, every time you halve the distance you <em>gain</em> 6dB – so 50cm would be -34dB, 25cm would be -28dB, 12.5cm would be -22dB, and now we’re getting really close to the beacon, and it’s already lost 99% of the transmitted power… Also worth noting here that when you mount them on a metal surface, you gain a little bit back, but if your surface is less than one wavelength (~12cm) wide, the math gets tricky and I won't go into it here. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>What this means for placement is that you want to get them as close to the receiver as possible, usually within 4m. This generally means at a height of 1-2m on walls, and between 40 and 55 inches is ideal, since it avoids hips, shoulders, and carts which could damage the beacon or outright rip it off the wall (and collisions with a hip or shoulder is not fun for the owner of the hips and shoulders either… ask me how I know). They can also be placed on ceilings, but as I pointed out previously, in an office building, that usually means you’re never going to get closer than ~2m to the beacon even if you’re standing directly underneath it.  Beacons near the floor are about a meter closer to the receiving device than the ceiling would. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In a recent deployment, the basic beacon grid (best practice: 10m) was deployed on the structural column wraps, which were spaced about 12m apart. The gaps in the middle of the squares formed by 4 columns were filled in with  AP based beacons (which isn’t always dead center due to some variability in the AP placement within those squares). In the common central areas on each floor, we had to fill some of those gaps with additional beacons to get within about 4-5m and provide greater accuracy due to the various obstructions, as well as place beacons near the areas where traffic enters and exits those spaces. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In locations where there are particular aesthetic concerns, it is usually possible to paint the beacons and their mounts to match, as long as the paint does not contain any metallic materials (lead, aluminum powder, gold leaf, iron oxide, etc.), or you can apply a vinyl skin. This also applies to access points. Check with your vendor to make sure it will not void the warranty (as it tends to do with many vendors). You can also often find snap-on paintable covers for indoor APs if you don’t want to paint them directly. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Applying this to design methodologies</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>So how do you plan out a beacon deployment? Same way you generally would with any RF planning. Ekahau supports modeling BLE access points (although it cannot survey them, much to my annoyance). At this point you want to set your BLE coverage requirements to the RSSI required for the most distance you want to be from the beacon, which is -52dBm, and you want to make sure that within that coverage level, you can always hear at least 3 beacons. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>How it works with clients</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>(added July 2022)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>How Bluetooth beacons work with clients is the subject of a lot of confusion on the part of the end users, especially those who are concerned about tracking, especially with the rise of Apple's AirTags (more on those in a minute) and other personal item trackers. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The good news is that a BLE beacon is nothing more than a small circuit that blips out a small identifier at regular intervals (Aruba beacons do so every second). It has no idea where either it or you are. Generally speaking, the payload of the beacon is very small, consisting of a major ID and a minor ID. Other ancillary data can go in there as well. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"sizeSlug":"large","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2021/08/%25E4%25B8%25BB%25E5%259B%25BE.webp" alt=""><br />
+<figcaption>BLE Beacon Frame Format (source: Mokoblue.com)</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:separator --></p>
+<hr class="wp-block-separator">
+<!-- /wp:separator --></p>
+<p><!-- wp:paragraph --></p>
+<p>The Major ID generally identifies the beacon type, and the Minor ID identifies the individual beacon. If you open up a BLE sniffer, you're surrounded by beacons almost everywhere you go. Your smartphone sees all of them, but if it had to look up what every single one does, it would nuke your battery in very short order. So what happens is that when you install an application that makes use of beacons, it tells the OS (IOS or Android or whatever) that it wants to know about any beacons with a certain Major ID. The OS then asks the user if they want to allow the app to receive data about nearby network devices (IOS, I don't know offhand how Android does it).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Once the app has permission, any time the OS sees a Major ID that has been registered by an app, it will send that beacon info to the app, which then processes the data. Apps like Meridian that do location then have information from the back end that tells it where each beacon is located, and from that, based on the signal strength of the beacon, it can multilaterate the user's location. Waze uses this approach to provide additional location in satellite-weak areas like tunnels. But anyone with an app that knows what to do with a particular beacon can benefit from it. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Which brings me to how Apple AirTags work. Apple has done a really good job of creating an asset tracking solution that ensures the tag owner's privacy. An AirTag is still just a BLE beacon (with some extra stuff), and the Find My app has registered the Major IDs with the OS (from the factory - and it doesn't have any special access to the OS). Where AirTag got really clever, is the Minor ID/payload is the owner's public key (which is unique to that specific tag). This keypair is generated when the tag is activated If it's detected by someone other than the owner, that device takes its location (from whatever source the OS location services has), the signal strength, and the time, and encrypts that using the public key, and uploads it to Apple's servers. Only the owner of the tag who has the private half of that key pair (stored in the device's TPM) can decrypt the payload. And if a particular device sees someone else's tag with a constant signal strength as the device moves around, after a while (an hour or two) it will determine that someone may be using a tag to track you and warns you. A few months ago, my daughter went on a school band trip and borrowed my suitcase, which still had an AirTag buried in it from a recent trip to Europe. About halfway across Iowa, almost 100 kids in three separate buses (including my daughter) simultaneously got an alert on their iPhones that an AirTag might be following them. They all found this incredibly amusing. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Tile's product works in a very similar manner, but I don't know if it does the encryption thing (which is likely patented by Apple). Apple's product benefits from a much broader client detection base due to Find My being installed on every iPhone, so anyone with an iPhone can see and handle an AirTag. Handling a Tile beacon requires the Tile app to be installed (and some bluetooth devices like headphones are able to be located with Tile), which limits the reach. As far as I know, there's nothing that would prevent Tile from adopting the Find My device spec. There have also been some Proof-of-Concept deployments where BLE-capable infrastructure such as Aruba Wi-Fi can also report these types of beacons back to their respective service providers. </p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>

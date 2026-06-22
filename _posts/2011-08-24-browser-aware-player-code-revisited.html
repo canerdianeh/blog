@@ -1,0 +1,68 @@
+---
+layout: post
+title: Browser-aware player code, revisited
+date: 2011-08-24 09:09:46.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- streaming
+- Wowza
+tags:
+- flash
+- HTML5
+- JWPlayer
+meta:
+  _edit_last: '1'
+  wp_plus_one_redirect: ''
+  dsq_thread_id: '394760834'
+  _googl_shortlink: http://goo.gl/vVgrR
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2011/08/24/browser-aware-player-code-revisited/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>I posted a while back about <a title="Browser-Aware Player code" href="http://blog.ianbeyer.com/code/browser-aware-player-code/" target="_blank">selecting video players based on browsers</a>... It was an ugly javascript hack, and since then <a title="Longtail Video" href="http://longtailvideo.com" target="_blank">LongTail</a> has updated their excellent <a title="JW Player" href="http://www.longtailvideo.com/players/" target="_blank">JWPlayer</a> to support multiple methods. In order to create an embed that worked best for supporting both HTML5 and Flash players, I had to dig through the documentation a little bit, and combine a couple of different sections.</p>
+<p>Here's how to embed JWPlayer 5.7 to try flash first, with multiple bitrates, and then attempt HTML5 if Flash is not supported. This particular scenario is for iOS support.</p>
+<p>[js]<br />
+&lt;script type="text/javascript" src="jwplayer.js"&gt;&lt;/script&gt;</p>
+<p>&lt;div id="container"&gt;Loading the player ...&lt;/div&gt;</p>
+<p>&lt;script type="text/javascript"&gt;<br />
+        jwplayer("container").setup({<br />
+                height: 360,<br />
+                width: 480,<br />
+                image: "http://server.com/images/thumbnail.jpg",<br />
+                skin: "bekle.zip",<br />
+                modes: [<br />
+                        {<br />
+                        type: "flash",<br />
+                        src: "player.swf",<br />
+                        config: {<br />
+                                levels: [<br />
+                                        { bitrate: 250, file: "playlist-low", width: 320 },<br />
+                                        { bitrate: 500, file: "playlist-high", width: 480 }<br />
+                                        ],<br />
+                                streamer: "rtmp://streamer.com:1935/live",<br />
+                                provider: "rtmp"<br />
+                                }<br />
+                        },<br />
+                        {<br />
+                        type: "html5",<br />
+                        config: {<br />
+                                file: "http://streamer.com/live/ipad.smil/playlist.m3u8"<br />
+                                }<br />
+                        } ]<br />
+                }<br />
+        );<br />
+&lt;/script&gt;<br />
+[/js]</p>
+<p>This still doesn't support RTSP and other HTML5  fallbacks due to limitations in JWPlayer, so if you're on a BlackBerry, you'll still need to switch the player. The order that the "type" statements appear in the javascript determines the order in which they'll be tried. Generally, you'll want to try Flash first, otherwise browsers that support HTML5 but not Apple's HTTP Live Streaming (which is pretty much all of them), will default to the HTML5 player, but be unable to get the stream. You can, however, provide multiple video sources with different codecs (for on-demand content) to support the different flavors of browsers, though.</p>
+<p></body></html></p>

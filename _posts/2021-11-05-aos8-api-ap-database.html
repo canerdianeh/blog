@@ -1,0 +1,280 @@
+---
+layout: post
+title: 'ArubaOS 8 API: AP Database'
+date: 2021-11-05 16:18:58.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Aruba
+- Code
+- Wireless
+tags:
+- Python
+meta:
+  _last_editor_used_jetpack: block-editor
+  _publicize_twitter_user: "@CaNerdIan"
+  _edit_last: '2'
+  _wpas_skip_19898087: '1'
+  _wpas_done_all: '1'
+  _cs_replacements: a:1:{s:7:"sidebar";s:7:"sidebar";}
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2021/11/05/aos8-api-ap-database/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>In my previous posts about the ArubaOS API, I've given a general framework for pulling data from the AOS Mobility Conductor or a Mobility Controller. Today I'm going to show how to retrieve the AP database and dump it into a CSV file which you can then open in Excel or anything else and work all kinds of magic (yes, I know, Excel is not a database engine, but it still works rather well with tabular data)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The long-form AP database command (<strong>show ap database long</strong>) provides lots of useful information about the APs in the system: </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>AP Name</li>
+<li>AP Group</li>
+<li>AP Model</li>
+<li>AP IP Address</li>
+<li>Status (and uptime if it's up)</li>
+<li>Flags</li>
+<li>Switch IP (primary AP Anchor Controller)</li>
+<li>Standby IP (standby AAC)</li>
+<li>AP Wired MAC Address</li>
+<li>AP Serial #</li>
+<li>Port</li>
+<li>FQLN</li>
+<li>Outer IP (Public IP when it is a RAP)</li>
+<li>User</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>This script will take the human-readable uptime string ("100d:12h:34m:28s") and convert that to seconds so uptime can be sorted in your favorite spreadsheet. It will also create a grid of all the AP flags so that you can sort/filter on those after converting the CSV to a data table. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The code is extensively commented so you should be able to follow along. Also <a href="https://github.com/canerdianeh/aruba-campus/blob/main/apdb2csv.py">available on github</a>. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code lang="python" class="language-python">#!/usr/bin/python3
+
+# ArubaOS 8 AP Database to CSV output via API call
+# (c) 2021 Ian Beyer, Aruba Networks &lt;canerdian@hpe.com&gt;
+# This code is provided as-is with no warranties. Use at your own risk. 
+
+import requests
+import json
+import csv
+import sys
+import warnings
+import sys
+import xmltodict
+import datetime
+
+
+aosDevice = "1.2.3.4"
+username = "admin"
+password = "password"
+httpsVerify = False
+
+outfile="outputfilename.csv"
+
+
+#Set things up
+
+if httpsVerify == False :
+    warnings.filterwarnings('ignore', message='Unverified HTTPS request')
+
+baseurl = "https://"+aosDevice+":4343/v1/"
+
+
+headers = {}
+payload = ""
+cookies = ""
+
+session=requests.Session()
+## Log in and get session token
+
+loginparams = {'username': username, 'password' : password}
+response = session.get(baseurl+"api/login", params = loginparams, headers=headers, data=payload, verify = httpsVerify)
+jsonData = response.json()['_global_result']
+
+if response.status_code == 200 :
+
+    #print(jsonData['status_str'])
+    sessionToken = jsonData['UIDARUBA']
+
+else :
+    sys.exit("Login Failed")
+
+reqParams = {'UIDARUBA':sessionToken}
+
+def showCmd(command, datatype):
+    showParams = {
+        'command' : 'show '+command,
+        'UIDARUBA':sessionToken
+            }
+    response = session.get(baseurl+"configuration/showcommand", params = showParams, headers=headers, data=payload, verify = httpsVerify)
+ 
+    if datatype == 'JSON' :
+        #Returns JSON
+        returnData=response.json()
+    elif datatype == 'XML' :
+        # Returns XML as a dict
+        returnData = xmltodict.parse(response.content)['my_xml_tag3xxx']
+    elif datatype == 'Text' :
+        # Returns an array
+        returnData =response.json()['_data']
+    return returnData
+
+apdb=showCmd('ap database long', 'JSON')
+
+# This is the list of status flags in 'show ap database long'
+
+apflags=['1','1+','1-','2','B','C','D','E','F','G','I','J','L','M','N','P','R','R-','S','U','X','Y','c','e','f','i','o','s','u','z','p','4']
+
+# Create file handle and open for write. 
+with open(outfile, 'w') as csvfile:
+ write=csv.writer(csvfile)
+ 
+ # Get list of data fields from the returned list
+ fields=apdb['_meta']
+ 
+ # Add new fields for parsed Data
+ fields.insert(5,"Uptime")
+ fields.insert(6,"Uptime_Seconds")
+ 
+ # Add fields for expanding flags
+ for flag in apflags:
+  fields.append("Flag_"+flag)
+ write.writerow(fields)
+ 
+ # Iterate through the list of APs
+ for ap in apdb["AP Database"]:
+ 
+   # Parse Status field into status, uptime, and uptime in seconds
+   utseconds=0
+   ap['Uptime']=""
+   ap['Uptime_Seconds']=""
+   
+   # Split the status field on a space - if anything other than "Up", it will only contain one element, first element is status description. 
+   status=ap['Status'].split(' ')
+   ap['Status']=status[0]
+
+   # Additional processing of the status field if the AP is up as it will report uptime in human-readable form in the second half of the Status field we just split
+   if len(status)&gt;1:
+    ap['Uptime']=status[1]
+
+    #Split the Uptime field into each time field and strip off the training character, multiply by the requisite number of seconds an tally it up. 
+    timefields=status[1].split(':')
+    # If by some stroke of luck you have an AP that's been up for over a year, you might have to add a row here - I haven't seen how it presents it in that case
+    if len(timefields)&gt;3 :
+        days=int(timefields.pop(0)[0:-1])
+        utseconds+=days*86400
+    if len(timefields)&gt;2 :
+        hours=int(timefields.pop(0)[0:-1])
+        utseconds+=hours*3600
+    if len(timefields)&gt;1 :
+        minutes=int(timefields.pop(0)[0:-1])
+        utseconds+=minutes*60
+    if len(timefields)&gt;0 :
+        seconds=int(timefields.pop(0)[0:-1])
+        utseconds+=seconds
+    ap['Uptime_Seconds']=utseconds
+
+   # FUN WITH FLAGS
+   # Bust apart the flags into their own fields 
+   for flag in apflags:
+
+    # Set field to None so that it exists in the dict
+    ap["Flag_"+flag]=None
+    
+    # Check to see if the flags field contains data
+    if ap['Flags'] != None :
+
+     # Iterate through the list of possible flags and mark that field with an X if present
+     if flag in ap['Flags'] :
+      ap["Flag_"+flag]="X"
+   
+   # Start assembling the row to write out to the CSV, and maintain order and tranquility. 
+   datarow=[]
+
+   # Iterate through the list of fields used to create the header row and append each one
+   for f in fields:
+    datarow.append(ap[f])
+
+   # Put it in the CSV 
+   write.writerow(datarow)
+
+   #Move on to the next AP
+
+# Close the file handle
+csvfile.close()
+
+## Log out and remove session
+
+response = session.get(baseurl+"api/logout", verify=False)
+jsonData = response.json()['_global_result']
+
+if response.status_code == 200 :
+
+    #remove 
+    token = jsonData['UIDARUBA']
+    del sessionToken
+
+else :
+    del sessionToken
+    sys.exit("Logout failed:")</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:paragraph --></p>
+<p>The human-readable output of the <strong>show ap database</strong> gives you a list of what the flags are, but the API call does not, so in case you want a handy reference, here it is in JSON format so that you can easily adapt it. (<a href="https://github.com/canerdianeh/aruba-campus/blob/main/apflags.json">Github</a>)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code lang="json" class="language-json">sheldon={
+'1':'802.1x authenticated AP use EAP-PEAP',
+'1+':'802.1x use EST',
+'1-':'802.1x use factory cert',
+'2':'Using IKE version 2',
+'B':'Built-in AP',
+'C':'Cellular RAP',
+'D':'Dirty or no config',
+'E':'Regulatory Domain Mismatch',
+'F':'AP failed 802.1x authentication',
+'G':'No such group',
+'I':'Inactive',
+'J':'USB cert at AP',
+'L':'Unlicensed',
+'M':'Mesh node',
+'N':'Duplicate name',
+'P':'PPPoe AP',
+'R':'Remote AP',
+'R-':'Remote AP requires Auth',
+'S':'Standby-mode AP',
+'U':'Unprovisioned',
+'X':'Maintenance Mode',
+'Y':'Mesh Recovery',
+'c':'CERT-based RAP',
+'e':'Custom EST cert',
+'f':'No Spectrum FFT support',
+'i':'Indoor',
+'o':'Outdoor',
+'s':'LACP striping',
+'u':'Custom-Cert RAP',
+'z':'Datazone AP',
+'p':'In deep-sleep status',
+'4':'WiFi Uplink'
+}</code></pre>
+<p><!-- /wp:code --><br />
+</body></html></p>

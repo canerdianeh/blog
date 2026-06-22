@@ -1,0 +1,114 @@
+---
+layout: page
+title: Load Balancer Server Monitor (perl/CGI)
+date: 2011-09-07 19:27:27.000000000 -05:00
+type: page
+parent_id: '948'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '1'
+  wp_plus_one_redirect: ''
+  _wp_page_template: default
+  dsq_thread_id: '407791612'
+  _googl_shortlink: http://goo.gl/a8bvS
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: admin
+  email: ian@nerdherd.net
+  display_name: Site Administrator
+  first_name: Site
+  last_name: Administrator
+permalink: "/code/backend/load-balancer-server-monitor/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>[perl]<br />
+#!/usr/bin/perl<br />
+use strict;<br />
+print "Content-type: text/htmlnn";<br />
+print "&lt;HEAD&gt;n&lt;TITLE&gt;Load Balancer Status&lt;/TITLE&gt;n&lt;/HEAD&gt;n&lt;BODY&gt;n";<br />
+print "&lt;style type="text/css"&gt; np.normal {color: white; background-color: green;} np.warning {color: black; background-color: yellow;} np.danger {color: white; background-color: red;}np#total {font:bold;}&lt;/STYLE&gt;n";</p>
+<p># use module<br />
+use XML::Simple;<br />
+use Data::Dumper;<br />
+use LWP::UserAgent;<br />
+use Scalar::Util 'reftype';</p>
+<p># Poll Origin server for list of active edge servers</p>
+<p>my $lb_ua = new LWP::UserAgent;<br />
+my $lb_url = "http://wms.rezonline.org:1935/loadbalancer?serverInfoXML";<br />
+my $lb_req = new HTTP::Request GET =&gt; $lb_url;<br />
+my $lb_res = $lb_ua-&gt;request($lb_req);<br />
+my $lb_xml = new XML::Simple;<br />
+my $lb_data = $lb_xml-&gt;XMLin($lb_res-&gt;content);<br />
+my @lb_ip;<br />
+my %connections;<br />
+my %status;<br />
+my $total=0;<br />
+my $running=0;<br />
+my $capacity=250;</p>
+<p># Dump raw XML (for debugging)<br />
+# print Dumper($lb_data);</p>
+<p># check reference type:<br />
+# if HASH, only single server is running, and XML returns without an array wrapping single element<br />
+# if ARRAY, multiple servers, each one inside an array element.</p>
+<p>my $reference = reftype $lb_data-&gt;{LoadBalancerServer};        # Check to see how to handle this...</p>
+<p>if ( $reference eq 'ARRAY' )<br />
+{<br />
+for my $lb_server (@{$lb_data-&gt;{LoadBalancerServer}})<br />
+{<br />
+push @lb_ip, $lb_server-&gt;{redirect};<br />
+$connections{$lb_server-&gt;{redirect}} = $lb_server-&gt;{connectCount};<br />
+$status{$lb_server-&gt;{redirect}} = $lb_server-&gt;{status};<br />
+}<br />
+}</p>
+<p>elsif ( $reference eq 'HASH' )<br />
+{<br />
+if ($lb_data-&gt;{LoadBalancerServer}-&gt;{status} eq "RUNNING")<br />
+{<br />
+push @lb_ip, $lb_data-&gt;{LoadBalancerServer}-&gt;{redirect};<br />
+$connections{$lb_data-&gt;{LoadBalancerServer}-&gt;{redirect}} = $lb_data-&gt;{LoadBalancerServer}-&gt;{connectCount};<br />
+$status{$lb_data-&gt;{LoadBalancerServer}-&gt;{redirect}} = $lb_data-&gt;{LoadBalancerServer}-&gt;{status};</p>
+<p>}<br />
+}</p>
+<p>else {<br />
+print "unknown reference type - abortingn";<br />
+}</p>
+<p>my $arraysize = @lb_ip;<br />
+my $style;<br />
+foreach (@lb_ip) {</p>
+<p>my $load = ($connections{$_} / $capacity)*100;<br />
+if ($load &gt; 85) {<br />
+$style = "danger";<br />
+}<br />
+elsif ( $load &gt;75) {<br />
+$style = "warning";<br />
+}<br />
+else    {<br />
+$style = "normal";<br />
+}</p>
+<p>if ($status{$_} eq "RUNNING") {<br />
+if ($_ eq "50.19.92.63") { print "&lt;I&gt;"; }<br />
+print "&lt;P class="$style"&gt;Repeater $_ is $status{$_} with $connections{$_} connections ($load %)&lt;/P&gt;n";<br />
+if ($_ eq "50.19.92.63") { print "&lt;/I&gt;"; }<br />
+$total += $connections{$_};<br />
+$running ++;<br />
+}<br />
+}<br />
+my $load = ($total / ($running * $capacity)) * 100;</p>
+<p>if ($load &gt; 85) {<br />
+$style = "danger";<br />
+}<br />
+elsif ( $load &gt;75) {<br />
+$style = "warning";<br />
+}<br />
+else    {<br />
+$style = "normal";<br />
+}</p>
+<p>print "&lt;P id="total" class="$style"&gt;Total of $total connections on $running active servers ($load %)&lt;/P&gt;n";</p>
+<p>print "&lt;/BODY&gt;n&lt;/HTML&gt;";<br />
+[/perl]</p>
+<p></body></html></p>

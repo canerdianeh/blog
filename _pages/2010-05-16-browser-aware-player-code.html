@@ -1,0 +1,121 @@
+---
+layout: page
+title: Browser-Aware Player code
+date: 2010-05-16 17:59:47.000000000 -05:00
+type: page
+parent_id: '940'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  dsq_thread_id: '217880314'
+  _edit_last: '2'
+  wp_plus_one_redirect: ''
+  _wp_page_template: default
+  _googl_shortlink: http://goo.gl/by9mS
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/code/client/browser-aware-player-code/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>Note: <a href="http://blog.ianbeyer.com/2011/08/24/browser-aware-player-code-revisited/">As of late 2011, there's a better way to do this now.</a><br />
+<img class="alignright size-medium wp-image-771" title="Player-flowchart" src="{{site.baseurl}}/assets/2010/05/Player-flowchart-137x300.png" alt="" width="137" height="300"></p>
+<p>Code to insert a player inside a div (named <em>videoframe</em> in this case). This will present either an instance of JW Player version 5 (default), JW Player version 4 for PlayStation (which do not have Flash 10), an HTML5 video element in the case of iPhone/iPad devices, and a graphic (that looks like JW Player for a consistent UX) hyperlinked to an RTSP feed for Android/BlackBerry/WebOS devices or an MMS feed for IE Mobile devices. David Walsh also has a post about how to <a title="Browser Detection in PHP" href="http://davidwalsh.name/detect-ipad" target="_blank">do it with PHP</a></p>
+<p>[js]<br />
+&lt;div id="videoframe"&gt;&lt;/div&gt;</p>
+<p>&lt;SCRIPT type="text/javascript"&gt;<br />
+// Browser-aware video player for JW Player and Wowza<br />
+// V0.2 - June 2, 2010<br />
+// (c)2010 Ian Beyer<br />
+// Released under the GPL</p>
+<p>var agent=navigator.userAgent.toLowerCase();<br />
+var is_iphone = (agent.indexOf('iphone')!=-1);<br />
+var is_ipad = (agent.indexOf('ipad')!=-1);<br />
+var is_playstation = (agent.indexOf('playstation')!=-1);<br />
+var is_safari = (agent.indexOf('safari')!=-1);<br />
+var is_iemobile = (agent.indexOf('iemobile')!=-1);<br />
+var is_blackberry = (agent.indexOf('blackberry')!=-1);<br />
+var is_android = (agent.indexOf('android')!=-1);<br />
+var is_webos = (agent.indexOf('webos')!=-1);</p>
+<p>if (is_iphone) { html5Player();}<br />
+else if (is_ipad) { html5Player(); }<br />
+else if (is_android) { rtspPlayer(); }<br />
+else if (is_webos) { rtspPlayer(); }<br />
+else if (is_blackberry) { rtspPlayer(); }<br />
+else if (is_iemobile) { windowsPlayer(); }<br />
+else if (is_playstation) { oldJWPlayer(); }<br />
+else { newJWPlayer(); }</p>
+<p>function html5Player()<br />
+{<br />
+var player=document.getElementById("player")<br />
+player.innerHTML='&lt;VIDEO '+<br />
+'SRC="http://wowza2:1935/live/stream/playlist.m3u8" '+<br />
+'HEIGHT="480" '+<br />
+'WIDTH="640" '+<br />
+'poster="poster.png" '+<br />
+'title="Live Stream"&gt;'+<br />
+'&lt;/video&gt;';<br />
+}</p>
+<p>function rtspPlayer()<br />
+{<br />
+var player=document.getElementById("player")<br />
+player.innerHTML='&lt;A HREF="rtsp://wowza2:1935/live/stream"&gt;'+<br />
+'&lt;IMG SRC="player-fake.png" '+<br />
+'ALT="Start Mobile Video" '+<br />
+'BORDER="0" '+<br />
+'HEIGHT="480" '+<br />
+'WIDTH="640"&gt;'+<br />
+'&lt;/A&gt;';<br />
+}</p>
+<p>function windowsPlayer()<br />
+{<br />
+var player=document.getElementById("player")<br />
+player.innerHTML='&lt;A HREF="mms://windows/pubpoint"&gt;'+<br />
+'&lt;IMG SRC="player-fake.png" '+<br />
+'ALT="Start Windows Mobile Video" '+<br />
+'BORDER="0" '+<br />
+'HEIGHT="480" '+<br />
+'WIDTH="640"&gt;'+<br />
+'&lt;/A&gt;';<br />
+}</p>
+<p>function oldJWPlayer()<br />
+{<br />
+var so = new SWFObject('player-45.swf','mpl','640','480','8');<br />
+so.addParam('allowfullscreen','true');<br />
+so.addParam('allowscriptaccess','always');<br />
+so.addParam('wmode','opaque');<br />
+so.addVariable('autostart', 'false');<br />
+so.addVariable('type', 'rtmp');<br />
+so.addVariable('streamer','rtmp://wowza-origin:1935/redirect');<br />
+so.addVariable('file','stream');<br />
+so.addVariable('controlbar','over');<br />
+so.addVariable('dock','true');<br />
+so.addVariable('image','poster.png');<br />
+so.write('player');<br />
+}</p>
+<p>function newJWPlayer()<br />
+{<br />
+var so = new SWFObject('player-5.swf','mpl','640','480','10');<br />
+so.addParam('allowfullscreen','true');<br />
+so.addParam('allowscriptaccess','always');<br />
+so.addParam('wmode','opaque');<br />
+so.addVariable('autostart', 'false');<br />
+so.addVariable('type', 'rtmp');<br />
+so.addVariable('streamer','rtmp://wowza-origin:1935/redirect');<br />
+so.addVariable('file','stream');<br />
+so.addVariable('controlbar','over');<br />
+so.addVariable('dock','true');<br />
+so.addVariable('image','poster.png');<br />
+so.write('player');<br />
+}</p>
+<p>&lt;/SCRIPT&gt;<br />
+[/js]</p>
+<p></body></html></p>

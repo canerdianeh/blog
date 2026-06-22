@@ -1,0 +1,125 @@
+---
+layout: post
+title: Tag, You're It!
+date:
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags: []
+meta:
+  _last_editor_used_jetpack: block-editor
+  _publicize_twitter_user: "@CaNerdIan"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>Since their introduction in April of 2021, Apple's <a href="https://amzn.to/3MHp3F5" data-type="URL" data-id="https://amzn.to/3MHp3F5">AirTags</a> have been gaining popularity among IOS users (I love mine!). True to form, Apple was not the first to market with this type of device, preferring to let someone else (namely, <a href="https://www.tile.com/en-ca/how-it-works" data-type="URL" data-id="https://www.tile.com/en-ca/how-it-works">Tile</a>, which was started via crowdfunding in 2013 - I used <a href="https://amzn.to/3CIbq3P" data-type="URL" data-id="https://amzn.to/3CIbq3P">Tile</a> before I used AirTags) take the risk of determining if there was a consumer market for Bluetooth-based tracking tags. BLE-based asset tracking tags had been around in commercial applications such as Meridian for a few years already, edging out RFID and WiFi RTLS for convenience and cost. Once it became clear that there was indeed solid consumer demand for such a product, Apple set about figuring out a way to give the product mass market appeal, which it seems to have done quite successfully (as they so often do). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>They're great for tracking your luggage while traveling, or figuring out where you left your wallet/keys/whatever (and notifying you that you left them behind before getting too far down the road!). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>How It Works</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>It's important to understand that due to an inherent need to run for long periods of time (about a year) on a battery tiny enough to make the tag useful, these devices must be very simple, very small, and consume as little energy as possible. This means they contain no GPS receiver, no cellular radio, and no Wi-Fi. This also means that the tag used to track whatever it is you want to track does not actually know where it is, whether in relative or absolute terms. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Bluetooth Low Energy (BLE) allows devices to send out a periodic advertising beacon that contains up to 255 octets of payload. As is the case with Wi-Fi, the payload contains information about the device, its capabilities (just a beacon, or is it a headset, or something else?). This beacon will generally contain an identifier of some sort. This happens on one of three 1MHz-wide advertising channels in the 2.4 GHz band - one below the wifi band, one above, and one in the middle, conveniently tucked between wifi channels 1 and 6 (which is another good reason to not use Wi-Fi channels 2 through 5!)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":1943,"sizeSlug":"large","linkDestination":"media"} --></p>
+<figure class="wp-block-image size-large"><a href="https://nerdian.ca/files/2022/10/bluetooth.jpeg"><img src="{{site.baseurl}}/assets/bluetooth-1024x519.jpeg" alt="" class="wp-image-1943"></a><br />
+<figcaption>Bluetooth and 2.4 GHz Wi-Fi (<a href="https://www.allaboutcircuits.com/projects/troubleshooting-tools-bluetooth-LE-project-ubertooth-Nordic-nRF-sniffer/" data-type="URL" data-id="https://www.allaboutcircuits.com/projects/troubleshooting-tools-bluetooth-LE-project-ubertooth-Nordic-nRF-sniffer/">All About Circuits</a>)</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>So all a tracking tag is doing all the time is sending out a little beacon saying "Hello, can anyone hear me? I am a device!" Meanwhile, other devices are constantly listening on Bluetooth. When one is seen, The device makes a note of the identifier, and the signal strength (and in a few rare cases, t<a href="https://www.bluetooth.com/blog/new-aoa-aod-bluetooth-capabilities/">he angle relative to the device that the signal came in at</a>). All day long. If an application on that device has registered with the operating system and said "I want to know about every Bluetooth beacon that matches this particular pattern!", the OS will then pass on relevant beacons to that app, which may do more with it - the OS itself truly doesn't care. In the case of the Tile app (and since Tile's acquisition by Life360 in 2021, the Life360 app, which significantly expanded the footprint of devices that can "see" Tile trackers), it's interested in seeing beacon data from Tile tags. Likewise with AirTags and the Find My app. Navigation apps such as Waze or Aruba Meridian can listen for specific identifiers and correlate them to known locations for those tags, to provide location inside spaces that don't get satellite signals. The key thing here is that the OS doesn't really know anything about the beacons other than the fact they exist. Everything else happens in application space which requires explicit user permission for the app to access the data coming from the OS.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Once Tile/AirTag get the beacon from the OS, they report the beacon back to the tracking service along with the time and location of the device that heard it, and any pertinent signal information. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This is where AirTag gets clever with its implementation: Apple really didn't want to have access to a giant tracking database of AirTag things and their locations, and the privacy implications that came with that. So when you set up an AirTag on an iCloud account, it generates an asymmetric public/private key pair, just like you would use for any one of a number of cryptographic processes. The private key is stored in the user's iCloud account (which is itself encrypted), and the public key is sent to the AirTag. When an iPhone with the Find My app installed (which is literally all of them), it takes the phone's location, the time, and the tag identifier, and then uses the public key in the payload to encrypt the whole thing before sending it to Apple's servers, which stores the encrypted data along with an identifier tying it back to the tag owner's iCloud account. Only the tag owner with the private key has the ability to request and decrypt that data (not even Apple can read it). The app then locally computes the last seen location of the tag and shows it to the user (and also provides some mechanisms to locate the tag or send instructions to it, but that's beyond the scope of this post). And since tag processing is part of the Find My app that is loaded on every IOS device by default, the pool of devices that can see the tags is vast. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>From a technical standpoint, there's really nothing that would prevent Apple from making the Find My app available on Android and make it such that pretty much every mobile phone on the planet could receive and report an AirTag. There's also very little in the way of Tile embracing the <a href="https://www.apple.com/newsroom/2021/04/apples-find-my-network-now-offers-new-third-party-finding-experiences/" data-type="URL" data-id="https://www.apple.com/newsroom/2021/04/apples-find-my-network-now-offers-new-third-party-finding-experiences/">Find My accessory device spec</a> and leveraging Apple's installed base (which would admittedly have some very interesting implications for the very existence of the Life360 app)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2><strong>Flaws in the system</strong></h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:image {"align":"right","id":1944,"width":317,"height":512,"sizeSlug":"large","linkDestination":"media"} --></p>
+<figure class="wp-block-image alignright size-large is-resized"><a href="https://nerdian.ca/files/2022/10/IMG_4817.png"><img src="{{site.baseurl}}/assets/IMG_4817-634x1024.png" alt="" class="wp-image-1944" width="317" height="512"></a><br />
+<figcaption>Sometimes Apple overreacts a bit...</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>As has been fairly well publicized in the media, a few bad actors have tried to use AirTags for nefarious purposes, including stalking people. To counter this, Apple has added to the processing in Find My that if it sees the same identifier for someone else's tag, with a constant signal strength, as you go about your daily business, you get an alert (the results can be unintentionally hilarious, when my youngest was on a school trip last year, and somewhere in the middle of Iowa, the iPhones of a bunch of students in four different buses all simultaneously alerted that an AirTag was following them... She had grabbed a suitcase that has one of my AirTags buried deep in a pocket somewhere). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Apple has done a solid job of discouraging bad actors (activating a tag requires an iCloud account, which normally requires positive confirmation of its owner, which also discourages stalking as someone with a StalkAirTag can be identified reasonably quickly and prosecuted. But enough about the intentional misuse. There are a few issues with the implementation of the tech. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Location, Location, Location</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>The big caveat to the entire AirTag and Tile ecosystems is that because the tags themselves have no location ability of their own, the system relies on good location data in phones that observe BLE tags in the wild. And as we'll see in a minute, accurate location is not always a given. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":4} --></p>
+<h4>How Location Services Work on Apple IOS</h4>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Since precision timing is central to the function of modern digital cellular systems, every digital cellular handset and base station has had the ability to receive satellite navigation signals. This is because navigation satellite constellations (collectively referred to as Global Navigation Satellite Systems) such as GPS (USA), Galileo (EU), GLONASS (Russia), and the regional systems in Asia (India, China, Japan) are in essence little more than very precise clocks that broadcast that information in a standard format. GNSS receiver chipsets since about 2010 generally support all the systems, and can use a mix of the satellites to derive a position. On IOS, the internal GNSS receiver updates about once a second. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>IOS also supports the ability to use an external dedicated GNSS receiver that updates more frequently. This can be connected via Bluetooth or a hardwired connection which is commonly found in automotive CarPlay systems, as more frequent updates are vital to accuracy when moving faster than walking or on a bicycle. Bluetooth systems such as my <a href="https://amzn.to/3D7pPYU" data-type="URL" data-id="https://amzn.to/3D7pPYU">Garmin GLO</a> are designed for aviation use (pilots love their iPads) and update 10 times a second, which is suitable for subsonic jet speeds. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In any case, GNSS currently only has a positional accuracy of 2-5 metres, which is not ideal for indoor use. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":4} --></p>
+<h4>Where it gets a little screwy... </h4>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>What happens when you don't have a GNSS signal to work with? This situation typically happens when you're in a tunnel (or a cave), a tall building, a basement, a commercial airplane, or a ship. This also happens on devices that simply don't have a GNSS receiver, like an iPad that lacks a cellular radio. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>From the the humble beginnings of IOS on iPod Touch, Apple has used a database of Wi-Fi BSSIDs with known locations to triangulate user location based on RSSI (and actually made the device's seen BSSID data available to app developers until IOS13). Initially, with the iPod Touch, they used a third-party vendor called <a href="https://www.skyhook.com/" data-type="URL" data-id="https://www.skyhook.com/">SkyHook</a> (now part of Qualcomm), until they developed their own system which was implemented around the time the OG iPhone was released. Skyhook still allows system operators and developers to submit the location of a BSSID in order to update their database. Apple does not allow this, but their system is constantly self-updating in the background. I haven't been able to confirm the specifics of how it works, but i've been able to observe some of its behaviour and deduce the following:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>When there is a mismatch between GNSS based location and BSSID location, it does some kind of internal sanity check to decide which one is more likely to be correct. This may also involve looking up the geolocation of the device's public IP address (which is pretty hit or miss these days). If it determines that the GNSS data is the most likely to be correct, it reports that location to the user and in the background, informs the Apple database of new location for those BSSIDs that it can see. Likewise if it does this with IP based data. This can get really interesting if you're on a satellite-based Internet system such as <a href="https://starlink.com" data-type="URL" data-id="https://starlink.com">Starlink</a> (which does offer self-published live geolocation of its user terminal IP addresses, as described in <a href="https://www.rfc-editor.org/rfc/rfc8805" data-type="URL" data-id="https://www.rfc-editor.org/rfc/rfc8805">RFC 8805</a> but not all providers subscribe to this yet). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>It can also get real interesting if the entire network is on the move, such as inside an airliner or a cruise ship. As best I can tell, current systems such as Apple and Skyhook lack the ability to identify a group of BSSIDs as being part of a common network (as well as the ability to identify that group such as an IMO number or an aircraft registration), or even that it is a network that is in motion. This makes it difficult to adjust its algorithms to perform a different sanity check for those networks. Currently, there are no defined methods (proprietary or standard) for communicating absolute or relative location inside an 802.11 beacon frame, so devices can't simply get location information from the network, although this is changing with <a href="https://www.electronicdesign.com/technologies/test-measurement/article/21173642/litepoint-how-bluetooth-51-uwb-and-wifi-80211az-empower-the-next-frontier-of-microlocation">802.11az</a>. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":4} --></p>
+<h4>The implications...</h4>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Of course, all this complicated stuff going on behind the scenes means that if you're inside the ship, your device will think your location is whatever it was at the last update (and whatever the locally cached data on the phone has, in case you have no internet connectivity at all). Often that lags a few port calls behind. On an airplane, it just straight up can't figure it out because that data is constantly changing. And that means that AirTags won't work so well in that environment. It can't say "Your AirTag was last seen aboard aircraft <a href="https://en.wikipedia.org/wiki/Gimli_Glider" data-type="URL" data-id="https://en.wikipedia.org/wiki/Gimli_Glider">C-GAUN</a>" or "You left your wallet behind in cabin 6789 of <a href="https://www.celebritycruises.com/cruise-ships/celebrity-beyond" data-type="URL" data-id="https://www.celebritycruises.com/cruise-ships/celebrity-beyond">Celebrity Beyond</a>". </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>But let's set aside the convenience of tracking your stuff for a moment - poor quality indoor location data has implications with regards to Wi-Fi calling and being able to access emergency services and get them to the correct location (if you're in a 45-story building, which floor you're on is of vital importance to getting a timely response). Or being able to find an accessible route to somewhere. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":4} --></p>
+<h4>How do we make it better? </h4>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>With many modern access points supporting Bluetooth, if the AP itself is aware of its location in both relative and absolute terms (as it is with <a href="https://www.arubanetworks.com/products/location-services/" data-type="URL" data-id="https://www.arubanetworks.com/products/location-services/">Aruba's OpenLocation and self-locating APs</a>), the infrastructure itself should be able to report any tags it sees. This way you're not necessarily relying on someone with an iPhone or the Tile app passing within Bluetooth range of that bag you left behind, the infrastructure itself can tell you (and even in your house, you don't always know what level or room to start looking for the wallet you set down somewhere for the umpteenth time, if your APs can help, it makes it a lot easier to find!</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>We also need device and infrastructure makers to support new network-based indoor location technologies. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>

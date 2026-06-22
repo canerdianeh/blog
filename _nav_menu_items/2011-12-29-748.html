@@ -1,0 +1,32 @@
+---
+layout: nav_menu_item
+title: ''
+date: 2011-12-29 04:51:20.000000000 -06:00
+type: nav_menu_item
+parent_id: '272'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _menu_item_type: post_type
+  _menu_item_menu_item_parent: '749'
+  _menu_item_object_id: '282'
+  _menu_item_object: page
+  _menu_item_target: ''
+  _menu_item_classes: a:1:{i:0;s:0:"";}
+  _menu_item_xfn: ''
+  _menu_item_url: ''
+author:
+  login: admin
+  email: ian@nerdherd.net
+  display_name: Site Administrator
+  first_name: Site
+  last_name: Administrator
+permalink: "/2011/12/29/748/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>#!/usr/bin/perl use Net::Amazon::EC2; my $ec2 = Net::Amazon::EC2-&gt;new( AWSAccessKeyId =&gt; ‘XXXX’, SecretAccessKey =&gt; ‘XXXX’ ); my $running_instances = $ec2-&gt;describe_instances; foreach my $reservation (@$running_instances) { foreach my $instance ($reservation-&gt;instances_set) { my $instance_id = $instance-&gt;instance_id; my $result = $ec2-&gt;terminate_instances(InstanceId =&gt; $instance_id); print “terminating” . $instance_id . “n”; } } Alternate method in bash: #!/bin/bash export JAVA_HOME=/usr export EC2_HOME=/opt/ec2/tools export EC2_PRIVATE_KEY=/root/ec2/pk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.pem export EC2_CERT=/root/ec2/cert-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.pem echo “Terminating Origin Server…” if test -f /root/ec2/origin.iid then date &gt;&gt; /root/term.log /opt/ec2/tools/bin/ec2-terminate-instances `cat /root/ec2/origin.iid` &gt;&gt; /root/term.log else echo “Instance ID not found!” fi</p>
+<p></body></html></p>

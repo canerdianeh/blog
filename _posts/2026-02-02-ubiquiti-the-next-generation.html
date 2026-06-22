@@ -1,0 +1,68 @@
+---
+layout: post
+title: 'Ubiquiti: The Next Generation'
+date: 2026-02-02 23:22:40.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags:
+- InstantON
+- networking
+- ubiquiti
+- wi-fi
+meta:
+  _last_editor_used_jetpack: block-editor
+  _edit_last: '2'
+  _wpas_done_all: '1'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2026/02/02/ubiquiti-the-next-generation/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>(Apologies, this was stuck in the draft queue for a hot minute, I mean, year... )<br><br>OK, so it's been a few months since my original post about the new generation of Ubiquiti gear, but in that time I started a new job that has me traveling every other week, and so I've been swamped with work and less time to work on my home network. But I finally got a week off and performed the long-awaited overhaul to the home network and the lab.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>My existing Aruba InstantON network (Wifi 6, 3x AP22 and 1xAP11D, and a 1930 switch) was beginning to be problematic and requiring everything to be rebooted periodically for the wifi to keep working happily. I was also having some issues with my IoT devices communicating with their motherships through the OPNsense gateway I was using (because using the InstantON AP11D as a router is... not great). And since I now have multiple devices that support 6GHz, I decided it was time to take all that out and put in the shiny new Wifi 7 gear that Ubiquiti sent me back in May. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Now, I was already quite familiar with Unifi, having deployed a considerable amount of it over the years, and my current job has me deploying Ubiquiti 60GHz gear. Since the Wifi was Layer 2 only, the first thing I did was deploy the <a href="https://techspecs.ui.com/unifi/unifi-cloud-gateways/udm-se">Dream Machine Pro SE</a>. I racked it, plugged it in to power, and into one of the ports on my ISP hardware. Provisioning the system with the mobile app on my iPhone was quick and easy, and I was able to replicate the multiple VLANs and subnets I had on the OPNsense box. once I validated that they were working correctly, I moved the InstantON switch uplink from the OPNsense box to the Dream Machine. This transition was almost completely seamless, because the DHCP server on the Dream Machine will ping any IP address being requested by a client before issuing it, to prevent duplicate IPs. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>So at this point, I've got the core of the network and the routing moved over to the Ubiquiti gateway. Since the InstantON wifi and switch weren't handling anything at Layer 3, they didn't really notice anything different. Everything was humming along smoothly. Next step was to deploy the <a href="https://techspecs.ui.com/unifi/switching/usw-pro-max-24-poe">24-port Pro Max switch</a>. The Pro Max line supports 2.5 Gigabit Ethernet (although only on 8 ports) and PoE++ (on 16 ports). Downside: It's not readily apparent from looking at the unit which ports are 2.5G (17-24, and identified by a very small gray bar below the ports that blends in to the chassis metal color). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>But these switches also support Ubiquiti's EtherLighting, which has an RGB LED located inside the port and shines out through clear patch cable ends and boots. I had suggested/requested something like this from another switch vendor over a decade ago, but it was dismissed as "not useful, because colorless ports are the future". I'm here to tell you that not only does this make the switches look really freaking cool, but it's also very useful in that the color can be configured to show either the link speed or the native VLAN on the port. It would be nice if there were additional options such as PoE status/draw, traffic utilization, or simply just make them whatever color I want. It shows this color on the status lights of the SFP+ ports as well. Sadly, the Dream Machine does not have this feature, and its 8 ports are only gigabit. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Once the switch got provisioned, I started moving stuff over from the InstantON switch, after a quick provisioning of the ports for the IoT network, and then moved the AP patches over to the 2.5G PoE++ ports. One thing I noticed was that my LG washer and dryer, which had lost their connection during a power outage and never were able to recover it (they were able to connect to the LAN, but not their notoriously flaky backend cloud service), both came online in the app, suggesting that there was something in the routing or firewall on OPNsense that was blocking them from reaching their mothership.  </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Other IOT stuff (most of which is wired) was popping up in the UniFi dashboard right away, and the system was correctly identifying the types of device. It knew what my Hue bridge and Lutron bridge were without any additional configuration. There's some device fingerprinting going on there that seems to be quite good. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>And then the last step, once the AP ports were repatched to the switch, was to go upstairs and do the AP swap. At least for the two I had APs for. Ubiquiti's included mounting plate is vastly better than the mounting option on the InstantOn, which is a badly rehashed version of Aruba's 2XX and 3XX mounting solution. The Ubiquiti mounting plate is metal and predrilled for a 3.5" round electrical box, which is what one of the locations terminates to, and which I will be installing at the other fairly soon. A quick swap of those APs and removal of the AP11D in the living room, and they were quickly provisioned and running. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Once the APs were up, it was time for the requisite speed test, and while my internet connection is nominally 500 Mbps, Ubiquiti's hardware and Wifiman app allow for a local speed test. The new 6GHz capability was quickly in evidence, and ridiculously fast. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>

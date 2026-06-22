@@ -1,0 +1,121 @@
+---
+layout: post
+title: Multi-Tenant/IP Hosting for Wowza Streaming Engine
+date: 2014-04-16 11:04:33.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- networking
+- streaming
+- Wowza
+tags: []
+meta:
+  _edit_last: '2'
+  _wpas_done_all: '1'
+  dsq_thread_id: '2616756111'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2014/04/16/multi-tenant-hosting-for-wowza/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body><br />
+<a href="http://blog.ianbeyer.com/files/2014/04/self-support-multi-tenant.jpeg"><img class="alignright size-medium wp-image-1266" alt="" src="{{site.baseurl}}/assets/2014/04/self-support-multi-tenant-225x300.jpeg" width="225" height="300"></a>For most users, running Wowza Media Server/Wowza Streaming Engine (which I'll refer to as just "Wowza") are perfectly content running it out of the box as is on a dedicated server. Where it gets a little more interesting is when you have to co-exist with other server applications that want some of the same ports (I'm lookin' at YOU, web servers!).</p>
+<p>By default, Wowza binds itself to all available IP addresses on ports 1935 (RTMP, but will also take HTTP requests on that port), 8086 (for some basic management functions), 8083 and 8084 (for JMX), and with WSE4, 8087 (REST) and 8088 (WSE Manager). It won't bind itself to port 80 specifically <em>because</em> of the common problem of co-existing with web servers. If you have Wowza enabled for IPv6, it will also bind to all available IPv6 addresses on the same ports.</p>
+<p>This technique is also good for reducing surface area, where you can have remote management such as SSH or RDP listening on one address, and someone scanning your streaming server IP won't find any open management ports to attempt to exploit.</p>
+<h2><!--more--></h2>
+<h2>Use Case: Web server on one IP address, Wowza on another</h2>
+<p>This is probably the simplest thing to do, where your ISP or colocation provider gives you the option of more than one IP address. You can also use multiple physical interfaces, if available. If you want to send web traffic out one gigabit port, and streaming traffic out another, Wowza doesn't really care about the hardware side, so assign your addresses to hardware interfaces in the operating system.</p>
+<p>To lock Wowza down to a particular IP address, there are three places you need to make configuration changes:</p>
+<h3>conf/Server.xml</h3>
+<p>In the Server.xml file, you're defining the bind address for JMX and REST API management.</p>
+<pre>&lt;RESTInterface&gt; 
+ &lt;Enable&gt;true&lt;/Enable&gt;
+ &lt;IPAddress&gt;*&lt;/IPAddress&gt;
+ &lt;Port&gt;8087&lt;/Port&gt;
+ [...]
+&lt;/RESTInterface&gt;</pre>
+<p>Simply change the IPAddress parameter to the address you want to bind it to. There's also no reason that I know of why you can't set this one strictly to localhost/127.0.0.1 so that your REST API isn't exposed to the world.</p>
+<p>Do the same in the CommandInterface section:</p>
+<pre>&lt;CommandInterface&gt;
+ &lt;HostPort&gt;
+  &lt;ProcessorCount&gt;${com.wowza.wms.TuningAuto}&lt;/ProcessorCount&gt;
+  &lt;IpAddress&gt;*&lt;/IpAddress&gt;
+  &lt;Port&gt;8083&lt;/Port&gt;
+ &lt;/HostPort&gt;
+&lt;/CommandInterface&gt;</pre>
+<p>Then under JMXRemoteConfiguration (if enabled), change the IpAddress and RMIServerHostName:</p>
+<pre>&lt;JMXRemoteConfiguration&gt;
+ &lt;Enable&gt;false&lt;/Enable&gt;
+ &lt;IpAddress&gt;localhost&lt;/IpAddress&gt; &lt;!-- set to localhost or internal ip address if behind NAT --&gt;
+ &lt;RMIServerHostName&gt;localhost&lt;/RMIServerHostName&gt; &lt;!-- set to external ip address or domain name if behind NAT --&gt;
+ &lt;RMIConnectionPort&gt;8084&lt;/RMIConnectionPort&gt;
+ &lt;RMIRegistryPort&gt;8085&lt;/RMIRegistryPort&gt;
+ [...]
+&lt;/JMXRemoteConfiguration&gt;</pre>
+<p>Likewise this one can be left on localhost so as not to expose JMX to the world.</p>
+<h3>conf/VHost.xml</h3>
+<p>Next stop is the VHost.xml configuration file which specifies where Wowza listens for actual streaming traffic.</p>
+<p>Each &lt;HostPort&gt; section will have an &lt;IpAddress&gt; block that defaults to *:</p>
+<pre>&lt;HostPort&gt;
+ &lt;Name&gt;Default Streaming&lt;/Name&gt;
+ &lt;Type&gt;Streaming&lt;/Type&gt;
+ &lt;ProcessorCount&gt;${com.wowza.wms.TuningAuto}&lt;/ProcessorCount&gt;
+ &lt;IpAddress&gt;69.4.233.200&lt;/IpAddress&gt;
+ &lt;!-- Separate multiple ports with commas --&gt;
+ &lt;!-- 80: HTTP, RTMPT --&gt;
+ &lt;!-- 554: RTSP --&gt;
+ &lt;Port&gt;1935&lt;/Port&gt;
+ [...]
+&lt;/HostPort&gt;</pre>
+<p>Do this for all HostPort sections.</p>
+<p>Finally, you'll need to tell the manager to listen on the IP as well.</p>
+<h3>manager/bin/startmgr.{bat|sh}</h3>
+<p>In the batch file (Windows) or the shell script (Linux/OSX), look for the line that begins with <strong>CMD</strong> and add the following parameter to the end:</p>
+<pre>--httpListenAddress=1.2.3.4</pre>
+<p>If you've changed the REST API address from its default of *, you'll get an error on the login screen:</p>
+<p><a href="http://blog.ianbeyer.com/files/2014/04/Screen-Shot-2014-04-16-at-11.50.17-AM.png"><img class="aligncenter size-medium wp-image-1263" alt="" src="{{site.baseurl}}/assets/2014/04/Screen-Shot-2014-04-16-at-11.50.17-AM-210x300.png" width="210" height="300"></a></p>
+<p>In this case, you'll need to tell the manager where to look for the server by clicking on the <strong>[+] Server </strong>link:</p>
+<p style="text-align: center;"><a href="http://blog.ianbeyer.com/files/2014/04/Screen-Shot-2014-04-16-at-11.51.37-AM.png"><img class="aligncenter  wp-image-1264" alt="Screen Shot 2014-04-16 at 11.51.37 AM" src="{{site.baseurl}}/assets/2014/04/Screen-Shot-2014-04-16-at-11.51.37-AM-300x292.png" width="210" height="204"></a></p>
+<p>(Tip: you can also use this to manage multiple Wowza Streaming Engine instances from a single installed manager)</p>
+<h2>Use Case: Wowza on Multiple IP addresses (but not all)</h2>
+<p>There are some situations where you'd want Wowza to listen on multiple addresses, but not all available addresses. An example of this would be where the base IP and management port of the machine are on a 100Mbps interface, and you've added a 4-port gigabit NIC to the system for streaming traffic. Another use case would be IPv6.</p>
+<p>One limitation of the Wowza software is that while you can have a comma-separated list of ports in the configuration files to bind multiple ports, you don't have that luxury for IP addresses. Practically speaking, this means all your stuff in Server.xml and the manager startup are restricted to either a single IP or all of them (unfortunately, this also means that as of right now, you cannot tell the manager to listen on a specific IPv4 address AND a specific IPv6 address).</p>
+<p>In VHost.xml, adding an additional IP is a matter of creating an additional HostPort section with the new IP (v4 or v6). With Wowza V3 and below, this can make tuning a little interesting, just make sure you don't give Wowza more processor cores than you actually have available, or the system performance will suffer. Another caveat to remember here is that if you make a change in the HTTPProviders on one IP's HostPort section, don't forget to do it for all the other IPs, or you'll tear your hair out wondering why it works only part of the time.</p>
+<p>As of 4.0.3, the manager doesn't deal with this kind of configuration very well, so you will likely still need to manually edit configuration files from time to time.</p>
+<h2>Use Case: Separating management from streaming</h2>
+<p>This is more or less a hybrid of the previous approaches. If you have your system configured for a management IP, you can configure your Server.xml and manager, along with the port 8086 stuff in VHost.xml to listen on the management address, and then all the streaming stuff on ports 80, 554, 1935 can listen on the streaming address(es).</p>
+<h2>Use Case: IPv6</h2>
+<p>Wowza can be configured to listen on IPv6 by changing the startup parameters.</p>
+<h3>Version 3</h3>
+<p>in bin/setenv.{sh|bat}, change the JAVA_OPTS line from</p>
+<p>-Djava.net.preferIPv4Stack=true</p>
+<p>to</p>
+<p>-Djava.net.preferIPv4Stack=false</p>
+<h3>Version 4</h3>
+<p>in conf/Tune.xml, similar process:</p>
+<pre>&lt;VMOptions&gt;
+ &lt;VMOption&gt;-server&lt;/VMOption&gt;
+ &lt;VMOption&gt;-Djava.net.preferIPv4Stack=true&lt;/VMOption&gt;
+ &lt;!-- &lt;VMOption&gt;-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="${com.wowza.wms.AppHome}/logs"&lt;/VMOption&gt; --&gt;
+ &lt;!-- &lt;VMOption&gt;-Duser.language=en -Duser.country=US -Dfile.encoding=Cp1252&lt;/VMOption&gt; --&gt;
+ &lt;!-- &lt;VMOption&gt;-verbose:gc -Xloggc:"${com.wowza.wms.AppHome}/logs/gc_${com.wowza.wms.StartupDateTime}.log" -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGCApplicationStoppedTime&lt;/VMOption&gt; --&gt;
+&lt;/VMOptions&gt;</pre>
+<h2>Use Case: Multi-tenant Virtual Hosts</h2>
+<p>This is essentially the same as above, except each defined VHost has its own configuration files, stored in a location determined by the entry in conf/VHosts.xml. Naturally, anything defined in conf/Server.xml doesn't apply to VHosts.</p>
+<p>In my ideal world, you'd be able to define one or more addresses allocated to each VHost in VHosts.xml, and then the VHost.xml for each of those VHosts could use "*" and be restricted to only those addresses, but that's not currently an option. Instead, You need to set up the IP address for each one in the VHost.xml as described earlier. Same caveat applies for tuning.</p>
+<h2>Testing:</h2>
+<p>Once you've configured your IP addresses, you should see something like this in your access log:</p>
+<pre>2014-04-16	10:42:36	CDT	comment	server	INFO	200	-	RESTServer: Bind attempt ([3.4.5.6]:8087)	-	-	-	1.912	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+2014-04-16	10:42:36	CDT	comment	server	INFO	200	-	RESTServer: Bind successful ([3.4.5.6]:8087)	-	-	-	2.209	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+2014-04-16	10:42:45	CDT	comment	vhost	INFO	200	_defaultVHost_	Bind attempt (3.4.5.6:1935:16)	-	-	-	11.073	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+2014-04-16	10:42:45	CDT	comment	vhost	INFO	200	_defaultVHost_	Bind successful (3.4.5.6:1935)	-	-	-	11.078	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+2014-04-16	10:42:45	CDT	comment	vhost	INFO	200	_defaultVHost_	Bind attempt (3.4.5.6:8086:4)	-	-	-	11.081	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+2014-04-16	10:42:45	CDT	comment	vhost	INFO	200	_defaultVHost_	Bind successful (3.4.5.6:8086)	-	-	-	11.084	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-</pre>
+<p>If you don't see a successful bind, it will tell you what caused the failure.</body></html></p>

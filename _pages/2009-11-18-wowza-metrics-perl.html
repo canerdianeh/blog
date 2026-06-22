@@ -1,0 +1,93 @@
+---
+layout: page
+title: Wowza stats collector with RRD (perl)
+date: 2009-11-18 15:50:45.000000000 -06:00
+type: page
+parent_id: '948'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  dsq_thread_id: '218351026'
+  _edit_last: '1'
+  _wp_page_template: default
+  s2mail: 'yes'
+  _googl_shortlink: http://goo.gl/qVgZ3
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/code/backend/wowza-metrics-perl/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>This perl script connects to a Wowza origin server and the connectioncounts.xml HTTPProvider function and extracts current connection counts at an interval specified on the command line (defaults every 10 seconds). Commandline options to write to an RRD file and silent operation. RRD file used in this example is <a title="RRD File Structure" href="http://blog.ianbeyer.com/code/stream-counter-rrd-structure" target="_blank">described over here</a>. This can be graphed with <a title="RRD Graphing Commands" href="http://blog.ianbeyer.com/code/rrd-graphing" target="_blank">these commands</a>.</p>
+<p>[perl]<br />
+#!/usr/bin/perl<br />
+use strict;</p>
+<p># use module<br />
+use XML::Simple;<br />
+use Data::Dumper;<br />
+use LWP::UserAgent;<br />
+use Getopt::Std;<br />
+use RRDs;</p>
+<p>my $interval=0;<br />
+my $rrd_file="/var/rrd/streams-2011.rrd";</p>
+<p>our($opt_r,$opt_q,$opt_i,$opt_s);<br />
+getopts('rqi:s:');</p>
+<p># Command-line options:<br />
+#<br />
+# -i &lt;seconds&gt;      Specifies polling interval<br />
+# -q                Silent operation (for running in a cron job)<br />
+# -r                Outputs to RRD<br />
+# -s &lt;server&gt;       Specifies server to poll</p>
+<p># Set default interval<br />
+if (!$opt_i) { $interval = 10; } else { $interval = $opt_i; }</p>
+<p>!$opt_s &amp;&amp; die('Please specify a server to query');</p>
+<p>while (1) {</p>
+<p>my $ua = new LWP::UserAgent;<br />
+$ua-&gt;timeout(10);</p>
+<p># Set up connection<br />
+my $wowza_url = "http://$opt_s:1935/connectioncounts.xml";<br />
+my $wowza_request = new HTTP::Request GET =&gt; $wowza_url;<br />
+my $wowza_result = $ua-&gt;request($wowza_request);</p>
+<p># create object</p>
+<p>my $hlssum = 0;<br />
+my $rtspsum = 0;<br />
+my $flashsum = 0;<br />
+my $iphonesum = 0;<br />
+my @streamcount = 0;<br />
+my %namecount = 0;</p>
+<p>if($wowza_result-&gt;is_success) {<br />
+ my $wowza_xml = new XML::Simple;<br />
+ my $wowza_data = $wowza_xml-&gt;XMLin($wowza_result-&gt;content);<br />
+ my $loopindex = 0;<br />
+ #Loop through all Streams</p>
+<p> for my $stream (@{$wowza_data-&gt;{VHost}-&gt;{Application}-&gt;{ApplicationInstance}-&gt;{Stream}})<br />
+  {<br />
+   $loopindex++;<br />
+   $flashsum += $stream-&gt;{SessionsFlash};<br />
+   $hlssum += $stream-&gt;{SessionsCupertino};<br />
+   $rtspsum += $stream-&gt;{SessionsRTSP};<br />
+   $streamcount[$loopindex] = $stream-&gt;{SessionsFlash} + $stream-&gt;{SessionsCupertino} + $stream-&gt;{SessionsRTSP};<br />
+   $namecount{$stream-&gt;{Name}} = $streamcount[$loopindex];<br />
+  }<br />
+ } else {<br />
+  !$opt_q &amp;&amp; print " [ERR] ";<br />
+ }</p>
+<p># You'll need to alter the %namecount hashes here to accomodate for your own stream names. </p>
+<p>$opt_r &amp;&amp; RRDs::update("/var/rrd/streams-2011.rrd","N:$namecount{'mobile-1'}:$namecount{'mobile-2'}:$hlssum:$rtspsum:$flashsum:$namecount{'ipad.smil'}:$namecount{'mobile.smil'}");<br />
+if (!$opt_q) { $opt_r &amp;&amp; print "[RRD] "; }</p>
+<p>!$opt_q &amp;&amp; print "[ F: $flashsum: H $hlssum : R $rtspsum ]";<br />
+!$opt_q &amp;&amp; print "[ Low: $namecount{'mobile-1'} High: $namecount{'mobile-2'} ]";<br />
+!$opt_q &amp;&amp; print "[ iOS: $namecount{'ipad.smil'} Roku: $namecount{'mobile.smil'} ]";<br />
+!$opt_q &amp;&amp; print "[ StreamClass | High: $namecount{'playlist-high'} Low: $namecount{'playlist-low'} ]n";</p>
+<p>sleep($interval);<br />
+}<br />
+[/perl]</p>
+<p></body></html></p>

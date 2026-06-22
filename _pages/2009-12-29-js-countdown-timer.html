@@ -1,0 +1,103 @@
+---
+layout: page
+title: JavaScript Countdown Timer
+date: 2009-12-29 21:22:20.000000000 -06:00
+type: page
+parent_id: '940'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '1'
+  _wp_page_template: default
+  dsq_thread_id: '217880176'
+  _googl_shortlink: http://goo.gl/GCzFr
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/code/client/js-countdown-timer/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>I don't know who wrote the original script this is based on. I've modified it some.</p>
+<p><strong>Usage:</strong><br />
+[js]<br />
+&lt;div id="tzcdtimer" align="center" class="cdtimer"&gt;<br />
+&lt;/div&gt;</p>
+<p>&lt;script language="JavaScript"&gt;</p>
+<p>// ****  Time Zone Count Down Javascript  **** //</p>
+<p>////////// CONFIGURE THE COUNT DOWN SCRIPT //////////////////</p>
+<p>var month = '1';     //  use '*' for next month; '0' for this month; or 1 thru 12 for the month<br />
+var day = '3';       //  insert a number 1-31 for the day of month<br />
+var hour = '10';        //  insert 0 thru 23 for the hour of the day the service starts<br />
+var min = 45;        //  set to 0 if the service starts on the hour. Set to 30 (or 45, etc.) if the service begins at xx:30.<br />
+var tz = '-6';         //  Offset for Resurrection's timezone in hours from UTC - CST is -6; CDT is -5<br />
+var event = 'Our next worship service'; // What is displayed in the message<br />
+var onair = 'ON AIR!'; // On Air message</p>
+<p>&lt;/script&gt;<br />
+&lt;script language="JavaScript" src="tzcountdown.js"&gt;&lt;/script&gt;<br />
+Code:</p>
+<p>var lab = 'tzcdtimer';    //  The id of the page entry that shows the timezone countdown</p>
+<p>function start() {displayTZCountDown(setTZCountDown(month,day,hour,min,tz,event,onair),lab);}</p>
+<p>// **    The start function can be changed if required   **<br />
+window.onload = start;</p>
+<p>//////////  DON'T EDIT PAST THIS LINE //////////////////</p>
+<p>function setTZCountDown(month,day,hour,min,tz)<br />
+{<br />
+var toDate = new Date();<br />
+if (month == '*')toDate.setMonth(toDate.getMonth() + 1);<br />
+else if (month &gt; 0)<br />
+{<br />
+if (month &lt;= toDate.getMonth())toDate.setYear(toDate.getYear() + 1);<br />
+toDate.setMonth(month-1);<br />
+}<br />
+if (day.substr(0,1) == '+')<br />
+{var day1 = parseInt(day.substr(1));<br />
+toDate.setDate(toDate.getDate()+day1);<br />
+}<br />
+else{toDate.setDate(day);<br />
+}<br />
+toDate.setHours(hour);</p>
+<p>toDate.setMinutes(0-(tz*60-min));</p>
+<p>toDate.setSeconds(0);<br />
+var fromDate = new Date();<br />
+fromDate.setMinutes(fromDate.getMinutes() + fromDate.getTimezoneOffset());<br />
+var diffDate = new Date(0);<br />
+diffDate.setMilliseconds(toDate - fromDate);<br />
+return Math.floor(diffDate.valueOf()/1000);<br />
+}<br />
+function displayTZCountDown(countdown,tzcd)<br />
+{<br />
+// if (countdown &lt; 0) document.getElementById(tzcd).innerHTML = "ON AIR!";<br />
+if (countdown &lt; 0) document.getElementById(tzcd).innerHTML = onair;<br />
+else {var secs = countdown % 60;<br />
+if (secs &lt; 10) secs = '0'+secs;<br />
+var countdown1 = (countdown - secs) / 60;<br />
+var mins = countdown1 % 60;<br />
+if (mins &lt; 10) mins = '0'+mins;<br />
+countdown1 = (countdown1 - mins) / 60;<br />
+var hours = countdown1 % 24;<br />
+var days = (countdown1 - hours) / 24;<br />
+// document.getElementById(tzcd).innerHTML = '&lt;span id="count"&gt;' + days + '&lt;/span&gt; day' + (days == 1 ? '' : 's') + ', &lt;span id="count"&gt;' +hours+ '&lt;/span&gt; hours, &lt;span id="count"&gt;' +mins+ '&lt;/span&gt; minutes, and &lt;span id="count"&gt;'+secs+'&lt;/span&gt; seconds.';<br />
+if (days &gt; 0 ) {<br />
+	document.getElementById(tzcd).innerHTML = event + ' begins in &lt;span id="count"&gt;' + days + '&lt;/span&gt; day' + (days == 1 ? '' : 's') + ', &lt;span id="count"&gt;' +hours+ '&lt;/span&gt; hour' + (hours == 1 ? '' : 's') +', &lt;span id="count"&gt;' +mins+ '&lt;/span&gt; minute'+  (mins == 1 ? '' : 's') + ', and &lt;span id="count"&gt;'+secs+'&lt;/span&gt; second' + (secs == 1 ? '' : 's');<br />
+	}<br />
+else {<br />
+	if (hours &gt;0) {<br />
+		document.getElementById(tzcd).innerHTML = event + ' begins in &lt;span id="count"&gt;' +hours+ '&lt;/span&gt; hour' + (hours == 1 ? '' : 's') +', &lt;span id="count"&gt;' +mins+ '&lt;/span&gt; minute'+  (mins == 1 ? '' : 's') + ', and &lt;span id="count"&gt;'+secs+'&lt;/span&gt; second' + (secs == 1 ? '' : 's');<br />
+		}<br />
+	else {<br />
+		document.getElementById(tzcd).innerHTML = event + ' begins in &lt;span id="count"&gt;' +mins+ '&lt;/span&gt; minute'+  (mins == 1 ? '' : 's') + ' and &lt;span id="count"&gt;'+secs+'&lt;/span&gt; second' + (secs == 1 ? '' : 's');<br />
+		}</p>
+<p>	}</p>
+<p>setTimeout('displayTZCountDown('+(countdown-1)+',''+tzcd+'');',999);<br />
+}<br />
+}<br />
+[/js]</p>
+<p></body></html></p>

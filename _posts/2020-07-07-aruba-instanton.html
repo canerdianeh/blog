@@ -1,0 +1,189 @@
+---
+layout: post
+title: 'Hands On: Aruba InstantON'
+date: 2020-07-07 14:08:07.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Aruba
+- Hardware
+- IT
+- networking
+- Wireless
+tags:
+- InstantON
+- SMB
+meta:
+  _publicize_twitter_user: "@CaNerdIan"
+  _wpas_done_all: '1'
+  _thumbnail_id: '1751'
+  spay_email: ''
+  _wpas_mess: 'Hands On: Aruba InstantON '
+  _edit_last: '2'
+  _wp_old_slug: hands-on-aruba-instanton
+  _cs_replacements: a:1:{s:7:"sidebar";s:7:"sidebar";}
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2020/07/07/aruba-instanton/"
+excerpt: 'Aruba turned some heads last year when they announced a new product line
+  for SMB, called InstantON. Read more about my experience... '
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>For many years, the small business segment of the wireless networking market has largely been the exclusive territory of <a href="https://www.ui.com">Ubiquiti</a>, who have developed a decent product suite that meets the needs and price points that small businesses seek (read: cheap). Netgear has played in that market a little bit with their ProSafe line, but most of their business has been on the consumer side of things. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Several years back, Cisco attempted to gain a foothold in the consumer/Small Business segment by acquiring Linksys. When I saw a box on the shelf at Wal-Mart that said "Cisco Small Business: By the makers of Linksys", I knew that the writing was on the wall for Cisco:  They had attempted to corner a market they didn't really understand, with their brand that was largely unknown outside the tech industry ("aren't they <a href="http://sysco.com">that food service company</a>?") -- It wasn't long before we heard that Cisco was unloading Linksys to TP-Link, which was already well established in the consumer market, and they retreated to the medium business sector with their shiny new Meraki acquisition. They've done well in that segment, despite Ubiquiti nipping at their heels and trying hard to break into the medium business market (to the point of practically cloning Meraki's industrial design), something Ubiquiti has had mixed success with.  </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Aruba turned some heads last year when they announced a new product line for SMB, called InstantON. It's got some similarities with Ruckus' Unleashed product (which was in turn modeled on Aruba's controllerless Instant product). InstantON is based on existing products (which didn't require any significant changes to manufacturing or FCC approval), running a scaled down version of Aruba's existing software, and managed with a mobile app or a web page (more on that in a bit). And they did this at a list price point that not only was squarely in Ubiquiti's price point, they did so while still offering margin to distributors and resellers, something that Ubiquiti quite notoriously does not do. They then coupled this with a community support model similar to the way Ubiquiti does it (although the overall technical caliber of Aruba community users is <em>light years</em> ahead of what is typically found elsewhere).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This past June, Aruba added ethernet switches to the InstantON portfolio, evolving the long-established OfficeConnect product line whose pedigree hails back to 3Com (acquired by HP back in 2012, and now part of HPE's Aruba unit). The OfficeConnect brand ended with the 1920 series switches, and the new 1930 series are only available in the InstantON portfolio, but the 3Com pedigree still lurks beneath the lid). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Product Line</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>There are five access points in the line, all based on Aruba's 3XX series of 802.11ac/n access points - For the most part, the only physical change is the plastic radome on the front of the AP, allowing them to re-use existing hardware and not have to get everything recertified by the FCC and other regulators. As with all the 300 series APs, they have integrated Bluetooth Low Energy radios, although I'm not aware of the software using them for anything other than discovery and provisioning at the moment. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>For those experienced with the Ubiquiti product line, I've provided a rough equivalent for comparison - spatial stream counts may differ, but performance and features should be comparable. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Distribution pricing varies depending on your distributor relationships, but you can expect a good 30 points of margin on these at MSRP. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>
+<a href="https://www.arubainstanton.com/files/DS_AIO_AP11.pdf">AP11</a>
+<ul>
+<li>Based on the AP-303</li>
+<li>2 spatial streams</li>
+<li>Downtilt omnidirectional antennas (3.3dBi @ 2.4GHz/5.8dBi @ 5GHz</li>
+<li>MSRP: $119 (AP R2W95A) / $139 (Bundle with AC adapter R3J21A)</li>
+<li>Amazon: $<a href="https://amzn.to/38DhlHO">87</a> (Bundle)</li>
+</ul>
+<ul>
+<li>Ubiquiti: UAP-AC-PRO</li>
+</ul>
+</li>
+<li>
+<a href="https://www.arubainstanton.com/files/DS_AIO_AP11D.pdf">AP11D</a> :
+<ul>
+<li>Based on the AP-303H (one of my personal favorites) </li>
+<li>2 spatial streams like its ceiling-mounted twin</li>
+<li>designed for installation into a wall data outlet</li>
+<li>Directional antennas (4.3dBi @ 2.4GHz/6.2dBi @ 5GHz) - these have a slight uptilt to them owing to being designed for low mounting</li>
+<li>four ethernet ports with one PoE output</li>
+<li>can also act as your internet router</li>
+<li>MSRP: $165 (AP R2X15A), $189 (Bundle R3J25A)</li>
+<li>Amazon: $<a href="https://amzn.to/2DjMuom">114.02</a> (AP)</li>
+<li>Ubiquiti: UAP-IW-HD-US + USG</li>
+</ul>
+</li>
+<li>
+<a href="https://www.arubainstanton.com/files/DS_AIO_AP12.pdf">AP12</a>
+<ul>
+<li>Based on the AP-305</li>
+<li>3 spatial streams</li>
+<li>Downtilt omnidirectional antennas (3.9dBi @ 2.4GHz/5.4dBi @ 5GHz)</li>
+<li>MSRP: $199 (AP R2X00A), $219 (Bundle R3J23A)</li>
+<li>Amazon: $<a href="https://amzn.to/2BDxotu">133.49</a> (AP)</li>
+<li>Ubiquiti:  UAP-nanoHD</li>
+</ul>
+</li>
+<li>
+<a href="https://www.arubainstanton.com/files/DS_AIO_AP15.pdf">AP15</a>
+<ul>
+<li>Based on the AP-315</li>
+<li>4 spatial streams</li>
+<li>Downtilt omnidirectional antenna (3.6dBi @ 2.4GHz/6.0dBi @ 5GHz)</li>
+<li>MSRP: $230 (AP R2X05A)</li>
+<li>Amazon: <a href="https://amzn.to/2AGu93S">$183.50</a>
+</li>
+<li>Ubiquiti: UAP-HD</li>
+</ul>
+</li>
+<li>
+<a href="https://www.arubainstanton.com/files/DS_AIO_AP17.pdf">AP17</a>
+<ul>
+<li>Based on the AP-365 board with a different antenna and enclosure - this is the only one that had to get a separate FCC ID.</li>
+<li>2 spatial streams</li>
+<li>Omnidirectional antenna (4.7 dBi @ 2.4 GHz, 4.2 dBi @ 5 GHz)</li>
+<li>outdoor-rated (IP55)</li>
+<li>MSRP: $289 (AP R2X10A)</li>
+<li>Amazon: $<a href="https://amzn.to/3f7KA8p">239.27</a>
+</li>
+<li>Ubiquiti Equivalent: UAP-AC-M-PRO (Although Ubiquiti doesn't really do outdoor IP-rated gear)</li>
+</ul>
+</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>There are also seven switches in the portfolio, with 8, 24, and 48 gigabit copper ports. 24 and 48-port models have four 10-gigabit SFP+ ports, and the 8-port models have two SFP ports. Each is available as just plain switch, PoE, and the 24-port model has two levels of power budget. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>InstantON Switches: <a href="https://www.arubainstanton.com/files/AAG_1930-Switches.pdf">Product Overview</a></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>HandsON</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>OK, finally where it gets interesting: The actual experience. While it may not be truly "instant", it's pretty darn close. When I plugged it in to my network, it booted up, checked for firmware updates, downloaded new firmware, and setup in the IOS app was dead simple (if you wish, you can also <a href="https://portal.arubainstanton.com/">manage instantON via a web interface</a> (worth noting that once you've added your devices, this works anywhere, not just on your LAN - under the hood, this appears to be running a heavily scaled back version of Aruba Central, as evidenced by some packet capture of outbound management traffic.) If you have an AP11D, you can set it up as your Internet router (so you probably want to set that one up first). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Mild annoyance about the AP11D acting as a router: It wants the internet connection on the E0 port, which is the port the AP uses for PoE power, which means you would have to use an injector or the external 48VDC adapter. I would prefer to be able to pick my WAN port for either the PoE out port (to power a point to point radio) or put the LAN on the E0 port (to power it from a switch).  The AP11D comes with a desk mount stand or a wall plate mount. It also provides PoE out on the E3 port if you need to hook up another AP or some other powered device. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>For those of us who do wireless for a living, it feels a little weird without all the "nerd knobs" I'm used to, but for the market this is intended to serve, it's nice and easy. This is perfect for a small coffee shop or a store, or even a small office. You can easily set up a separate guest network and multiple VLANs. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The settings in the app are fairly clearly explained, along with what side effects they could have (such as the one to "extend 2.4GHz range" - it defaults to a 6Mbps basic rate, but this will drop it to 1Mbps to get distance at the expense of performance). It does have a slightly buried option for radio management under the sushi menu in the device list, which lets you select your channel width and a range of allowed channels. I haven't deployed it in a congested environment to see if it will automatically shift down to 40 or 20MHz channels. Thankfully, it doesn't do 40MHz on 2.4GHz by default, even though radio management will let you change this. This is a refreshing change from other vendors in the space who set the defaults to try and get PHY speeds close to those wild numbers claimed by the marketing department. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>I haven't tried mesh yet, but it's supposedly as straightforward as everything else. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Since the AP11D is also a switch, you have VLAN tagging and primary VLAN selection ability on each port right in the app. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Like all the Aruba 300 series AP hardware, the InstantON APs support enterprise authentication with RADIUS, as well as WPA2/WPA3. It also supports captive portal for guest auth, either by generating its own, using an external CP, or building a Facebook login if you have a business page with a verified location. There's no MPSK support at the moment (this JUST came out on Aruba Instant with 8.7 last week), but I would be really happy if MPSK came to InstantON for dealing with home IoT. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Where this shines</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Independent Coffee Shops </li>
+<li>Small Retail </li>
+<li>Restaurants</li>
+<li>Home/Home Office</li>
+<li>Residential (this is even easier to set up than Ubiquiti, as it doesn't require a config controller)</li>
+<li>Bed &amp; Breakfast/Small hospitality</li>
+<li>Small Offices</li>
+<li>Smaller houses of worship</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>If you need more capabilities, then it's not a real big leap into the Instant line, especially when managed with Aruba Central (which is what I currently run my main home network on). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>Disclaimer: Aruba is my employer, but this post reflects my personal experience as a wi-fi nerd with product that I purchased through normal channels. This is not a paid promotion, and is not official Aruba communication. I am not on the InstantON product team and have no insider knowledge of the product.</em></p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>

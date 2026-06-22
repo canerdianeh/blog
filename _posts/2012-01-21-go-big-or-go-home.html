@@ -1,0 +1,33 @@
+---
+layout: post
+title: Go big, or go home!
+date: 2012-01-21 22:03:19.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Cloud Computing
+- Wowza
+tags: []
+meta:
+  _edit_last: '2'
+  dsq_thread_id: '548304590'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2012/01/21/go-big-or-go-home/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>I'm currently working on setting up Wowza on an EC2 "Cluster Compute Quadruple Extra Large" instance (or as I've heard it called, the "super-duper-quadruple", which sounds like something I'd get at Five Guys). There's no pre-built AMI for this one, so you have to use a stock Linux image (I use the standard Amazon one) and install Wowza with a subscription license, and do the tuning yourself. But the payoff is this: for $1.30 an hour, you get a streaming server capable of delivering 10Gbps of data.  On a 750Kbps stream, that's over 13,000 concurrent clients. This for about the same cost as nine or ten m1.small instances which can deliver an aggregate of about 1.5Gbps. On a reserved instance, you can get this down to just under 75 cents an hour.</p>
+<p>In addition to Ludicrous Speed on the network I/O, this instance comes with 8 multithreaded Xeon 5570 cores (at 2.97GHz), 23 GB of RAM, and 1.7TB of local storage. (a quick speed test downloaded a half-gigabyte file in about four seconds, limited by the gigabit interface at the remote server). This is roughly equivalent to a moderately configured Dell R710. There's also a GPU-enabled version of this that adds a pair of nVidia Tesla GPU cores.</p>
+<p>If that's not enough, you can go bigger, with 16 cores, 60GB of memory, and 3.5TB, Recently, someone clustered just over a thousand of these instances into the 42nd largest supercomputer in the world.</p>
+<p>As of right now, these monster instances are only available in the us-east-1 zone.</p>
+<p> </p>
+<p> </p>
+<p></body></html></p>

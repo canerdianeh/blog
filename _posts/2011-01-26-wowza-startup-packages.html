@@ -1,0 +1,268 @@
+---
+layout: post
+title: Inside Wowza Startup Packages
+date: 2011-01-26 14:41:17.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Internet Campus
+- streaming
+- Wowza
+tags:
+- ec2
+- scripting
+meta:
+  dsq_thread_id: '217881153'
+  _wp_old_slug: ''
+  _edit_last: '2'
+  s2mail: 'yes'
+  _googl_shortlink: http://goo.gl/5NbcY
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2011/01/26/wowza-startup-packages/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body><br />
+<a href="http://blog.ianbeyer.com/files/2011/01/logo_aws.gif"><img class="alignright size-full wp-image-545" alt="" src="{{site.baseurl}}/assets/2011/01/logo_aws.gif" width="164" height="60"></a>Startup packages are one of the more useful features of <a title="Wowza for Amazon EC2" href="http://wowzamedia.com/ec2.html" target="_blank">Wowza Media Server for EC2</a> - they allow you to custom-configure a system for rapid scaling and provisioning. Wowza provides several <a title="Wowza EC2 Startup Packages" href="http://wowzamediasystems.s3.amazonaws.com/packagelist.html" target="_blank">starter packages</a> to build on.</p>
+<p>A startup package is a file (up to 16384 bytes in size) that's passed to the instance through the <strong>--user-data-file</strong> parameter on the API tools (if you're uploading it via the <a title="Amazon Web Services Console" href="http://console.aws.amazon.com" target="_blank">AWS Web Consol</a>e, you'll need to <a title="Base64 encoder/decoder" href="http://www.motobit.com/util/base64-decoder-encoder.asp" target="_blank">encode it to Base64</a> and paste it into the text box) . There are a few ways that the data can get into the instance, which Amazon <a title="Using EC2 Instance Data" href="http://docs.amazonwebservices.com/AmazonEC2/dg/2006-10-01/AESDG-chapter-instancedata.html" target="_blank">documents over here</a>. For a generic EC2 instance, this can be anything, from text to binary data, depending on what the processing on the target instance is set up to do. In the case of Wowza, it's a zip file with a specific structure. Much of this is digested from the <a title="Wowza for Amazon EC2 User's Guide" href="http://www.wowzamedia.com/resources/WowzaMediaServerForEC2_UsersGuide.pdf" target="_blank">Wowza for EC2 guide</a>.</p>
+<h1>File Contents</h1>
+<p>A startup package for EC2 contains the following:</p>
+<ul>
+<li>startup.xml (startup manifest)</li>
+<li>tuning folder</li>
+<li>wowza folder</li>
+<li>Any other folders referenced in the startup manifest</li>
+</ul>
+<p>A startup package is limited to a maximum of 16KB.</p>
+<p>Startup activities are logged to <strong>/usr/local/WowzaMediaServer/logs/wowzamediaserver_startup.log</strong>. This is a good place to look if it's not behaving as expected. The package is unpacked to <strong>/opt/working</strong>.</p>
+<h2 style="padding-left: 30px;">Startup Manifest</h2>
+<p style="padding-left: 30px;">This file controls the startup processing for instantiating a Wowza server on Amazon EC2. It allows three commands: Install, Download, and RunScript.</p>
+<h3 style="padding-left: 60px;">Download</h3>
+<p style="padding-left: 60px;">The &lt;Download&gt; command will download content from a web server and save it to the local Amazon instance. The &lt;Download&gt; command includes the following elements: URL, Data, Header, Destination, and Action:</p>
+<pre style="padding-left: 90px;">&lt;Download&gt;
+&lt;URL&gt;[URL]&lt;/URL&gt;
+&lt;Data&gt;[data]&lt;/Data&gt;
+&lt;Header&gt;&lt;Name&gt;[key-name]&lt;/Name&gt;&lt;Value&gt;[value]&lt;/Value&gt;&lt;/Header&gt;
+&lt;Header&gt;&lt;Name&gt;[key-name]&lt;/Name&gt;&lt;Value&gt;[value]&lt;/Value&gt;&lt;/Header&gt;
+&lt;Destination&gt;[relative-or-absolute-file-path]&lt;/Destination&gt;
+&lt;Action&gt;[UNZIP, INSTALL]&lt;/Action&gt;
+&lt;/Download&gt;</pre>
+<p style="padding-left: 60px;">The only two required elements are &lt;URL&gt; and &lt;Destination&gt;. To download a file from the url http://www.mycompany.com/myfile.zip, save it to the local machine at the location /opt/myfile.zip and unzip the file after download, the command is:</p>
+<pre style="padding-left: 90px;">&lt;Download&gt;
+&lt;URL&gt;http://www.mycompany.com/myfile.zip&lt;/URL&gt;
+&lt;Destination&gt;/opt/myfile.zip&lt;/Destination&gt;
+&lt;Action&gt;UNZIP&lt;/ Action &gt;
+&lt;/Download&gt;</pre>
+<p style="padding-left: 60px;">When completed, the contents of the zip archive are located in <strong>/opt</strong>.</p>
+<p style="padding-left: 60px;">One use of the &lt;Download&gt; command is to work around the 16kB startup package size limitation. For example, if you need to add several .jar files into the Wowza Server “lib” folder and these files push your startup package size over the 16kB limit, you might package these files into a separate zip archive. You can then host this zip archive on a web server and use the &lt;Download&gt; command to install the files into the Wowza Server “lib” folder.</p>
+<p style="padding-left: 60px;">It's important to remember that the zipfile path structure is critical. If it uses no paths, you'll need your destination to be where it ultimately lives, either in the staging area, or the absolute path to the Wowza install. When creating the zipfile with relative paths, create the path tree as if you were in the Wowza installation root.</p>
+<h4 style="padding-left: 90px;">URL</h4>
+<p style="padding-left: 90px;">The &lt;URL&gt; is the URL of the file to be downloaded. The download can be performed over SSL by starting the url with https:// rather than http://. The url can also contain query parameters. The file will be downloaded using the GET method unless &lt;Data&gt; is specified.</p>
+<h4 style="padding-left: 90px;">Data</h4>
+<p style="padding-left: 90px;">The Data is text data that will be included as part of the body of the HTTP request. You can use post data to send user name and password information to your web server so you can protect your content.</p>
+<h4 style="padding-left: 90px;">Header: &lt;Name&gt; and &lt;Value&gt;</h4>
+<p style="padding-left: 90px;">The &lt;Header&gt; elements are name value pairs added to the header part of the HTTP request. An example would be:</p>
+<pre style="padding-left: 120px;">&lt;Header&gt;
+&lt;Name&gt;Content-type&lt;/Name&gt;
+&lt;Value&gt;text/plain&lt;/Value&gt;
+&lt;/Header&gt;</pre>
+<h4 style="padding-left: 90px;">Destination</h4>
+<p style="padding-left: 90px;">The &lt;Destination&gt;element is the path to which the file will be saved (including the filename). This path can be relative or absolute. The base directory when calculating a relative file path, is the root directory of the startup package (the folder that contains the startup.xml file).</p>
+<h4 style="padding-left: 90px;">Action</h4>
+<p style="padding-left: 90px;">The &lt;Action&gt; element is the action performed after the file is downloaded. The action can either be UNZIP or INSTALL. If the action is UNZIP the downloaded file will be unzipped using the unzip command. If the action is INSTALL the downloaded file will be unzipped and the contents of the folder will be installed (copied) into the Wowza Server installation folder.</p>
+<h3 style="padding-left: 60px;">Install</h3>
+<p style="padding-left: 60px;">The &lt;Install&gt; command will copy the contents of a folder into the Wowza Server installation folder. The &lt;Install&gt; command can either contain a single &lt;Package&gt; element or single &lt;Folder&gt; element.</p>
+<pre style="padding-left: 90px;">&lt;Install&gt;
+&lt;Package&gt;[path-to-package]&lt;/Package&gt;
+&lt;/Install&gt;</pre>
+<pre style="padding-left: 90px;">&lt;Install&gt;</pre>
+<pre style="padding-left: 90px;">&lt;Folder&gt;[foldername]&lt;/Folder&gt;</pre>
+<pre style="padding-left: 90px;">&lt;/Install&gt;</pre>
+<p style="padding-left: 60px;">The Package path can reference an external URL, like http://wowzamediasystems.s3.amazonaws.com</p>
+<p style="padding-left: 60px;">The Folder path can reference either a relative path (relative to the root of the startup package where Startup.xml is located) or an absolute path on the local file system.</p>
+<h3 style="padding-left: 60px;">RunScript</h3>
+<p style="padding-left: 60px;">The &lt;RunScript&gt; command will execute a script on a running Amazon instance.</p>
+<pre style="padding-left: 120px;">&lt;RunScript&gt;
+&lt;Script&gt;[relative-or-absolute-file-path]&lt;/Script&gt;
+&lt;Param&gt;[parameter]&lt;/Param&gt;
+&lt;Param&gt;[parameter]&lt;/Param&gt;
+&lt;/RunScript&gt;</pre>
+<h4 style="padding-left: 90px;">Script</h4>
+<p style="padding-left: 90px;">The &lt;Script&gt; element is the path to the script file to be executed. This path can be relative or absolute. The base directory when calculating a relative file path, is the root directory of the startup package (the folder that contains the startup.xml file). This can refer to a script, or be a single-line command.</p>
+<p style="padding-left: 90px;">Any files referenced in the script need absolute paths or a path relative to the startup package root.</p>
+<h4 style="padding-left: 90px;">Param</h4>
+<p style="padding-left: 90px;">The &lt;Param&gt; elements are parameters that will be passed to the running script. For example the following &lt;RunScript&gt; command:</p>
+<pre style="padding-left: 120px;">&lt;RunScript&gt;
+&lt;Script&gt;scripts/copyfile.sh&lt;/Script&gt;
+&lt;Param&gt;filea.txt&lt;/Param&gt;
+&lt;Param&gt;fileb.txt&lt;/Param&gt;
+&lt;/RunScript&gt;</pre>
+<p style="padding-left: 90px;">Would be the equivalent of executing the command:</p>
+<pre style="padding-left: 120px;">./scripts/copyfile.sh filea.txt fileb.txt</pre>
+<h3 style="padding-left: 60px;">Environment Variables</h3>
+<p style="padding-left: 60px;">The following environment variables are available to scripts launched by the startup processor:</p>
+<pre style="padding-left: 90px;">AWSEC2_METADATA_INSTANCE_ID - Amazon instance id
+AWSEC2_METADATA_SECURITY_GROUPS - Security group
+AWSEC2_METADATA_LOCAL_IPV4 - Local IP address
+AWSEC2_METADATA_AMI_LAUNCH_INDEX - Launch index
+AWSEC2_METADATA_PUBLIC_HOSTNAME - Public host name
+AWSEC2_METADATA_PRODUCT_CODES - DevPay product code
+AWSEC2_METADATA_INSTANCE_TYPE - instance type (m1-small, m1-large, m1-xlarge)
+AWSEC2_METADATA_HOSTNAME - Public host name
+AWSEC2_METADATA_LOCAL_HOSTNAME - Local host name
+AWSEC2_METADATA_PUBLIC_IPV4 - Public IP address
+AWSEC2_METADATA_AMI_MANIFEST_PATH - S3 manifest path
+AWSEC2_METADATA_RESERVATION_ID - Instance reservation ID
+AWSEC2_METADATA_AMI_ID - AMI ID</pre>
+<h2 style="padding-left: 30px;">Wowza Folder</h2>
+<p style="padding-left: 30px;">The Wowza folder in the startup package is meant to mirror the Wowza installation folder on the server. When the Install command in the startup manifest is invoked with this folder, the file structure of this folder will be copied to the installation folder.</p>
+<h3 style="padding-left: 60px;">Applications Tree</h3>
+<p style="padding-left: 60px;">Contains folders for each Wowza application configured. There are not typically any files in this tree, just folders.</p>
+<h3 style="padding-left: 60px;">Conf Tree</h3>
+<p style="padding-left: 60px;">Contains the configuration files for the server (at the root of the tree) and for each application (in folders matching the applications tree</p>
+<h3 style="padding-left: 60px;">Content Tree</h3>
+<p style="padding-left: 60px;">Contains any content referenced by the applications. This is where SMIL files, stream schedules, and such go. Any audio/video content that goes here won’t fit in the startup package and will need to be downloaded separately.</p>
+<h3 style="padding-left: 60px;">Lib Tree</h3>
+<p style="padding-left: 60px;">Contains any additional modules for the server.</p>
+<h2 style="padding-left: 30px;">Tuning Folder</h2>
+<p style="padding-left: 30px;">This folder contains tuning scripts that tune the Wowza server.  It copies the requisite environment variables and tuning commands to a script executed as part of the Wowza startup, which happens after the startup processor is run.</p>
+<h1>Scripting</h1>
+<p>The following useful linux tools are available on the standard EC2 build (based on <a title="Fedora Linux" href="http://fedoraproject.org/" target="_blank">Fedora</a>):</p>
+<ul>
+<li>MySQL client commands</li>
+<li>zip/unzip, bzip/bunzip, gzip/gunzip</li>
+<li>s3fs</li>
+<li>Compiler and build tools</li>
+<li>WGet</li>
+<li>RSync</li>
+<li>SSH commands</li>
+<li>dos2unix/unix2dos</li>
+<li>curl</li>
+<li>perl 5.8.8 (with MySQL support)</li>
+<li>GPG</li>
+<li>Shells: bash, sh</li>
+<li>RRDTool</li>
+<li>PHP5</li>
+<li>EC2 API tools</li>
+</ul>
+<h1>Services</h1>
+<p>The following services are available on the EC2 build of Wowza, in startup order:</p>
+<ul>
+<li>SNMP</li>
+<li>SSH</li>
+<li>FTP (Anonymous access to /var/ftp/)</li>
+<li>MySQL (default password = “password”)</li>
+<li>Wowza</li>
+<li>Apache 2 – port 8080, content in /var/www/html
+<ul>
+<li>Cacti</li>
+</ul>
+</li>
+<li>Java Console</li>
+</ul>
+<p>Startup package scripts and data are invoked by the Wowza startup script. If you modify any applications started prior to that, you'll need to restart them.</p>
+<h1>Example</h1>
+<p>Here's what my startup.xml looks like:</p>
+<pre style="padding-left: 30px;">&lt;Startup&gt;
+ &lt;Commands&gt;
+
+ &lt;!--
+  Comments
+  --&gt;
+
+ &lt;Download&gt;
+  &lt;URL&gt;http://webserver/wowza/wms-plugin-collection.zip&lt;/URL&gt;
+  &lt;Destination&gt;wowza/lib/wms-plugin-collection.zip&lt;/Destination&gt;
+  &lt;Action&gt;UNZIP&lt;/Action&gt;
+ &lt;/Download&gt;
+
+ &lt;RunScript&gt;
+  &lt;Script&gt;scripts/mount-s3.sh&lt;/Script&gt;
+ &lt;/RunScript&gt;
+
+ &lt;Install&gt;
+  &lt;Folder&gt;wowza&lt;/Folder&gt;
+ &lt;/Install&gt;
+
+ &lt;RunScript&gt;
+  &lt;Script&gt;tuning/tune.sh&lt;/Script&gt;
+ &lt;/RunScript&gt;
+
+ &lt;RunScript&gt;
+ &lt;Script&gt;scripts/enable_cacti.sh&lt;/Script&gt;
+ &lt;/RunScript&gt;
+ &lt;/Commands&gt;
+&lt;/Startup&gt;</pre>
+<p>How this works:</p>
+<ul>
+<li>Download the wms-plugin-collection.zip file and dump it in the staging area for wowza (/opt/working/wowza/lib)</li>
+<li>Unzip it (this leaves the zip file behind, but that doesn't matter)</li>
+<li>Run the a script that mounts some s3 buckets and copies them into the content folder:</li>
+</ul>
+<pre style="padding-left: 60px;">#!/bin/sh
+mkdir -p /usr/local/WowzaMediaServer/content/s3
+mkdir -p /usr/local/WowzaMediaServer/content/archives
+
+s3fs bucket1 -o accessKeyId=XXX -o secretAccessKey=YYY /usr/local/WowzaMediaServer/content/s3
+
+s3fs bucket2 -o accessKeyId=XXX -o secretAccessKey=YYY /usr/local/WowzaMediaServer/content/archives/
+
+cp /usr/local/WowzaMediaServer/content/s3/* /usr/local/WowzaMediaServer/content</pre>
+<ul>
+<li>Install the Wowza configs from the staging area</li>
+<li>Run the tuning scripts</li>
+<li>Run a script that automatically enables Cacti (since polling the local host is disabled by default):</li>
+</ul>
+<pre style="padding-left: 60px;">#!/bin/sh
+mysql -u root -ppassword &lt; scripts/enable_cacti.sql</pre>
+<p style="padding-left: 60px;">enable_cacti.sql contains the following statement:</p>
+<pre style="padding-left: 60px;">update cacti.host set disabled='' where id='2';</pre>
+<p style="padding-left: 60px;">(note that if you're using an Elastic IP, you'll need to restart the Wowza Service for Cacti to behave)</p>
+<p>In my Wowza directories, I have:</p>
+<ul>
+<li>
+<strong>applications</strong>directory</p>
+<ul>
+<li>
+<strong>live</strong> directory (think of this as a mount point - it's an empty directory, but has to exist)</li>
+</ul>
+</li>
+<li>
+<strong>conf</strong>directory</p>
+<ul>
+<li>
+<strong>Server.xml</strong> (general server parameters)</li>
+<li>
+<strong>VHost.xml</strong> (host bindings, HTTP providers, etc.)</li>
+<li>
+<strong>live</strong>directory (this is the application configuration for the live application)</p>
+<ul>
+<li>
+<strong>Application.xml</strong> (defining the live application)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>content </strong>directory</p>
+<ul>
+<li>
+<strong>ipad.smil</strong> ( multi-bitrate stream selection for <a title="Apple" href="http://apple.com" target="_blank">iOS devices</a>)</li>
+<li>
+<strong>mobile.smil</strong> (defining where the <a title="Roku" href="http://roku.com" target="_blank">Roku</a> stream goes - this abstracts a potentially changing stream name, as well as giving me a way to track Roku traffic using <a title="Wowza stats collector with RRD (perl)" href="http://blog.ianbeyer.com/code/backend/wowza-metrics-perl/" target="_blank">this perl stats collection script</a>)</li>
+<li>
+<strong>streamschedule.smil </strong>(defines the schedule for the <a title="Using the Wowza Stream Class" href="http://blog.ianbeyer.com/2011/01/17/wowza-stream-class/" target="_blank">Stream Class module</a>)</li>
+<li>Additional material is pulled from S3 in the aforementioned script</li>
+</ul>
+</li>
+<li>
+<strong>lib</strong> directory (empty mount point)</li>
+</ul>
+<p>To start my Wowza instances, I create the startup package file and tree structure, and then call this <a title="Wowza Origin Server Startup (bash)" href="http://blog.ianbeyer.com/code/ec2/wowza-origin-startup-bash/" target="_blank">startup script</a> that packs up the zip file and fires off the instance.</body></html></p>

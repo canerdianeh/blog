@@ -1,0 +1,91 @@
+---
+layout: page
+title: EC2 Shutdown
+date: 2009-11-18 16:21:08.000000000 -06:00
+type: page
+parent_id: '272'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  dsq_thread_id: '221354002'
+  _edit_last: '1'
+  _wp_page_template: default
+  _googl_shortlink: http://goo.gl/CX3I8
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/code/ec2/shutdown/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>[perl]<br />
+#!/usr/bin/perl</p>
+<p>use Net::Amazon::EC2;<br />
+my $ec2 = Net::Amazon::EC2-&gt;new(<br />
+AWSAccessKeyId =&gt; 'XXXX',<br />
+SecretAccessKey =&gt; 'XXXX'</p>
+<p>);</p>
+<p>my $running_instances = $ec2-&gt;describe_instances;</p>
+<p>foreach my $reservation (@$running_instances) {</p>
+<p>foreach my $instance ($reservation-&gt;instances_set) {</p>
+<p>my $instance_id = $instance-&gt;instance_id;</p>
+<p>my $result = $ec2-&gt;terminate_instances(InstanceId =&gt; $instance_id);</p>
+<p>print "terminating" . $instance_id . "n";</p>
+<p>}</p>
+<p>}<br />
+[/perl]</p>
+<p>Alternate method in bash:</p>
+<p>[bash]<br />
+#!/bin/bash</p>
+<p>    export JAVA_HOME=/usr<br />
+    export EC2_HOME=/opt/ec2/tools<br />
+    export EC2_PRIVATE_KEY=/root/ec2/pk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.pem<br />
+    export EC2_CERT=/root/ec2/cert-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.pem</p>
+<p>    echo "Terminating Origin Server..."<br />
+    if test -f /root/ec2/origin.iid<br />
+    then<br />
+    date &gt;&gt; /root/term.log</p>
+<p>    /opt/ec2/tools/bin/ec2-terminate-instances `cat /root/ec2/origin.iid` &gt;&gt; /root/term.log<br />
+    else<br />
+    echo "Instance ID not found!"<br />
+    fi<br />
+[/bash]</p>
+<p>PHP (requires <a title="AWS SDK for PHP" href="http://aws.amazon.com/sdkforphp/" target="_blank">AWS SDK for PHP</a>):</p>
+<p>[php]<br />
+&lt;?php<br />
+error_reporting(-1);<br />
+header("Content-type: text/html; charset=utf-8");<br />
+require_once '/usr/share/php/AWSSDKforPHP/sdk.class.php';</p>
+<p>define('AWS_KEY', 'access key here');<br />
+define('AWS_SECRET_KEY', 'secret key here']);<br />
+$startup_region = 'us-east-1';</p>
+<p>$ec2 = new AmazonEC2();</p>
+<p>?&gt;<br />
+&lt;HTML&gt;<br />
+&lt;HEAD&gt;<br />
+&lt;TITLE&gt;Instance Termination&lt;/TITLE&gt;<br />
+&lt;link href="loginmodule.css" rel="stylesheet" type="text/css" /&gt;<br />
+&lt;/TITLE&gt;<br />
+&lt;/HEAD&gt;<br />
+&lt;BODY&gt;<br />
+&lt;H1&gt;Terminate Instances&lt;/H1&gt;<br />
+&lt;?php</p>
+<p>$instances[] = 'i-xxxxxxxx';</p>
+<p>$term_result = $ec2-&gt;terminate_instances($instances);<br />
+if ($term_result-&gt;status != "200") {<br />
+print "Termination error&lt;BR&gt;";<br />
+print_r($term_result);<br />
+die('ERROR');</p>
+<p>print "Instance termination complete. \n";<br />
+?&gt;<br />
+&lt;/BODY&gt;<br />
+&lt;/HTML&gt;<br />
+[/php]</p>
+<p></body></html></p>

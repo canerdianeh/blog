@@ -1,0 +1,39 @@
+---
+layout: post
+title: Streaming on Amazon's "SuperQuad"
+date: 2012-02-09 21:09:06.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Cloud Computing
+- streaming
+- Wowza
+tags:
+- superquad
+meta:
+  _thumbnail_id: '1127'
+  _edit_last: '2'
+  dsq_thread_id: '570734340'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2012/02/09/streaming-on-amazons-superquad/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body><br />
+<img class="alignright size-medium wp-image-1127" style="border-image: initial; margin: 5px;" title="Amazon Is My Hot Rod" src="{{site.baseurl}}/assets/2012/02/turbomod2-300x231.jpg" alt="" width="300" height="231">I posted <a title="Go big, or go home!" href="http://blog.ianbeyer.com/2012/01/21/go-big-or-go-home/">recently</a> about using Amazon EC2's cluster compute instances for big streaming projects. That post got me a call from a client in Texas who was planning to stream a big tennis tournament in Dallas and needed a server backend that could handle it, without going through the hassle and expense of setting up a CDN account for a single event. Of course, since everything is bigger in Texas, they wanted to stream to a large audience. They also wanted to be able to send a single high-definition stream for each of the two tournament courts, and then transcode down to a few different bandwidth-friendly bitrates. This called for not only big network horsepower, but big CPU horsepower as well.</p>
+<p>I fired up the superquad (cc1.4xlarge), installed Wowza and the subscription license on it (Wowza pre-built AMIs do not exist for this instance type), and tuned it. I then created the transcoder profiles to create a 480p, 360p, 240p, and 160p stream, and we tested. Note that when installing Wowza yourself on an EC2 image, you don't have access to the EC2-specific variables and classes out of the box. You'll need to add the EC2 jar file that can be found on one of Amazon's prebuilt AMIs. In this case, that wasn't a factor, as I simply hardcoded the server's public DNS name into any place that needed it.</p>
+<p>Once the tournament started, we were seeing big audience numbers, with bitrates on the box well in excess of 1Gbps. On day two, audiences started complaining about spotty stream performance, and some were running 15 minutes behind live.</p>
+<p>After jumping into the logs, it became apparent that this 8-core/16-thread monster was starved for CPU resources! Wowza recommends that a transcoder system not exceed 50-55% CPU. We then reduced the number of transcode streams to two (480p and 360p). In the process, I discovered that a misformatted search/replace had altered the configuration to transcode all the streams to 1280x720, at extremely low bitrates. No wonder the poor thing was dying. Once we got everything fixed, a full audience with both courts going was clocking in around 40% CPU. At no time in the process did Java heap memory exceed 3GB (in the tuning, I allowed it up to 8GB, the max recommended by Wowza). Wowza seems to be exceedingly efficient with its memory usage. If you need to run heavier transcoding loads, you may want to look at what I call the "super-duper-octopus" (cc1.8xlarge), which is about double what this one is.</p>
+<p>[caption id="attachment_1128" align="aligncenter" width="630" caption="CPU Usage - Note 2/7 when we were having trouble"]<a href="http://blog.ianbeyer.com/files/2012/02/superquad-CPU.png"><img class="size-full wp-image-1128" title="superquad CPU" src="{{site.baseurl}}/assets/2012/02/superquad-CPU.png" alt="" width="630" height="301"></a>[/caption]</p>
+<p>Early Thursday, I checked the AWS usage stats for the month, and my jaw dropped. In three days of streaming, we'd clocked over five TERABYTES of data transfer. I expect I'll bump into the next bandwidth tier (or come very close) by the end of the week. That's what happens when you average around 1Gbps for the better part of 12 hours a day!</p>
+<p>[caption id="attachment_1129" align="aligncenter" width="628" caption="Network Usage (Bytes/Minute.. What the heck, Amazon?)"]<a href="http://blog.ianbeyer.com/files/2012/02/superquad-Network.png"><img class="size-full wp-image-1129" title="superquad Network" src="{{site.baseurl}}/assets/2012/02/superquad-Network.png" alt="" width="628" height="301"></a>[/caption]</p>
+<p>As for server usage, this instance type runs about the price of two extra-large instances (each capable of about 450Mbps), and doesn't even break a sweat at those transfer rates. Had I parked this service on a VPS at another hosting provider, I would have blown through the monthly data cap by mid-Tuesday, and likely not had access to a 10GB pipe on the server.  Meanwhile, when you start cranking terabytes of data, that cost per gigabyte is a major factor. When you crank out 10TB of data, every penny per gigabyte adds $100 to the bandwidth tab.</p>
+<p>Although a large portion of the audience for this event was in Europe (at one point, 60% of the audience was coming from Lithuania!), the cluster instances are currently only available in the us-east (Virginia) region. If performance for European users had gotten problematic, I could have set up a repeater in Amazon's datacenter in Ireland. As it was, there were no complaints.</p>
+<p>So that's how a superquad works for large streaming events. If you want some help setting one up, or just want to rent mine for your event, drop me a line.</body></html></p>

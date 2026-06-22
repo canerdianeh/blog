@@ -1,0 +1,89 @@
+---
+layout: post
+title: Using Bitmovin Player with Church Online Platform
+date: 2017-04-15 22:52:04.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Church IT
+- Internet Campus
+- streaming
+- Wowza
+tags: []
+meta:
+  _edit_last: '2'
+  _syntaxhighlighter_encoded: '1'
+  _thumbnail_id: '1447'
+  _wpas_done_all: '1'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2017/04/15/using-bitmovin-player-with-church-online-platform/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body></p>
+<p>Today's post will be a brief tutorial on using <a href="https://bitmovin.com">Bitmovin</a>'s excellent <a href="https://bitmovin.com/html5-player/">HTML5 video player</a> with <a href="http://churchonlineplatform.com">Church Online Platform</a>.</p>
+<p>If you're a church that is wanting to go live, and you haven't discovered COP, it's a marvelous product. The fine folks on the <a href="http://life.church">life.church</a> Digerati Team (who created the <a href="https://www.bible.com/app">Bible App</a> and made it available on just about every platform known to mankind). It's a free hosted platform that lets you deliver church online. All you have to do is bring your own streaming provider and provide an embed code. You can use your provider's player, or you can use your own player. The Digerati team are also a client of mine, and I really enjoy working with them - they're talented, nerdy, and very good at what they do. (most recently, I helped them build out their Wowza Streaming Engine capability for automating the scheduling and delivery of simulated live events.)</p>
+<p>One of my favorite video players out there right now is from Bitmovin, and they provide a CDN-hosted player that provides excellent analytics (complete with API access for the especially nerdy), and usage is free for the first 5000 impressions (and pricing is quite reasonable as you scale up from there). For this reason alone, it's an excellent choice for churches getting started with streaming. Its other major benefit is that because it is written in HTML5 and Javascript, it will work on just about anything you can throw at it (for the really archaic devices, it still has a Flash component). It also is designed from the ground up to support the new <a href="http://www.streamingmedia.com/Articles/Editorial/What-Is-.../What-is-MPEG-DASH-79041.aspx">MPEG-DASH</a> standard, but if you're using a streaming CDN or service that doesn't provide DASH, no big deal, as the player also supports HLS, even for Flash delivery for those 3 devices that still haven't discovered modern streaming technology or are running a particularly ancient version of Android. Added bonus, BitMovin's player also supports VR and 360 streaming (as does Wowza Streaming Cloud).</p>
+<p>For starters, you'll need to sign up for an account, which will give you player information. One thing you'll want to make sure you do is add your churchonline.org domain to the allowed domains for your license key. This is under Player/Overview:</p>
+<p><a href="http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.03.48.png"><img class="aligncenter size-large wp-image-1442" src="{{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.03.48-1024x559.png" alt="Bitmovin Player Domain Config" width="1024" height="559"></a></p>
+<p>If you forget to do this, the player will simply show an error telling you you need to do it.  This keeps someone from using your player key on their site, so be sure to use yourdomain.churchonline.org, not just churchonline.org.</p>
+<p>To put this in your COP page, go to the event where you wish to use the player, and go to the Video tab:</p>
+<p><a href="http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.18.40.png"><img class="aligncenter size-large wp-image-1444" src="{{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.18.40-1024x564.png" alt="ChurchOnline Event Settings" width="1024" height="564"></a></p>
+<p>When you go to the Embed menu, you will see code to put it on the page (under Default video embed code). This is a little more involved than your standard embed code.</p>
+<p><a href="http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.13.37.png"><img class="aligncenter size-large wp-image-1443" src="{{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.13.37-1024x552.png" alt="Bitmovin Embed Controls" width="1024" height="552"></a></p>
+<p>A couple of key things to note here with regards to COP:</p>
+<ol>
+<li>In order to put the &lt;script&gt; stuff in your &lt;head&gt; section, you'd need to create a custom theme in COP. This is not necessary (in fact, putting that script statement in the head that way doesn't work). What you'll need to do is simply put the &lt;script&gt; piece just above the rest of it in the default embed code section.</li>
+<li>You'll need to edit the source section in that code. If all you're doing is HLS, you can remove the dash and progressive entries. Leave the HLS entry in place and put in the HLS URL provided by your streaming platform. In the case of Wowza Streaming Cloud, this is located at the bottom of the Overview tab of your streaming application under "Playback URLs".</li>
+<li>The "poster" entry is the image the player shows when you're not streaming any video.</li>
+</ol>
+<p>So, for my test stream, the embed code looks like this:</p>
+<p>[code]</p>
+<p>&lt;script type="text/javascript" src="https://bitmovin-a.akamaihd.net/bitmovin-player/stable/7/bitmovinplayer.js"&gt;&lt;/script&gt;</p>
+<p>&lt;div id="player"&gt;&lt;/div&gt;<br />
+&lt;script type="text/javascript"&gt;<br />
+var conf = {<br />
+key: "d8XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX2e",<br />
+source: {<br />
+hls: "http://wowzaprod103-i.akamaihd.net/hls/live/######/########/playlist.m3u8",<br />
+poster: "http://dontfenceme.in/wp-content/uploads/2013/09/g-global-background.jpg"<br />
+}<br />
+};<br />
+var player = bitmovin.player("player");<br />
+player.setup(conf).then(function(value) {<br />
+// Success<br />
+console.log("Successfully created bitmovin player instance");<br />
+}, function(reason) {<br />
+// Error!<br />
+console.log("Error while creating bitmovin player instance");<br />
+});<br />
+&lt;/script&gt;</p>
+<p>[/code]</p>
+<p>The console.log lines aren't necessary, but potentially useful when trying to debug why it can't instantiate the player.</p>
+<p>If you want to run a separate video when the doors aren't open, put that under the offline video embed code section. You can leave the mobile and low sections empty, as your stream is probably already adaptive from your streaming provider.</p>
+<p>Save it, and this is what you get:</p>
+<p><strong><a href="http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-17.39.24.png"><img class="aligncenter size-large wp-image-1445" src="{{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-17.39.24-1024x546.png" alt="BitMovin in ChurchOnline Platform" width="1024" height="546"></a></strong></p>
+<p>In order to remove the Bitmovin logo, edit the theme's CSS and add the following lines:</p>
+<p>[code]</p>
+<p>/* Remove Bitmovin Logo on player */<br />
+.bmpui-ui-watermark {<br />
+display: none;<br />
+}</p>
+<p>[/code]</p>
+<p><a href="http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.29.27.png"><img class="aligncenter size-large wp-image-1446" src="{{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.29.27-1024x544.png" alt="ChurchOnline Platform CSS Edit" width="1024" height="544"></a><br />
+</body></html></p>

@@ -1,0 +1,166 @@
+---
+layout: post
+title: 'Home Lab: The Network'
+date: 2020-07-17 13:01:31.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Home Lab
+- networking
+- Working from Home
+tags: []
+meta:
+  _publicize_twitter_user: "@CaNerdIan"
+  _edit_last: '2'
+  _thumbnail_id: '1761'
+  _cs_replacements: a:1:{s:7:"sidebar";s:7:"sidebar";}
+  _wpas_done_all: '1'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2020/07/17/home-lab-network/"
+excerpt: 'A key component of any IT engineer''s toolkit is the lab. First in a series. '
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>A key component of any IT engineer's toolkit is the lab. This can be at the office if you're not the type to work from home (if you're not, I highly recommend it - Productivity is so much better when you're not in an office). or the ubiquitous "home lab" that most of us have (even if we don't work from home), which can be anything from a haphazard pile of  machines on a shelf, to a lovingly built rack full of gear that would look perfectly at home in any enterprise data center.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The entire purpose of the home lab is to give you an environment in which to tinker, and break stuff. It also often forms the foundation of the tech infrastructure for the other people who live with you, although the people in my house sometimes wish it was separate and insulated from my tinkering. They've also instituted a change freeze for 2 weeks prior to me leaving on a work trip. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The foundation to all this is the network: Routing, Switching, Firewalls, Monitoring, and Internet access. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Routing and Firewalls</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>One of the quickest and easiest ways to get your home lab up and running is to let <a href="https://pfsense.org">pfSense</a> handle the day to day routing - It's easy to install, powerful enough to do what you need it to, and it will run on just about any old hardware you have lying around, or something you can buy online for cheap - NUC boxes, spare PCs, older servers, etc. My current pfSense box is a Gen7 HP DL360, which is complete freaking overkill (like using an Abrams tank for mosquito control), but it was $130 on Amazon, and it came with 4 Ethernet interfaces. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>If you're using a software-based router like pfSense, <em>resist the temptation to virtualize it</em>. When the virtualization host goes down, your network goes down with it, along with any ability to remotely get into the network and fix it. I don't recommend this. It's especially annoying when you're literally a thousand miles from anywhere and the only other occupied man-made vehicle within sight is the International Space Station. (yes, this actually happened). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>If you have access to an actual router/firewall appliance, you can also use that. There are many options from the likes of Aruba, Fortinet, Palo Alto, Barracuda, etc. Work with what you have available to you. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>The WAN</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>aka, the Internet... If your ISP offers a static IP address, or even a highly stable dynamic address, this will simplify remote access. It also helps when it comes to tech support if you have a good relationship with your ISP and they know you're an engineer - this helps bypass the tier 1 script kiddies manning the phone firewall, and it also gives you a certain amount of grace and understanding when they see traffic patterns on your link that might otherwise raise some red flags. "No, I haven't been hacked, I'm just trying out some new stuff!". This may be tricky if you're stuck with a giant cable behemoth that struggles to care about individual residential clients. I am extremely fortunate to have a locally owned ISP that offers static IPs and a direct pipeline to the support engineers. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>See if your WAN provider allows multiple devices on the WAN link, and how many. Even if you're on a cable modem, some providers will allow multiple MAC addresses to connect via a switch. I have a fiber terminal on the outside of the house that has four Ethernet ports: two of them are provisioned for my static addresses, and the other two are provisioned to allow multiple DHCP clients, which is incredibly handy when I need to lab up some of our SD-WAN stuff. I just trunk each one into the wiring enclosure and cross-connect them from there. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>The LAN</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>This is where things get fun. I currently have the LAN set up for the following:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>Management Network
+<ul>
+<li>Best Practice: <a href="https://www.timigate.com/2017/12/native-vlan-why-you-should-not-use-vlan.html">Don't put this on VLAN 1</a>!</li>
+<li>Server management interfaces</li>
+<li>Switch management interfaces</li>
+<li>Access Points</li>
+</ul>
+</li>
+<li>3 Lab Networks
+<ul>
+<li>Used to isolate various projects from each other. Can add more as needed. </li>
+</ul>
+</li>
+<li>Home Network
+<ul>
+<li>Printer</li>
+<li>TVs</li>
+<li>Media server</li>
+<li>Wireless connections for the people who live with me
+<ul>
+<li>Wireless uses enterprise authentication/encryption</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>IoT Network
+<ul>
+<li>Any IoT stuff goes here. That isolates it from the home and management networks. It is only able to access the internet, on a limited basis. </li>
+<li>Wireless uses PSK encryption (hoping to move this to MPSK and MAC auth soon) </li>
+</ul>
+</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>Because a lot of devices default to 192.168.something or 10.something, I operate in the 172.something space defined by <a href="https://tools.ietf.org/html/rfc1918">RFC1918</a> - this keeps badly designed defaults from screwing things up, and also doesn't screw me up when I am using a VPN connection to work and/or a client that uses the same address space. I'll typically use the VLAN ID as the third (and occasionally the second) octet of the network. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>I currently have 7 switches in the environment. Because of all the VLANs, these need to be managed switches, but I can't really picture a scenario where someone with a lab would actually want to use unmanaged switches. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>HP 1810-24G (J9450A) : Handles management interfaces like ILO, UPS management card, and a couple of IoT things that don't require huge performance. </li>
+<li>HP 1810-8G (J9802A) : Usually for spots where I need multiple ports or to break out VLANs. These are conveniently able to be powered from a PoE port on the upstream switch. </li>
+<li>
+<a href="https://support.hpe.com/hpesc/public/docDisplay?docId=emr_na-c04868827">HP 2915</a> (J9562A): This is basically the "core" switch - this is where the other switches, VM hosts, and router are connected. </li>
+<li>
+<a href="https://www.arubanetworks.com/products/networking/switches/2930f-series/">Aruba 2930F</a>-8G (JL258A): I have two of these - these typically feed the access points. They are managed, like the APs, with <a href="https://www.arubanetworks.com/products/networking/management/central/">Aruba Central</a>. </li>
+<li>
+<a href="https://www.commscope.com/globalassets/digizuite/294043-431-ds-icx-7150.pdf?utm_source=ruckus&amp;utm_medium=redirect">Ruckus ICX7150-C12P</a>: This one feeds all the stuff in the house. Managing these is a pain in the butt, but it's a decent switch otherwise.</li>
+<li>
+<a href="http://www.dataswitchworks.com/FastIron-SX-800.asp">Foundry FastIron SX800</a>: This is the great-great-great grandfather of the ICX switch. Its sole purpose right now is as ballast (it weighs around 100 lb)</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>Next phase of building out the lab network will be to move everything to 10-Gigabit Ethernet.  </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Wiring</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Just like in any environment, neat and tidy wiring makes management a lot easier. I have a color code I try to stick to for patch cables. I'm a big fan of the <a href="https://amzn.to/2COFkYI">Monoprice SlimRun patch cables</a>: They're inexpensive, of good quality for the money, and they're a lot easier to manage. For your wiring in the house and the lab, It's always good to follow <a href="https://www.bicsi.org/standards/bicsi-standards/standardization/installation">BICSI best practices</a>, if for no other reason than as an engineer, you should at least be familiar with them.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Velcro is your friend. I'm a big fan of Rip-Tie's <a href="https://amzn.to/32uSkOk">RipWrap</a> product. It's slim, plays nice with the slim cables, and isn't overly expensive. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>When it comes to bulk cable, I am a big fan of <a href="https://www.commscope.com/product-type/networking-systems/structured-cabling/uniprise/copper-structured-cabling/twisted-pair-cables/">Commscope Uniprise</a>, although <a href="https://superioressexcommunications.com/wp-content/uploads/2020/01/SPSX_CommLineCard_English.pdf">Superior Essex</a> comes in a close second, especially since it's made right here in Kansas. Don't waste your time with any bulk cable from Amazon or Monoprice - the shipping alone for a box of Cat 6 prices them out of competing with your local supply house (I've been a fan of <a href="https://www.accu-tech.com/">Accu-Tech</a> for nearly 2 decades, HMU if you need a contact there) </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>For termination, I generally won't use anything but <a href="https://www.panduit.com/en/products/copper-systems/connectors/jack-modules.html">Panduit's Mini-Com</a> stuff (major exception is anything going into a structured wiring enclosure, since Panduit doesn't make any brackets for those. If you have some metalworking skills, you could probably adapt something, as most of the Mini-Com line is designed around the standard 1.38” x 2.71” knockout hole found on almost any modular office furniture.) The Panduit terminations are a little more expensive, but it's easy to use and you never have to worry about it failing on you. I own a set or two of modular plug (Don't call them "RJ45") crimpers and probably have some plugs, but it's been years since I've actually used them - Making your own patch cables is a complete waste of time, and any installed cable should always be terminated to a jack. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Monitoring</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>This starts to veer into servers (which will be covered in a future post), but you probably want to monitor your network. If for no other reason than the fact that <em><a href="https://grafana.com/blog/2019/05/16/worth-a-look-public-grafana-dashboards/">dashboards look cool</a></em>. <a href="https://en.wikipedia.org/wiki/Simple_Network_Management_Protocol">SNMP</a> has been the standard way of monitoring server infrastructure for decades. While there are numerous tools out there such as <a href="https://www.cacti.net/">Cacti</a> and <a href="https://www.librenms.org/">LibreNMS</a>, nothing does visualizations quite as impressively as Grafana (which isn't really an NMS in and of itself, but merely a rendering and visualization engine that can pull all kinds of data from all kinds of places. As SNMP starts giving way to REST APIs and webhooks, This is the future.) </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":1760,"sizeSlug":"large"} --></p>
+<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2020/07/Annotation-2020-07-17-132427-1024x522.png" alt="" class="wp-image-1760"></figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>I currently use <a href="https://www.influxdata.com/products/influxdb-overview/">InfluxDB</a> as my time-series database (<a href="https://oss.oetiker.ch/rrdtool/">RRDTool</a> is so last century), with <a href="https://grafana.com/">Grafana</a> visualizing the data, and an assortment of things collecting data, including <a href="https://www.influxdata.com/time-series-platform/telegraf/">Telegraf</a> for collecting SNMP. I'm gradually adding some API calls for other stuff like VMWare and Aruba. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Stay Tuned for the next installment: <strong>Servers</strong>. In the meantime, please share your home lab networking stories, tips, and comments below. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><em>Featured Image: Reddit User <strong>u/HotSchmoe</strong> in <a href="https://www.reddit.com/r/homelab/comments/ewk3pb/heard_you_like_gore/">r/homelab</a></em></p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>

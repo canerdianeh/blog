@@ -1,0 +1,32 @@
+---
+layout: nav_menu_item
+title: ''
+date: 2011-12-29 04:51:20.000000000 -06:00
+type: nav_menu_item
+parent_id: '272'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _menu_item_type: post_type
+  _menu_item_menu_item_parent: '749'
+  _menu_item_object_id: '692'
+  _menu_item_object: page
+  _menu_item_target: ''
+  _menu_item_classes: a:1:{i:0;s:0:"";}
+  _menu_item_xfn: ''
+  _menu_item_url: ''
+author:
+  login: admin
+  email: ian@nerdherd.net
+  display_name: Site Administrator
+  first_name: Site
+  last_name: Administrator
+permalink: "/2011/12/29/753/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>#!/bin/bash export JAVA_HOME=/usr export EC2_HOME=/opt/ec2/tools export index=$1 export date=`date +%m-%d-%y` # Get instance ID if [ -f ~/var/origin.iid ] then export iid=`cat ~/var/origin.iid` else echo That instance does not exist! exit fi # Get IP address export ip=`${EC2_HOME}/bin/ec2-describe-instances ${iid} | grep INSTANCE | cut -f17` echo Terminating Origin server at AMI ${iid} on IP address ${ip} # Shut down Wowza echo Shutting down services… ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} service WowzaMediaServer stop # Back up content of archive directory to mounted S3 bucket echo Archiving content directory ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} rm -f /usr/local/WowzaMediaServer/content/s3*.smil ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} rm -f /usr/local/WowzaMediaServer/content/s3*.mp4 ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} cp /usr/local/WowzaMediaServer/content/*.smil /usr/local/WowzaMediaServer/content/s3 ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} cp /usr/local/WowzaMediaServer/content/*.mp4 /usr/local/WowzaMediaServer/content/s3 # Zip up the logs echo Archiving logs… ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} gzip /usr/local/WowzaMediaServer/logs/*.log # Save the logs to a local directory echo Shipping logs… mkdir -p ~/var/logs/origin/${date}/${iid} scp -i ~/.ssh/gsg-keypair.priv.txt root@${ip}:/usr/local/WowzaMediaServer/logs/*.gz ~/var/logs/origin/${date}/${index} # Shut ‘er down echo Terminating instance… ${EC2_HOME}/bin/ec2-terminate-instances ${iid} if [ $? != 0 ]; then echo Error terminating instance for image ${iid} exit 1 fi # clean up files echo Removing temporary data files… rm ~/var/origin.* rm ~/var/wowza_current_instance_${ip} echo Instance ${iid} has been terminated.</p>
+<p></body></html></p>

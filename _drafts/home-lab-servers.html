@@ -1,0 +1,68 @@
+---
+layout: post
+title: 'Home Lab: Servers'
+date:
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags: []
+meta:
+  _publicize_twitter_user: "@CaNerdIan"
+  _edit_last: '2'
+  _bpp_element: body
+  _bpp_repeat-x: 'yes'
+  _bpp_repeat-y: 'yes'
+  _bpp_attachment: scroll
+  _bpp_position: center
+  _bpp_fade: 'yes'
+  _bpp_fade_height: '100'
+  _bpp_color: "#"
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<!-- wp:paragraph --><html><body></p>
+<p>A key component of any IT engineer's toolkit is the lab. This can be at the office if you're not the type to work from home (if you're not, I highly recommend it - Productivity is so much better when you're not in an office). or the ubiquitous "home lab" that most of us have (even if we don't work from home), which can be anything from a haphazard pile of  machines on a shelf, to a lovingly built rack full of gear that would look perfectly at home in any enterprise data center.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The entire purpose of the home lab is to give you an environment in which to tinker, and break stuff. It also often forms the foundation of the tech infrastructure for the other people who live with you, although the people in my house sometimes wish it was separate and insulated from my tinkering. They've also instituted a change freeze for 2 weeks prior to me leaving on a work trip. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In the last post, I discussed the network as the foundation to all of this. But an almost equally important piece is your server infrastructure. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Generally speaking, if you want to do something computer-related, you need a box to run it on. In its most simple form, you get a box, you install an operating system on it, and then whatever application you wish. This leads to two problems: The first is having to maintain a bunch of different systems, and the second is that chances are good that your system will have way more horsepower than it needs. It also tends to use up switch ports and physical space (and power!) in a hurry. The solution:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Virtualization</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Virtualization has been around for quite some time now, and it's proven its usefulness in terms of maximizing the use of server resources. This allows me to have a small handful of physical boxes, while running dozens of virtual systems. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>There are numerous virtualization platforms, each with their own merits. I'm partial to VMWare's product offering, as they were the first to really commercialize the idea, over two decades ago. I remember when they made the announcement, thinking, "this is really freaking cool". They now own (or are owned by, depending on how you look at it) Dell, and their virtualization software is nearly ubiquitous. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In its most straightforward mode, you can spin up a server with their free hypervisor (called ESXi) and run as many virtual hosts as your hardware can handle. You can even do multiple servers like that. But where much of VMWare's magic lies is in being able to centrally manage all your virtual servers and be able to move a virtual machine from one host to another (for instance, when you want to do maintenance). This requires VCenter for management, and VSphere (licensed ESXi) on the hosts. Sounds expensive... Who's going to drop thousands on licensing for lab gear? Fear not... The VMware User Group (or VMUG) has a premium tier membership that gets you 365-day eval licenses for the entire VMWare portfolio. In the case of VCenter, that gets you 12 processor sockets of VSphere, plus the management. The premium membership also gets you discounts on VMWorld conference as well as on training and certification (after all, learning is why we have a lab, right?) All that for $200, and you can probably find a coupon online that knocks it down a bit more. VMUG membership also plugs you into the local chapters, who hold events throughout the year where you can network with other VMWare nerds and learn from them as well. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Then there's the OS licensing. Sure, Linux is free, but sometimes you need to do stuff in Windows - Microsoft also has a few programs for that. The most simple is the 180-day evaluation licenses for their server software. You can also look at Action Pack (partners) and Visual Studio (formerly MSDN). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Hardware</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>But you need a machine to run all this on, and servers are expensive, right? No way. Only if you buy brand new stuff. You can even run VMWare on an Intel NUC or similar machine. The amount of horespower that can be stuffed in a small box these days is mind-blowing. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>My personal platform of choice right now is 8th-generation HP Proliant servers. Not just because I work for HPE (Gen 8 predated the 2015 split into HPE/HPI), but because there are some incredible deals to be had on Gen8 hardware, which is </p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>

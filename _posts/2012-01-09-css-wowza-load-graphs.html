@@ -1,0 +1,403 @@
+---
+layout: post
+title: 'Stupid CSS Tricks: Wowza Load Graphs'
+date: 2012-01-09 03:48:58.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Web 2.0
+- Wowza
+tags:
+- CSS
+meta:
+  _edit_last: '2'
+  _syntaxhighlighter_encoded: '1'
+  dsq_thread_id: '532092293'
+  _wp_old_slug: stupid-css-tricks-wowza-load-graphs
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2012/01/09/css-wowza-load-graphs/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body></p>
+<p>I've been experimenting with ways to generate load graphs for Wowza. The best way for doing bar graphs on a webpage is to go all crazy with CSS. It's really well suited to doing this. Here's a PHP script that will query a Wowza origin server for its repeaters, and then polls the repeaters for their load stats. This also provides buttons for launching/terminating repeaters, and visually representing them as a rack full of servers:</p>
+<p><a href="http://blog.ianbeyer.com/files/2012/01/loadrack21.png"><img class="aligncenter size-full wp-image-1071" title="loadrack2" src="{{site.baseurl}}/assets/2012/01/loadrack21.png" alt="" width="609" height="145"></a></p>
+<p><!--more--></p>
+<p>You can get really crazy with this. For example, here's a farm of 14 servers:<img class="aligncenter size-full wp-image-1073" title="BigRack" src="{{site.baseurl}}/assets/2012/01/BigRack.png" alt="" width="620" height="926"></p>
+<p>How do I do this?</p>
+<p>The basic structure of my virtual rack is not unlike that of a real rack: The Rack Unit. In this case, it's a DIV 60 pixels high and 700 pixels wide. It then contains a rack space which is 600 pixels wide, leaving me some room on the end to put something if I want to. The rack space div then uses the server image as a background. Inside that I have the display, power button, Wowza button (all three of these are simple absolute position DIV elements - the Wowza button is simply an empty DIV with rounded corners set to make it an actual circle, and then a TITLE attribute containing the build info of that particular server), and graph, which is the larger container div (with opacity set to be slightly transparent) that then has the smaller graph div, with the width set to the calculated load percentage.</p>
+<p>Now, the code. Note that this requires the <a href="http://aws.amazon.com/sdkforphp/">AWS SDK for PHP</a> to be installed on your box (and apparently a prerequisite for that is a bowl of alphabet soup) Bear in mind that querying each server is going to take 2-3 seconds, so this doesn't scale well (the 14-server graph made use of a variant of this script that gets edge data via SQL, making it much faster). I'd love to know if it's possible to fork each of those getLoad() processes off so they can run in parallel.</p>
+<p>syntax is:</p>
+<pre>loadrack.php?origin=1.2.3.4</pre>
+<p>loadrack.php:</p>
+<pre>
+[php]
+&lt;?PHP
+error_reporting(0);
+require 'includes/aws-init.php';
+include 'includes/capacity_vars.php';
+require_once 'includes/functions.php';
+header("Content-type: text/html; charset=utf-8");
+
+$bwin = array();
+$bwout = array();
+$conn = array();
+$cap = array();
+$iid = array();
+$ver = array();
+
+if (isset($_GET['origin'])) { $origin_ip = $_GET['origin'];} else { die('No Origin Server Specified'); }
+
+// Gather Data
+$ip = getRepeaters($origin_ip);
+$origin_ver = getVersion($origin_ip);
+
+foreach ($ip as $repeater) {
+	list($in, $out, $count) = getLoad($repeater);
+	$bwin[$repeater] = $in;
+	$bwout[$repeater] = $out;
+	$conn[$repeater] = $count;
+	$ver[$repeater]= getVersion($repeater);
+	$size = "m1.small"; // can also query DB or AWS for this.
+	$sz[$repeater] = $size;
+	$iid[$repeater] = (string)$sizerow['IID'];
+	$cap[$repeater] = $mbps[$size];
+	}
+
+} //End Repeater Foreach
+
+// Display Summary
+
+$total_cap = array_sum($cap);
+$total_load = array_sum($bwout) / $total_cap * 100; // convert to percentage
+
+$load_string = sprintf("%.2f",$total_load);
+$bwout_string = sprintf("%.3f",array_sum($bwout));
+$total['repeaters'] = sizeof($ip);
+$total['conns'] = array_sum($conn);
+$load_round = round($total_load);
+switch ($total_load) {
+	case ($total_load &gt; 99): $color = "#000000"; break;
+	case ($total_load &gt;= 85): $color = "#FF0000"; break;
+	case ($total_load &gt;= 75): $color = "#FFFF00"; break;
+	default: $color = "#00FF00";
+	}
+		$label = 'Origin | &lt;A style="color: black;" HREF="http://'.$origin_ip.':1935/loadbalancer?serverInfoXML" target="_blank"&gt;'. $origin_ip . "&lt;/A&gt;";
+
+	?&gt;
+		&lt;DIV class="rackslot" 
+			style="height: 60px; 
+				width: 660px; 
+				position: relative; 
+				border: none; 
+				background: none;
+				"&gt;
+		&lt;DIV class="server" 
+			style="height: 60px; 
+				float: left; 
+				width: 600px; 
+				position: relative; 
+				background-image: url('images/rackserver2.jpg');
+				"&gt;
+			&lt;DIV class="loadbar" 
+				style="height: 10px; 
+				border-radius: 3px; 
+				opacity: 0.6; 
+				position: absolute; 
+				left: 46px; 
+				top: 42px; 
+				width: 500px; 
+				background: none repeat scroll 0% 0% #ffffff; 
+				border: 1px solid;
+			"&gt;
+				&lt;DIV class="load" 
+					style="height: 100%; 
+					border-radius: 2px; 
+					position: absolute; 
+					left: 0px; 
+					top: 0px; 
+					background: &lt;?=$color?&gt;; 
+					color: black; 
+					width: &lt;?=$load_round;?&gt;%;
+				"&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;DIV class="display" 
+				style="height: 22px; 
+					position: absolute; 
+					left: 44px; 
+					top: 12px; 
+					width: 145px; 
+					background-color: #2222FF; 
+					color: #CCCCFF; 
+					font-size: 8px; 
+					border: 1px solid black; 
+					border-radius: 3px; 
+					margin: 2px;
+					font-family: sans-serif; 
+					padding: 1px;
+			"&gt;
+				&lt;?=$total['conns'];?&gt; Connections (&lt;?=$total['repeaters'];?&gt; Edges)&lt;BR&gt;
+				&lt;?=$bwout_string;?&gt; Mbps  (&lt;?=$load_string;?&gt; %)
+			&lt;/DIV&gt;
+			&lt;DIV class="label"
+				style="height: 13px; 
+					position: absolute; 
+					left: 350px; 
+					top: 10px; 
+					background-color: #eeeeee; 
+					color: black; 
+					text-align: center;
+					font-size: 12px; 
+					font-family: sans-serif; 
+					padding: 2px;
+			"&gt;&lt;?=$label;?&gt;&lt;/DIV&gt;
+			&lt;div class="powerbutton" 
+				style="padding: 5px; 
+					position: absolute; 
+					left: 530px; 
+					top:8px; 
+					width: 30px; 
+					float: right;
+			"&gt;
+&lt;form action="startup.php" method="POST" target="_blank"&gt;
+&lt;input type="hidden" name="config" value="repeater" /&gt;
+&lt;input type="hidden" name="version" value="2" /&gt;
+&lt;input type="hidden" name="license" value="devpay" /&gt;
+&lt;input type="hidden" name="zone" value="us-east-1" /&gt;
+&lt;input type="hidden" name="elasticIP" value="Dynamic" /&gt;
+&lt;input type="hidden" name="keypair" value="Wowza-Keypair" /&gt;
+&lt;input type="hidden" name="security" value="Wowza-SecGrp" /&gt;
+&lt;input type="hidden" name="type" value="m1.small" /&gt;
+&lt;input title="Start a default repeater" type="image" width="20" height="20" src="/images/power-green.png" alt="Start Repeater" /&gt;
+&lt;/form&gt;
+
+			&lt;/div&gt;
+			&lt;div class="version"
+				title="&lt;?=$origin_ver;?&gt;"
+				style="position: absolute;
+					left: 23px;
+					top: 24px;
+					width: 20px;
+					height: 20px;
+					border-radius: 10px;
+					border: none;
+			"&gt;&lt;/DIV&gt;
+					
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;?php
+
+// Iterate through IP address array and display individual servers
+
+
+foreach ($ip as $repeater) { 
+		$server_load = $bwout[$repeater] / $cap[$addr] * 100; // convert to percentage
+
+		$load_string = sprintf("%.2f",$server_load);
+		$bwout_string = sprintf("%.3f",$bwout[$repeater]);
+		$load_round = round($server_load);
+	
+		switch ($server_load) {
+			case ($server_load &gt; 99): $color = "#000000"; $heavy = true; break;
+			case ($server_load &gt;= 85): $color = "#FF0000"; $heavy = true; break;
+			case ($server_load &gt;= 75): $color = "#FFFF00"; break;
+			default: $color = "#00FF00";
+			}
+		$label = 'Edge | &lt;A style="color: black;" HREF="http://'.$repeater.':8086/serverinfo.xml" target="_blank"&gt;'. $repeater . "&lt;/A&gt;";
+		$lcd = $conn[$repeater]." Connections &lt;BR&gt;$bwout_string Mbps ($load_string%)";
+		?&gt;
+		&lt;DIV class="rackslot" 
+			style="height: 60px; 
+				width: 660px; 
+				position: relative; 
+				border: none; 
+				background: none;
+		"&gt;
+		&lt;DIV class="server" 
+			style="height: 60px; 
+				width: 600px; 
+				float: left; 
+				position: relative; 
+				border: none; 
+				background-image: url('images/rackserver2.jpg');
+		"&gt;
+			&lt;DIV class="loadbar" 
+				style="height: 10px; 
+					border-radius: 3px; 
+					opacity: 0.6; 
+					position: absolute; 
+					left: 46px; 
+					top: 42px; 
+					width: 500px; 
+					background: none repeat scroll 0% 0% #ffffff; 
+					border: 1px solid;
+			"&gt;
+				&lt;DIV class="load" 
+					style="height: 100%; 
+						border-radius: 2px; 
+						position: absolute; 
+						left: 0px; 
+						top: 0px; 
+						background: &lt;?=$color?&gt;; 
+						width: &lt;?=$load_round;?&gt;%;
+				"&gt;
+				&lt;/div&gt; 
+			&lt;/div&gt;
+			&lt;DIV class="display" 
+				style="height: 22px; 
+				border-radius: 3px; 
+				position: absolute; 
+				left: 46px; 
+				top: 14px; 
+				width: 145px; 
+				background-color: #2222FF; 
+				color: #CCCCFF; 
+				font-size: 8px; 
+				border: 1px solid black; 
+				font-family: sans-serif; 
+				padding: 1px;
+			"&gt;&lt;?=$lcd;?&gt;&lt;/DIV&gt;
+			&lt;DIV class="label" 
+				style="height: 13px; 
+					position: absolute; 
+					left: 350px; 
+					top: 10px; 
+					background-color: #eeeeee; 
+					color: black; 
+					text-align: center;
+					font-size: 12px; 
+					font-family: sans-serif; 
+					padding: 2px;
+			"&gt;&lt;?=$label;?&gt;&lt;/DIV&gt;
+			&lt;div class="powerbutton" 
+				style="padding: 5px;
+				 	position: absolute; 
+					left: 530px; 
+					top:8px; 
+					width: 30px; 
+					float: right;
+			"&gt;
+				&lt;?php 
+					if ($repeater != $origin_ip) {
+        				echo '&lt;FORM action="terminate.php" method="POST" target="_blank"&gt;';
+					echo '&lt;INPUT type="hidden" name="instances[]" value="'.$iid[$repeater].'"&gt;';
+					echo '&lt;INPUT type="image" height="20" width ="20" src="images/power-red.png" TITLE="Terminate this server"&gt;';
+					echo '&lt;/FORM&gt;';
+					}
+					else 
+					{
+					echo '&lt;FORM action=""&gt;';
+					echo '&lt;IMG SRC="images/power-gray.png" height="20" TITLE="Power control disabled on origin"&gt;';
+					echo '&lt;/FORM&gt;';
+					}
+				?&gt;
+			&lt;/div&gt;
+
+			&lt;div class="version"
+				title="&lt;?php echo $ver[$repeater]." ".$sz[$repeater]." ".$iid[$repeater];?&gt;"
+				style="position: absolute;
+					left: 23px;
+					top: 24px;
+					width: 20px;
+					height: 20px;
+					border-radius: 10px;
+					border: none;
+			"&gt;&lt;/DIV&gt;
+		&lt;/div&gt;
+	&lt;/DIV&gt;
+&lt;?php
+
+} // Repeater Loop
+			echo "&lt;SMALL&gt;Last Refresh: ";
+			echo $date = date("Y-m-d H:i:s");
+			echo "&lt;/SMALL&gt;\n";
+
+?&gt;
+
+[/php]
+</pre>
+<p>aws-init.php:</p>
+<pre>
+[php]
+&lt;?php
+require_once '/usr/share/php/AWSSDKforPHP/sdk.class.php';
+
+define('AWS_KEY', $_SESSION['AWS_KEY']);
+define('AWS_SECRET_KEY', $_SESSION['AWS_SECRET_KEY']);
+
+        $startup_region = $_SESSION['DEFAULT_REGION'];
+        
+$ec2 = new AmazonEC2();
+
+
+?&gt;
+[/php]
+</pre>
+<p>functions.php:</p>
+<pre>
+[php]
+function getRepeaters($origin_ip) {
+		
+	$addr = array();
+	$lb = "http://$origin_ip:1935/loadbalancer?serverInfoXML";
+	$xml = simplexml_load_file($lb);
+
+	if ($xml === FALSE) {
+		return("");
+	}
+
+	$server = $xml-&gt;LoadBalancerServer;
+
+	// Get IP addresses of active repeaters and put them in an array.
+	foreach ($server as $rep) {
+		$ip = (string)$rep-&gt;redirect;
+		if ($rep-&gt;status == "RUNNING" or $rep-&gt;status =="PAUSED") { 
+			$addr[]=$ip;
+		} // End Running If
+	} // end Server foreach
+	return($addr);
+} // End Function
+
+function getLoad($repeater) {
+
+        $repurl = "http://$repeater:1935/connectioncounts.xml";
+        $repxml = simplexml_load_file($repurl);
+        $bwin = (string)$repxml-&gt;MessagesInBytesRate / 131072; // Convert Bps to Mbps
+        $bwout = (string)$repxml-&gt;MessagesOutBytesRate / 131072; // Convert Bps to Mbps
+        $conns = (string)$repxml-&gt;ConnectionsCurrent+0;
+
+	$data = array ($bwin, $bwout, $conns);
+
+	return($data);
+
+} // End Function
+
+function getVersion($server) {
+        $repurl = "http://$server:1935/";
+        $repxml = simplexml_load_file($repurl);
+	$ver = (string)$repxml-&gt;body;
+
+	return($ver);
+
+} // End GetVersion Function
+?&gt;
+[/php]
+</pre>
+<p>capacity_vars.php:</p>
+<pre>
+[php]
+&lt;?PHP 
+$mbps['m1.small']=150; 
+$mbps['m1.large']=250; 
+$mbps['m1.xlarge']=350; 
+?&gt;
+[/php]
+</pre>
+<p></body></html></p>

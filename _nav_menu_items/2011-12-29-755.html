@@ -1,0 +1,32 @@
+---
+layout: nav_menu_item
+title: ''
+date: 2011-12-29 04:51:20.000000000 -06:00
+type: nav_menu_item
+parent_id: '948'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _menu_item_type: post_type
+  _menu_item_menu_item_parent: '990'
+  _menu_item_object_id: '698'
+  _menu_item_object: page
+  _menu_item_target: ''
+  _menu_item_classes: a:1:{i:0;s:0:"";}
+  _menu_item_xfn: ''
+  _menu_item_url: ''
+author:
+  login: admin
+  email: ian@nerdherd.net
+  display_name: Site Administrator
+  first_name: Site
+  last_name: Administrator
+permalink: "/2011/12/29/755/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>#!/usr/bin/perl use strict; # use module use XML::Simple; use Data::Dumper; use LWP::UserAgent; use Getopt::Std; use RRDs; use Scalar::Util ‘reftype’; # Parse Commandline options: # q: quiet # r: write to RRD # i: specify refresh interval (default 10s) my $interval; our($opt_r,$opt_q,$opt_i); getopts(‘rqi:’); if (!$opt_i) { $interval = 10; } else { $interval = $opt_i; } while (1) {     #establish forever loop # Poll Origin server for list of active edge servers my $lb_ua = new LWP::UserAgent; my $lb_url = “http://wms.rezonline.org:1935/loadbalancer?serverInfoXML”; my $lb_req = new HTTP::Request GET =&gt; $lb_url; my $lb_res = $lb_ua-&gt;request($lb_req); my @lb_ip; if($lb_res-&gt;is_success) { my $lb_xml = new XML::Simple; my $lb_data = $lb_xml-&gt;XMLin($lb_res-&gt;content); # Dump raw XML (for debugging) # print Dumper($lb_data); # check reference type: # if HASH, only single server is running, and XML returns without an array wrapping single element # if ARRAY, multiple servers, each one inside an array element. my $reference = reftype $lb_data-&gt;{LoadBalancerServer};        # Check to see how to handle this… if ( $reference eq ‘ARRAY’ ) { for my $lb_server (@{$lb_data-&gt;{LoadBalancerServer}}) { if ($lb_server-&gt;{status} eq “RUNNING”) { #print “ID: $lb_server-&gt;{serverId} at $lb_server-&gt;{redirect}n”; push @lb_ip, $lb_server-&gt;{redirect}; } } } elsif ( $reference eq ‘HASH’ ) { if ($lb_data-&gt;{LoadBalancerServer}-&gt;{status} eq “RUNNING”)…</p>
+<p></body></html></p>

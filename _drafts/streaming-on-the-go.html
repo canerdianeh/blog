@@ -1,0 +1,30 @@
+---
+layout: post
+title: Streaming on the go
+date:
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories: []
+tags: []
+meta:
+  _edit_last: '2'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>Lately, I've been evaluating some hardware for a quick and easy, portable streaming setup. This week, I've been fortunate enough to get my hands on a demo unit of Canon's XF105 camcorder thanks to my local Canon rep. I'll be the first to admit that I'm not an expert videographer, and I don't work with cameras all day long like some of my friends do, so the perspective here will be pretty basic. There are dozens of other detailed technical reviews of this camera out on the internet, so I'll focus on my reactions to the device from a newbie perspective which is likely where most of my customers will be coming from as well.</p>
+<p><img class="alignleft size-medium wp-image-1153" title="Canon-XF105-back" src="{{site.baseurl}}/assets/Canon-XF105-back-300x225.jpg" alt="" width="300" height="225"></p>
+<p>Out of the bag, this camera is delightfully compact, and has all the stuff you'd expect from a pro-levelcamera: SDI connection, external microphone connections, and a bevy of wires to hook it up to all manner of screens or other hardware. The thing that really stuck out for me was how good the image stabilization on this camera is. It can take a shaky n00b like me and make me look like I've got a steadycam rig when shooting on the move. It's got optical stabilization in the lens (which I picture in my mind as a bunch of lenses hanging by a net of rubber bands!), augmented by what Canon calls "powered image stabilization" which clearly works on some kind of magic.</p>
+<p>For those of you used to hooking cameras up to your streaming computer using Firewire, that's not going to happen here. The camera has ditched FireWire in favor of USB2 for data transfer off the two internal CF card, and provides HD component, HDMI, and SDI outputs. If you're streaming live with one of these, you'll need some sort of capture device.</p>
+<p><a href="http://blog.ianbeyer.com/files/2012/08/ultrastudiosdi.jpg"><img class="alignright size-medium wp-image-1154" title="ultrastudiosdi" src="{{site.baseurl}}/assets/ultrastudiosdi-300x155.jpg" alt="" width="300" height="155"></a>The most logical choice for me at this point was BlackMagic Design's UltraStudio SDI, a basic capture interface that takes SDI in, has an SDI and HDMI monitoring output, and interfaces with the computer via a USB3. With my new MacBook having USB3 onboard, that was the first thing I tried. Uh-oh, there's no software for Mac for this device! After digging around BMD's website for a while and contacting support, it seems that OSX support for BMD's growing array of USB3 hardware is non-existent, although BMD says it's forthcoming, but won't provide a timeline. In order to bring SDI into your Mac, you'll need the Intensity 3D Thunderbolt interface, which will set you back a cool grand (but is a very nice and functional piece of gear). BMD is coming out later this month with the Intensity Express which is a simple 2D SDI/Analog capture device for Thunderbolt that will set you back only half the cost of the Extreme.</p>
+<p>After striking out on the Mac, I headed over to MicroCenter to pick up a USB3 interface for my Windows desktop. Once I got everything hooked up and drivers installed. I fired up BlackMagic's capture software and hooked up the camera. Uh-oh, black screen. No amount of fiddling with the settings would give me an image, so it was back to BMD's tech support. As it turns out, Not only does their USB3 hardware not work on macs, it also only works on PCs if you have an Intel USB3 chipset. Given that the overwhelming majority of the aftermarket USB3 cards use the ASMedia chipset, which BMD tells me has been "hit or miss."</p>
+<p></body></html></p>

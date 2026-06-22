@@ -1,0 +1,50 @@
+---
+layout: post
+title: Live Streaming On a Budget (Part 1) - Genesis
+date: 2009-06-03 20:18:27.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Internet Campus
+- streaming
+tags:
+- amazon
+- CDN
+- ec2
+- flash
+- streaming
+- video
+- windows media
+- wowza
+meta:
+  dsq_thread_id: '217877475'
+  _googl_shortlink: http://goo.gl/PlIJ6
+  _edit_last: '1'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2009/06/03/live-streaming-on-a-budget-part-1-genesis/"
+excerpt: When our senior pastor started casting his vision of an Internet Campus which
+  would revolve around a live (or nearly-live) stream of worship, it became pretty
+  apparent that this was not going to scale well or cheaply. Over the course of the
+  summer of 2008, we started exploring creative ways to do the impossible with nearly
+  no money.
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>I promised everyone at <a href="http://www.ministrytech.org">MinistryTECH</a> way back in April that I'd rehash my presentation on my blog. Here we are almost 6 weeks later, and I owe you all!</p>
+<p>In the beginning...</p>
+<p>In April of 2008, we were asked to stream one of our Easter services live on the Web as an experiment. It was a very simple concoction of a Firewire cable coming out of one of the Sony DVCPro decks in the video rack, running into a Dell Optiplex 745 with a cheap add-in FireWire card, and <a href="http://www.microsoft.com/windows/windowsmedia/forpros/encoder/default.mspx" target="_blank">Windows Media Encoder</a>.  We made some slide loops into videos that we could bumper the live stream with (WME is good at switching recorded sources into a live stream like that), and broadcast the IMAG feed. It was simple, and we streamed 320x200@15fps to an audience of about 200 using a traditional streaming CDN. Total cost was about $300.</p>
+<p>When our <a href="http://adamhamilton.cor.org" target="_blank">senior pastor</a> started casting his vision of an Internet Campus which would revolve around a live (or nearly-live) stream of worship, it became pretty apparent that this was not going to scale well or cheaply. Over the course of the summer of 2008, we started exploring creative ways to do the impossible with nearly no money. We even looked at what it would take to run our own streaming servers, and that was also ruled out quickly due to the sheer bulk of cash that would have to be thrown at it and our lack thereof (this would have been so much easier if we were Congress and able to print it at will!).</p>
+<p>One of the key requirements for our streaming platform was that it be able to stream <a href="http://www.adobe.com/products/flash/" target="_blank">Flash</a> video in the interest of cross-platform compatibility. We love our <a href="http://www.apple.com" target="_blank">Mac</a> viewers enough that we didn't want to subject them to <a href="http://www.telestream.net/flip4mac-wmv/overview.htm" target="_blank">Flip4Mac</a> week after week. If we had any <a href="http://www.slashdot.org" target="_blank">Linux</a> viewers, we'd love them too, not wanting to let the lack of a Windows Media player keep our penguin-loving friends from hearing the Gospel.</p>
+<p>It was around this time that <a href="http://www.anchorite.org" target="_blank">Andrew Mitry</a>, one of the regulars in the <a href="http://www.citrt.org">CITRT</a> chat, informed us of Amazon's fledgling cloud computing offering called <a href="http://aws.amazon.com" target="_blank">EC2</a>, which allowed for on-demand computing at ridiculously low prices. We were exploring licensing a software platform and creating our own images when we discovered that <a href="http://www.wowzamedia.com/" target="_blank">Wowza</a>, one of the software platforms was available as a <a href="http://www.wowzamedia.com/ec2.html" target="_blank">paid image for EC2</a>.</p>
+<p>Not only were we excited at the prospect of a software company that was willing to embrace this new platform, the ability to pay for that software based entirely on usage with no up-front licensing was very attractive for an experimental project with virtually no money available to it.</p>
+<p>We now had a platform, it was time to start looking at how we were going to encode the video and get it up there.</p>
+<p>Continue on to <a title="Live Streaming On a Budget (Part 2) – Encoding" href="http://blog.ianbeyer.com/2009/06/03/live-streaming-on-a-budget-part-2-encoding/">Part 2: Encoding</a></p>
+<p></body></html></p>

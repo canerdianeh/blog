@@ -1,0 +1,108 @@
+---
+layout: post
+title: 'Browser-Aware Player Code: Episode V, IE Strikes Back'
+date: 2013-04-17 07:18:45.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Code
+- Grrr!
+- streaming
+- Wowza
+tags:
+- Broken By Design
+- Internet Explorer
+- javascript
+meta:
+  _edit_last: '2'
+  _syntaxhighlighter_encoded: '1'
+  _wpas_done_all: '1'
+  dsq_thread_id: '1217842445'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2013/04/17/browser-aware-player-code-episode-v-ie-strikes-back/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>Not so long ago, I updated my browser-aware player code to <a title="Browser-aware player code, revisited again" href="http://blog.ianbeyer.com/2012/10/29/browser-aware-player-code-revisited-again/">check for the presence of a stream</a>. Recently, it's come to light that Internet Explorer 9 doesn't play nice with this particular snippet, because in IE9, the Javascript engine is rather brain-damaged when it comes to cross-site requests. In order to deal with this properly, we must alter the way we query the server for the presence of a stream:</p>
+<p>[js]</p>
+<p>console.log("Starting stream Check");<br />
+if (is_ie9) {<br />
+console.log ("Using XDR because IE9 is stupid");<br />
+streamcheckXDR();<br />
+setInterval(function(){streamcheckXDR()},10000);<br />
+}<br />
+else {<br />
+streamcheck();<br />
+setInterval(function(){streamcheck()},10000);<br />
+}<br />
+function streamcheckXDR() {<br />
+ console.log("Starting XDR");<br />
+ xdr = new XDomainRequest();<br />
+ if(xdr) {<br />
+ xdr.onerror = function(){ console.log("XDR Error"); };<br />
+ xdr.onload = function(){ startPlayer(xdr.responseText,"XDR"); };<br />
+ url = "http://"+streamer+":8086/streamcheck?stream="+stream;<br />
+ xdr.open("get",url);<br />
+ xdr.send();<br />
+ } else {<br />
+ console.log("Failed to create XDR object");<br />
+ }</p>
+<p>}</p>
+<p>function startPlayer(result,mode){</p>
+<p>// for some inexplicable reason, running "Boolean" on the XDR output doesn't work</p>
+<p>// so we have to call the function and tell it if we're dealing with XDR data or AJAX data.</p>
+<p>&amp;nbsp;</p>
+<p>if(mode == "XDR") {<br />
+ if (result === "true") { curstatus = true;}<br />
+ if (result === "false") { curstatus = false;}<br />
+ } else {<br />
+ curstatus = Boolean(result);<br />
+ }</p>
+<p>//console.log("Result: "+result);<br />
+ //console.log("Previous: "+prevstatus);<br />
+ //console.log("Current: "+curstatus);<br />
+ if (curstatus == prevstatus) {<br />
+ //console.log("No Change");<br />
+ } else {<br />
+ if (curstatus) {<br />
+ if (is_iphone || is_ipad || is_ipod) { iOSPlayer("videoframe",plwd,plht,server,stream);}<br />
+ else if (is_blackberry) { rtspPlayer("videoframe",plwd,plht,server,stream+'_+240p');}<br />
+ else { flashPlayer("videoframe",plwd,plht,server,stream); }<br />
+ console.log("Changed from false to true");<br />
+ } else {<br />
+ var vframe=document.getElementById("videoframe")<br />
+ if (is_iphone || is_ipad || is_ipod || is_blackberry) {<br />
+ } else {<br />
+ jwplayer("videoframe").remove();<br />
+ }<br />
+ vframe.innerHTML = '&lt;IMG SRC="image.png" WIDTH="'+plwd+'" HEIGHT="'+plht+'"&gt;';</p>
+<p> console.log("Changed from true to false");<br />
+ }</p>
+<p>}<br />
+ prevstatus = curstatus;<br />
+}</p>
+<p>function streamcheck() {<br />
+ console.log("Starting AJAX");<br />
+ $.ajax({<br />
+ dataType: "json",<br />
+ contentType: "text/plain",</p>
+<p>type: "GET",<br />
+ url: "http://"+streamer+":8086/streamcheck?stream="+stream,<br />
+ error: function(XMLHttpRequest, textStatus, errorThrown)<br />
+ {<br />
+ console.log('AJAX Failure:'+ textStatus+':'+errorThrown);<br />
+ //some stuff on failure<br />
+ },<br />
+ success: function(result){startPlayer(result)}<br />
+ });<br />
+}</p>
+<p>[/js]</p>
+<p></body></html></p>

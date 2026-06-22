@@ -1,0 +1,145 @@
+---
+layout: post
+title: Browser-Aware Player Code, 2014 Edition
+date: 2014-05-19 14:08:17.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Code
+- streaming
+- Wowza
+tags: []
+meta:
+  _edit_last: '2'
+  _syntaxhighlighter_encoded: '1'
+  _wpas_done_all: '1'
+  dsq_thread_id: '2697750927'
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+permalink: "/2014/05/19/browser-aware-player-code-2014-edition/"
+---
+<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
+<html><body>
+<p>Yet another installment in the never-ending series of dealing with different platforms. This is precipitated by the continued boneheadedness of Google when it comes to supporting any live streaming transports in the native browser (they just simply don't). Some handset manufacturers are adding HLS support back, though.</p>
+<p>You'll notice there's also code in here to reference an MPEG-DASH manifest as well as "sanjose" and "smooth" (in Wowza parlance). This script doesn't make use of those capabilities at the moment, but once I get a good list of which browsers can support MSE and DASH.js, I'll update it to be able to use that player.</p>
+<p>This assumes that you're using cloud-hosted JW Player with a key, but if you're not, simply replace the first SCRIPT reference with your locally hosted JWPlayer file and comment out the jwplayer.key line. </p>
+<p>If you wish to use a different player such as FlowPlayer, you can replace the appropriate code in the flashPlayer() function.</p>
+<p>[js]</p>
+<p>&lt;HTML&gt;<br />
+&lt;HEAD&gt;<br />
+&lt;TITLE&gt;Player&lt;/TITLE&gt;</p>
+<p>&lt;script type="text/javascript" src="http://p.jwpcdn.com/6/8/jwplayer.js?ver=3.9"&gt;&lt;/script&gt;<br />
+&lt;script type="text/javascript"&gt;</p>
+<p>jwplayer.key='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';</p>
+<p>jwplayer.defaults = { "ph": 2 };</p>
+<p>&lt;/script&gt;</p>
+<p>&lt;/HEAD&gt;<br />
+&lt;BODY STYLE="margin: 0px; background-color: white"&gt;<br />
+&lt;div id="videoframe"&gt;&lt;/div&gt;</p>
+<p>&lt;SCRIPT type="text/javascript"&gt;<br />
+// Browser-aware video player for JW Player and Wowza<br />
+// V0.3 - May 19, 2014<br />
+// (c)2014 Ian Beyer<br />
+// Released under the GPL</p>
+<p>var container='videoframe';<br />
+var width="100%";<br />
+var aspect="4:3";</p>
+<p>//This section calculates actual sizes for player when using non-responsive elements.</p>
+<p>var multiplier=aspect.split(":");<br />
+var fixedwidth = Math.floor(window.innerWidth*width.split("%")[0]/100);<br />
+var fixedheight = Math.floor(window.innerWidth*multiplier[1]/multiplier[0]*width.split("%")[0]/100);<br />
+console.log ('Size: '+width+', '+aspect+' ('+fixedwidth+' x '+fixedheight+')');</p>
+<p>var streamserver='wowzanode1.tvwmedia.net';<br />
+var streamport='1935';<br />
+var streamapp='srcEncoders';<br />
+var streamname='TVW01';</p>
+<p>var streambase=streamserver+':'+streamport+'/'+streamapp+'/_definst_/'+streamname;<br />
+var cupertinourl='http://'+streambase+'/playlist.m3u8';<br />
+var sanjoseurl='http://'+streambase+'/Manifest.f4m';<br />
+var smoothurl='http://'+streambase+'/Manifest';<br />
+var dashurl='http://'+streambase+'/manifest.mpd';<br />
+var rtmpurl='rtmp://'+streambase;<br />
+var rtspurl='rtsp://'+streambase;</p>
+<p>var agent=navigator.userAgent.toLowerCase();<br />
+var is_iphone = (agent.indexOf('iphone')!=-1);<br />
+var is_ipad = (agent.indexOf('ipad')!=-1);<br />
+var is_ipod = (agent.indexOf('ipod')!=-1);<br />
+var is_safari = (agent.indexOf('safari')!=-1);<br />
+var is_iemobile = (agent.indexOf('iemobile')!=-1);<br />
+var is_blackberry = (agent.indexOf('blackberry')!=-1);<br />
+var is_android1= (agent.indexOf('android\ 1')!=-1);<br />
+var is_android2= (agent.indexOf('android\ 2')!=-1);<br />
+var is_android3= (agent.indexOf('android\ 3')!=-1);<br />
+var is_android4 = (agent.indexOf('android\ 4')!=-1);</p>
+<p>var is_chrome = (agent.indexOf('chrome')!=-1);</p>
+<p>if (is_iphone) { iosPlayer(); }<br />
+else if (is_ipad) { iosPlayer(); }<br />
+else if (is_ipod) { iosPlayer(); }<br />
+else if (is_android1) { rtspPlayer(); }<br />
+else if (is_android2) { rtspPlayer(); }<br />
+else if (is_android4) { a4Player(); }<br />
+else if (is_blackberry) { rtspPlayer(); }<br />
+else if (is_iemobile) { rtspPlayer(); }<br />
+else { flashPlayer(); }</p>
+<p>function iosPlayer()<br />
+{<br />
+var player=document.getElementById(container)<br />
+player.innerHTML='&lt;VIDEO '+<br />
+' SRC="'+cupertinourl+'"'+<br />
+' HEIGHT="'+fixedheight+'"'+<br />
+' WIDTH="'+fixedwidth+'"'+<br />
+' poster="poster.png"'+<br />
+' title="Live Stream"'+<br />
+' CONTROLS&gt;'+<br />
+'&lt;/video&gt;';<br />
+}</p>
+<p>function windowsPlayer()</p>
+<p>{</p>
+<p>// Need to add code here for silverlight player in Windows Phone to support the 12 users that actually have one. Until then use rtspPlayer();</p>
+<p>}</p>
+<p>function a4Player()<br />
+{<br />
+var player=document.getElementById(container)<br />
+player.innerHTML='&lt;A HREF="'+cupertinourl+'"&gt;'+<br />
+'&lt;IMG SRC="player.png" '+<br />
+'ALT="Start Mobile Video" '+<br />
+'BORDER="1" '+<br />
+'WIDTH="'+width+'"&gt;'+<br />
+'&lt;/A&gt;';<br />
+}</p>
+<p>function dashPlayer()</p>
+<p>{</p>
+<p>// Reserved for future use</p>
+<p>}</p>
+<p>function rtspPlayer()<br />
+{<br />
+var player=document.getElementById(container)<br />
+player.innerHTML='&lt;A HREF="'+rtspurl+'"&gt;'+<br />
+'&lt;IMG SRC="player.png" '+<br />
+'ALT="Start Mobile Video" '+<br />
+'BORDER="0" '+<br />
+'WIDTH="'+width+'"&gt;'+<br />
+'&lt;/A&gt;';<br />
+}</p>
+<p>function flashPlayer()<br />
+{</p>
+<p>//If using JW6 Premium or Enterprise, you can also use the cupertinourl here.</p>
+<p>jwplayer(container).setup({<br />
+ width: width,<br />
+ aspectratio: aspect,<br />
+ file: rtmpurl,<br />
+ autostart: false<br />
+ });</p>
+<p>}</p>
+<p>&lt;/SCRIPT&gt;<br />
+&lt;/BODY&gt;<br />
+&lt;/HTML&gt;</p>
+<p>[/js]</p>
+<p></body></html></p>
