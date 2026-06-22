@@ -8,14 +8,25 @@ lang: "en"
 
 show_excerpts: true
 show_frame: true
-show_sidebar: true
+show_sidebar: false
 include:
   - _pages
+
+
 
 navigation:
   - {title: "About", url: "/about/"}
   - {title: "The Lab", url: "/the-lab/"}
   - {title: "Archive", url: "/archive/"}
+  - title: "Blogroll"
+    dropdown:
+      - {title: "Aruba Blog: Gaining Altitude with Python and APIs", url: "https://blogs.arubanetworks.com/solutions/gaining-altitude-with-python-and-apis/"}
+      - {title: "Jim Palmer: Wi-Fi and the Netflix Effect", url: "https://jimswirelessworld.wordpress.com/2019/12/19/wi-fi-and-the-netflix-effect-aka-dont-rate-limit-your-wi-fi/"}
+      - {title: "Scott Lester: Temporary Network Connectivity Options", url: "https://blog.theitrebel.com/2020/03/20/temporary-network-connectivity-options/"}
+  - title: "Network Resources"
+    dropdown:
+      - {title: "Calculate TZ Offset for DHCP Option 2", url: "https://www.cisco.com/c/en/us/support/docs/broadband-cable/cable-modem-termination-systems-cmts/12188-calculate-hexadecimal-dhcp.pdf"}
+      - {title: "Propagation Losses Through Common Building Materials: 2.4 GHz vs 5 GHz", url: "https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf"}
 
 remote_theme: niklasbuschmann/contrast
 
