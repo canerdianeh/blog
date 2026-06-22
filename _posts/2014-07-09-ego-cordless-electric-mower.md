@@ -23,7 +23,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2014/07/09/ego-cordless-electric-mower/"
-image: "https://nerdian.ca/files/2014/07/mower_large.png"
+image: "/assets/images/2014/07/mower_large.png"
 ---
 
 It's a clean, green, mowing machine!

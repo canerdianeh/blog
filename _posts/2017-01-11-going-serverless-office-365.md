@@ -36,7 +36,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2017/01/11/going-serverless-office-365/"
-image: "https://nerdian.ca/files/2017/01/Products_ContentManagement.jpg"
+image: "/assets/images/2017/01/Products_ContentManagement.jpg"
 ---
 
 Recently I just completed a project for a small church in Kansas. Several months ago, the senior pastor asked me for a quote on a Windows server to provide authentication as well as file and print share services. During the conversation, a few things became clear:

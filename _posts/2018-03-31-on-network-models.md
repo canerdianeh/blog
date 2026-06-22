@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2018/03/31/on-network-models/"
-image: "https://nerdian.ca/files/2018/03/7-layer-burrito.jpg"
+image: "/assets/images/2018/03/7-layer-burrito.jpg"
 ---
 
 One of the most fundamental concepts underlying modern data networking is that of the network

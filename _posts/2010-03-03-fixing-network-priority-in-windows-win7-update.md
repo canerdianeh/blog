@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2010/03/03/fixing-network-priority-in-windows-win7-update/"
-image: "http://blog.ianbeyer.com/files/2010/03/NetworkAdvanced.png"
+image: "/assets/images/2010/03/NetworkAdvanced.png"
 ---
 
 A long time ago, I made a post about [fixing network priority in Windows](http://blog.ianbeyer.com/2008/10/10/fixing-network-priority-in-windows/ "Fixing network priority in Windows"), and I found myself having to do the same task again on my new Windows 7 system. The process isn't quite as easy to find under Windows 7/Vista. Here's the updated version:

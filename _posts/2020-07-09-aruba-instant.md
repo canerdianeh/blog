@@ -36,7 +36,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/07/09/aruba-instant/"
-image: "https://nerdian.ca/files/2020/07/AdobeStock_111552964-scaled.jpeg"
+image: "/assets/images/2020/07/AdobeStock_111552964-scaled.jpeg"
 ---
 
 After our [quick little tour of Aruba InstantON](https://nerdian.ca/2020/07/07/aruba-instanton/), I'm going to move up to the next level of Aruba gear: Instant.

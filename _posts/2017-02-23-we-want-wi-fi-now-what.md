@@ -31,7 +31,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2017/02/23/we-want-wi-fi-now-what/"
-image: "https://nerdian.ca/files/2017/02/IMG_2334.png"
+image: "/assets/images/2017/02/IMG_2334.png"
 ---
 
 I've been spending the past week at the annual [Wireless LAN Professionals](http://wlanpros.com) Conference in Phoenix. This is one of my favorite conferences along with the [Church IT Network](http://churchitnetwork.com) conference, because I get to spend a couple of days geeking out hard with a whole bunch of REALLY smart people. The amount of information I've stuffed into my brain since last Friday is a little bit, well, mind-blowing...

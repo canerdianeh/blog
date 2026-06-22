@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2013/11/04/mobile-internet-in-haiti/"
-image: "http://blog.ianbeyer.com/files/2013/11/Screen-Shot-2013-11-05-at-8.03.55-AM-300x200.png"
+image: "/assets/images/2013/11/Screen-Shot-2013-11-05-at-8.03.55-AM-300x200.png"
 ---
 
 **Note: Be sure to read my [March 2015 update](http://blog.ianbeyer.com/2015/03/03/mobile-internet-in-haiti-part-2/ "Mobile Internet In Haiti, Part 2") about this...**

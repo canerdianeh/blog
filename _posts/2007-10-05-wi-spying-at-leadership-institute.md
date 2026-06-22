@@ -38,7 +38,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2007/10/05/wi-spying-at-leadership-institute/"
-image: "http://blog.ianbeyer.com/files/2007/10/LI-Session-1-300x226.png"
+image: "/assets/images/2007/10/LI-Session-1-300x226.png"
 ---
 
 I've been keeping an eye on our new wireless (SonicPoints!), and noticed something interesting... This 60-minute image was captured at 10:17. Can you guess what time people started coming into the sanctuary?

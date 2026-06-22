@@ -24,7 +24,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2011/07/18/wowza-stream-class-playlist-generator/"
-image: "http://blog.ianbeyer.com/files/2011/07/PLGen1.png"
+image: "/assets/images/2011/07/PLGen1.png"
 ---
 
 I've received a few comments and e-mails to my post about the [Wowza Stream Class](http://blog.ianbeyer.com/wowza-stream-class/ "Using the Wowza Stream Class") asking if I had any kind of playlist generator. I have something in Excel that I use for our weekly live stream and scheduled rebroadcasts. It may require heavy modification to suit your purposes, but it's helpful to really see how a playlist can come together.

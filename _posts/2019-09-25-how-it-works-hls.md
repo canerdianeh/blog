@@ -36,7 +36,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2019/09/25/how-it-works-hls/"
-image: "https://nerdian.ca/files/2019/09/Aadaptive-Bitrate-Streaming-Graphic-700x313.png"
+image: "/assets/images/2019/09/Aadaptive-Bitrate-Streaming-Graphic-700x313.png"
 ---
 
 For those of us that work on wireless systems with a strong guest access component, the fine folks at Wowza Media Systems posted earlier this month about the inner workings of HTTP Live Streaming (Apple's proprietary streaming protocol, or HLS) which accounts for about 45% of all streaming traffic - which tracks pretty closely to Apple's market share of mobile devices.

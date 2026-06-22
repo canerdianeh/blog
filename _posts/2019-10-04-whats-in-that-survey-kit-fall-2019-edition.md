@@ -31,7 +31,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2019/10/04/whats-in-that-survey-kit-fall-2019-edition/"
-image: "https://nerdian.ca/files/2019/10/IMG_6761.jpeg"
+image: "/assets/images/2019/10/IMG_6761.jpeg"
 ---
 
 The life and contents of a survey kit is a dynamic one. Here's what's in my kit these days. The Pelican 1510 is airline carry-on size, because there's no way they'll let you check that stuff with the batteries (which are all just under the airline limit of 100Wh), and the contents are valuable enough that you probably don't want it out of sight, or trust it to the airline baggage handlers. If you're carrying this stuff, it's because you need it at your destination. Downside is that the 1510 doesn't allow the overhead bin to be closed on Embraer 135/145 regional jets.

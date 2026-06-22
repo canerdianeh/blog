@@ -30,7 +30,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2010/02/21/anatomy-of-an-online-worship-service/"
-image: "http://blog.ianbeyer.com/files/2010/02/02-21-10-AM-Network-300x201.png"
+image: "/assets/images/2010/02/02-21-10-AM-Network-300x201.png"
 ---
 
 (or, How Amazon Cloudwatch helps manage Wowza server load)[![02-21-10-AM-AWS]({{site.baseurl}}/assets/2010/02/02-21-10-AM-AWS-300x159.png)](http://blog.ianbeyer.com/files/2010/02/02-21-10-AM-AWS.png)

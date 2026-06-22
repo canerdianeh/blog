@@ -21,7 +21,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2008/07/07/i-knew-this-day-would-come/"
-image: "http://blog.ianbeyer.com/files/2008/07/faith-harness-200x300.jpg"
+image: "/assets/images/2008/07/faith-harness-200x300.jpg"
 ---
 
 My eldest, Faith (who will be \*gasp\* FIVE next month) showed from a very early age (6 months?) that she was probably going to be one of these extreme-sports adrenaline junkies.

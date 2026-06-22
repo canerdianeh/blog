@@ -22,7 +22,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2008/07/07/citrt-expands-northward/"
-image: "http://blog.ianbeyer.com/files/2008/07/projectors640-300x200.jpg"
+image: "/assets/images/2008/07/projectors640-300x200.jpg"
 ---
 
 I had a great chat this morning with Gregg Hatton-Fearnley, the IS/IT director at Centre Street Church here in Calgary.

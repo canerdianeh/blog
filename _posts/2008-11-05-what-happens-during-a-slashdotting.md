@@ -25,7 +25,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2008/11/05/what-happens-during-a-slashdotting/"
-image: "http://blog.ianbeyer.com/files/2008/11/consumeristapache.png"
+image: "/assets/images/2008/11/consumeristapache.png"
 ---
 
 Well, OK, it wasn't [Slashdot](http://www.slashdot.org "Slashdot") that was the culprit this time, but rather the pro blog [Consumerist](http://www.consumerist.com "Consumerist") (if we're a megachurch, does Consumerist count as a megablog? It claims nearly 3 million unique visitors a month)

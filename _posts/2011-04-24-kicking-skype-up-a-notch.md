@@ -26,7 +26,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2011/04/24/kicking-skype-up-a-notch/"
-image: "http://blog.ianbeyer.com/files/2011/04/IMAG0583-612x1024.jpg"
+image: "/assets/images/2011/04/IMAG0583-612x1024.jpg"
 ---
 
 A few weeks ago, our Senior Pastor asked for some assistance with setting up a skype video conference so that Adam could participate in a meeting being held in Texas. The alternative was to have him fly down to Dallas for a 1-hour meeting, effectively blowing out an entire day of productive hours.

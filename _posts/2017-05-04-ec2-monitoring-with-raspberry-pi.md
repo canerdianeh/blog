@@ -39,7 +39,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2017/05/04/ec2-monitoring-with-raspberry-pi/"
-image: "https://nerdian.ca/files/2017/05/1200px-Mission_control_center.jpg"
+image: "/assets/images/2017/05/1200px-Mission_control_center.jpg"
 ---
 
 I've been doing a little Raspberry Pi hacking lately, and put together a neat way to have physical status LEDs on your desk for things like EC2 instances.

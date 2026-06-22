@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2015/03/03/mobile-internet-in-haiti-part-2/"
-image: "https://nerdian.ca/files/2015/03/aip4-flag-haiti.jpg"
+image: "/assets/images/2015/03/aip4-flag-haiti.jpg"
 ---
 
 A while back, I posted about getting [mobile Internet in Haiti](http://blog.ianbeyer.com/2013/11/04/mobile-internet-in-haiti/ "Mobile Internet in Haiti"). As technology changes rapidly, especially when it comes to Haitian internet access, I figured I'd post an update, having just returned from there in late February.

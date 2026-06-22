@@ -35,7 +35,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2016/10/16/wowza-stream-scheduler-hacks-google-calendar/"
-image: "https://nerdian.ca/files/2016/10/CDsqQFlWAAA7A5z.png"
+image: "/assets/images/2016/10/CDsqQFlWAAA7A5z.png"
 ---
 
 One of Wowza's most underutilized yet most powerful features is the stream scheduler. I've blogged about it extensively in the past, and I'll return from a long hiatus to do it again.

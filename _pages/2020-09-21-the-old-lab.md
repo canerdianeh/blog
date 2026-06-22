@@ -29,7 +29,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/the-old-lab/"
-image: "https://nerdian.ca/files/2020/09/AdobeStock_298508606.jpeg"
+image: "/assets/images/2020/09/AdobeStock_298508606.jpeg"
 ---
 
 I often get asked about what's in The Lab. It's always somewhat fluid, but I'll update this page accordingly. This is the lab as it stood prior to January 2021 when I moved.

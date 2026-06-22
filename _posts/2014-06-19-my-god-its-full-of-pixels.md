@@ -27,7 +27,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2014/06/19/my-god-its-full-of-pixels/"
-image: "https://nerdian.ca/files/2014/06/Screen-Shot-2014-06-19-at-12.32.29-PM-3.png"
+image: "/assets/images/2014/06/Screen-Shot-2014-06-19-at-12.32.29-PM-3.png"
 ---
 
 One of my desktop monitors gave it up last week, the backlight started flickering and randomly disconnecting from my Mac (which causes all attached displays to go dark for a second while it recomputes your workspace). Needless to say, it was sapping productivity even worse than Facebook. I've been eyeing 4K monitors for a while now, and both [Dell](http://accessories.us.dell.com/sna/productdetail.aspx?c=us&cs=19&l=en&sku=210-ACHO "Dell P2815Q Ultra HD Display") and [Lenovo](http://www.cnet.com/products/lenovo-thinkvision-pro2840m-4k-display/ "Lenovo ThinkVision Pro2840M") have some decent low-cost options in 28" sizes ($700ish), but that was still more than I was willing to cough up for a new monitor right now, even with the Lenovo dealer demo discount.

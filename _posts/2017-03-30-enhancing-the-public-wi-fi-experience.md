@@ -41,7 +41,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2017/03/30/enhancing-the-public-wi-fi-experience/"
-image: "https://nerdian.ca/files/2017/03/Mac-OSX-Server.png"
+image: "/assets/images/2017/03/Mac-OSX-Server.png"
 ---
 
 Recently, there was an excellent blog post from [WLAN Pros](http://wlanpros.com) about "[Rules for successful hotel wi-fi](http://www.wlanpros.com/rules-successful-hotel-wi-fi-3)". While it is aimed primarily at Wi-Fi in the hotel business (where there is an overabundance of [Bad-Fi](https://badfi.com/bad-fi/)), many of the tips presented also apply to a wide variety of large-scale public venue wifi installations. Lots of great information in the post, and well worth a read.

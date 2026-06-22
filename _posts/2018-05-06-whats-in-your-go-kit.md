@@ -35,7 +35,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2018/05/06/whats-in-your-go-kit/"
-image: "https://nerdian.ca/files/2018/05/D764D261-4793-4DA4-9E8F-A0C8C55DE829.jpeg"
+image: "/assets/images/2018/05/D764D261-4793-4DA4-9E8F-A0C8C55DE829.jpeg"
 ---
 
 As I prepare for another trip to a customer site, I figured I'd post the contents of my wireless engineering go-kit for the benefit of others wanting to put one together. I've posted previously about my [streaming go-kit](http://blog.ianbeyer.com/2015/01/22/streaming-on-the-go/), which has largely been retired as I'm not doing nearly as much streaming as before, having shifted over to Wi-Fi. Amazon links in this post are affiliate links, and it's where I bought most of this stuff over the course the the last several years. Some of it was freebies from conferences like the [Wireless LAN Professionals Conference](https://www.wlanpros.com/thewlpc/).

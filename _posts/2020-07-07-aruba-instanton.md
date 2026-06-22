@@ -42,7 +42,7 @@ author:
 permalink: "/2020/07/07/aruba-instanton/"
 excerpt: 'Aruba turned some heads last year when they announced a new product line
   for SMB, called InstantON. Read more about my experience... '
-image: "https://nerdian.ca/files/2020/07/Screen-Shot-2020-07-07-at-2.55.30-PM.png"
+image: "/assets/images/2020/07/Screen-Shot-2020-07-07-at-2.55.30-PM.png"
 ---
 
 For many years, the small business segment of the wireless networking market has largely been the exclusive territory of [Ubiquiti](https://www.ui.com), who have developed a decent product suite that meets the needs and price points that small businesses seek (read: cheap). Netgear has played in that market a little bit with their ProSafe line, but most of their business has been on the consumer side of things.

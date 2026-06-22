@@ -39,7 +39,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2019/09/06/hiding-in-plain-sight/"
-image: "https://nerdian.ca/files/2019/09/x1080.jpeg"
+image: "/assets/images/2019/09/x1080.jpeg"
 ---
 
 One of my favorite things to do when I'm at a Disney park is to play the wireless nerd's version of [Hidden Mickeys](https://en.wikipedia.org/wiki/Hidden_Mickey): Trying to spot the myriad creative ways in which Disney's Imagineers have blended their excellent wireless network into the carefully contrived scenery. It truly is magical how they can make wireless everywhere while keeping it nearly invisible.

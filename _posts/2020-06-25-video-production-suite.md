@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/06/25/video-production-suite/"
-image: "https://nerdian.ca/files/2020/06/IMG_0751-1.png"
+image: "/assets/images/2020/06/IMG_0751-1.png"
 ---
 
 I'm going to veer off from my usual diet of wireless posts to bring you a howto post on the new video production desk that I built for the Family Life Center at our church.

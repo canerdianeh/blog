@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2018/04/19/achievement-unlocked-cwne/"
-image: "http://blog.ianbeyer.com/files/2018/04/Ian-Beyer-CWNE-273-300x300.png"
+image: "/assets/images/2018/04/Ian-Beyer-CWNE-273-300x300.png"
 ---
 
 After several years of training, learning, and experience doing, I've just been awarded CWNE certificate #273. Stay tuned for some posts about that process and how I got there.

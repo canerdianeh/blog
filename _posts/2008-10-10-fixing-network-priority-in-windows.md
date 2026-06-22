@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2008/10/10/fixing-network-priority-in-windows/"
-image: "http://blog.ianbeyer.com/files/2008/10/networkproperties.png"
+image: "/assets/images/2008/10/networkproperties.png"
 ---
 
 Recently, we made some changes to the DNS infrastructure on our public wireless networks which has had the unintended consequence of breaking things when our laptop users are plugged into the LAN and have their wireless active. Brian and I have wrangled with this in the office, but we simply turned off the wireless as a workaround.

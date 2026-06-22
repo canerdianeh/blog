@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2017/04/15/using-bitmovin-player-with-church-online-platform/"
-image: "https://nerdian.ca/files/2017/04/lifechurch-tv.png"
+image: "/assets/images/2017/04/lifechurch-tv.png"
 ---
 
 Today's post will be a brief tutorial on using [Bitmovin](https://bitmovin.com)'s excellent [HTML5 video player](https://bitmovin.com/html5-player/) with [Church Online Platform](http://churchonlineplatform.com).

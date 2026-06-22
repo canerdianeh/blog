@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2022/03/10/aruba-central-api/"
-image: "https://nerdian.ca/files/2022/03/Screen-Shot-2022-03-10-at-10.04.25.png"
+image: "/assets/images/2022/03/Screen-Shot-2022-03-10-at-10.04.25.png"
 ---
 
 Yep. Another post about code. No, I'm not a software developer, I'm just a lazy network engineer who has an allergic reaction to doing GUI-based management of large environments. And thus I code because that's a growing part of being a network engineer in the 2022.

@@ -27,7 +27,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2009/06/04/live-streaming-on-a-budget-part-3-the-process/"
-image: "http://blog.ianbeyer.com/files/2009/06/11089636-300x225.jpg"
+image: "/assets/images/2009/06/11089636-300x225.jpg"
 ---
 
 For background information, see [Part 1](http://blog.ianbeyer.com/2009/06/03/live-streaming-on-a-budget-part-1-genesis/ "Live Streaming On a Budget (Part 1) – Genesis") and [Part 2](http://blog.ianbeyer.com/2009/06/03/live-streaming-on-a-budget-part-2-encoding/ "Live Streaming On a Budget (Part 2) – Encoding")

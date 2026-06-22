@@ -30,7 +30,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/03/18/working-from-home-the-basics/"
-image: "https://nerdian.ca/files/2020/03/AdobeStock_205178565-scaled.jpeg"
+image: "/assets/images/2020/03/AdobeStock_205178565-scaled.jpeg"
 ---
 
 Since working from home is a hot topic right now with everyone practicing social distancing, I thought I'd present a couple of posts about what works for me. I've been working from home in some form or another since 2011, and I think I'm starting to get the hang of it. We'll start with some of the basics of remote work in this post, and in later posts, I'll dig into the details of home office technology and creating a functional work space.

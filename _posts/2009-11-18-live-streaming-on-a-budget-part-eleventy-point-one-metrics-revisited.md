@@ -24,7 +24,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2009/11/18/live-streaming-on-a-budget-part-eleventy-point-one-metrics-revisited/"
-image: "http://blog.ianbeyer.com/files/2009/11/streams-200911151215.png"
+image: "/assets/images/2009/11/streams-200911151215.png"
 ---
 
 Back in July, I made a [post about metrics](http://blog.ianbeyer.com/2009/07/12/live-streaming-on-a-budget-part-eleventy-metrics/ "Live Streaming on a Budget (Part eleventy) – Metrics") and a cheesy VB Script that got the job done, but wasn't particularly elegant. I've since improved on this due to load balancing (I [posted about that](http://blog.ianbeyer.com/2009/09/27/live-streaming-on-a-budget-wowza-load-balancing-part-um-how-many-is-it-now/ "Live Streaming on a budget: Wowza Load Balancing (Part … um.. how many is it now?)") in September).

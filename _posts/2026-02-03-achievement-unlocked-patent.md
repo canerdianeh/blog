@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2026/02/03/achievement-unlocked-patent/"
-image: "https://nerdian.ca/files/2026/02/light-bulb-gru.gif"
+image: "/assets/images/2026/02/light-bulb-gru.gif"
 ---
 
 Way back in the olden days before the world shut down (but only very shortly before), I had an inkling of an idea whilst returning to the USA aboard a cruise ship whose Wi-Fi refit I was commissioning. After letting the idea percolate in the ocean breeze, it dawned on me that my frustration over why nobody had done this before was because it had apparently not occurred to *anyone* to do it before, and I started down the long and complicated road of getting official confirmation and recognition that I was the first person to have this idea and had in fact *invented something*!

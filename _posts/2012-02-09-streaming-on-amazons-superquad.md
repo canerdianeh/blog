@@ -24,7 +24,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2012/02/09/streaming-on-amazons-superquad/"
-image: "https://nerdian.ca/files/2012/02/turbomod2.jpg"
+image: "/assets/images/2012/02/turbomod2.jpg"
 ---
 
 ![]({{site.baseurl}}/assets/2012/02/turbomod2-300x231.jpg "Amazon Is My Hot Rod")I posted [recently](http://blog.ianbeyer.com/2012/01/21/go-big-or-go-home/ "Go big, or go home!") about using Amazon EC2's cluster compute instances for big streaming projects. That post got me a call from a client in Texas who was planning to stream a big tennis tournament in Dallas and needed a server backend that could handle it, without going through the hassle and expense of setting up a CDN account for a single event. Of course, since everything is bigger in Texas, they wanted to stream to a large audience. They also wanted to be able to send a single high-definition stream for each of the two tournament courts, and then transcode down to a few different bandwidth-friendly bitrates. This called for not only big network horsepower, but big CPU horsepower as well.

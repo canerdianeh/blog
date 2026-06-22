@@ -21,7 +21,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2008/08/01/arena-check-in/"
-image: "http://blog.ianbeyer.com/files/2008/08/checkinmain-300x218.jpg"
+image: "/assets/images/2008/08/checkinmain-300x218.jpg"
 ---
 
 Now that a lot of the back end of our Arena Check-in system is in place and ready to go, I've been focusing my efforts on the fun part... Themes!

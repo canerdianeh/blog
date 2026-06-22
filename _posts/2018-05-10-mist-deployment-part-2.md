@@ -40,7 +40,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2018/05/10/mist-deployment-part-2/"
-image: "https://nerdian.ca/files/2018/05/DSC_0115.jpg"
+image: "/assets/images/2018/05/DSC_0115.jpg"
 ---
 
 *Second in a series about our first deployment of a Mist Systems wireless network.*

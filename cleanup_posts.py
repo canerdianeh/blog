@@ -1,37 +1,71 @@
 #!/usr/bin/env python3
 """
-cleanup_posts.py
-
-Run from the root of your Jekyll repo:
-    python3 cleanup_posts.py              # full run (fetches images)
+cleanup_posts.py - Run from Jekyll repo root to clean _posts/
+    python3 cleanup_posts.py              # includes image fetching
     python3 cleanup_posts.py --no-images  # skip image fetching
 
-Requirements:
-    pip3 install requests beautifulsoup4 markdownify
+Requirements: pip3 install requests beautifulsoup4 markdownify
 """
 
-import os
-import re
-import sys
-import time
-import html
-import requests
+import os, re, sys, time, html, requests
+from urllib.parse import urlparse
+from pathlib import Path
 from bs4 import BeautifulSoup
 from markdownify import markdownify as md
 
+TARGET_DIR = "_posts"
+ASSETS_DIR = "assets/images"
 REQUEST_DELAY = 0.5
 SKIP_IMAGES = "--no-images" in sys.argv
-
-# Directory defaults to _posts, override with e.g. python3 cleanup_posts.py _pages
-args = [a for a in sys.argv[1:] if not a.startswith("--")]
-POSTS_DIR = args[0] if args else "_posts"
-
-# Matches fenced code blocks (``` with or without language)
 FENCED_BLOCK = re.compile(r'(```[^\n]*\n[\s\S]*?```)', re.MULTILINE)
 
 
+def download_image(url):
+    """Download image to assets/images/, return local path or None."""
+    try:
+        parsed = urlparse(url)
+        # Preserve the path structure from the URL
+        url_path = parsed.path.lstrip("/")
+        # Strip domain-specific prefix (e.g. files/2022/11/img.jpg -> 2022/11/img.jpg)
+        parts = url_path.split("/")
+        # Drop the first path component if it's 'files' or similar non-date prefix
+        if parts and not re.match(r'^\d{4}$', parts[0]):
+            parts = parts[1:]
+        local_path = os.path.join(ASSETS_DIR, *parts)
+        if os.path.exists(local_path):
+            return "/" + local_path
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        resp = requests.get(url, timeout=15, headers={"User-Agent": "Jekyll-cleanup/1.0"})
+        if resp.status_code != 200:
+            return None
+        with open(local_path, "wb") as f:
+            f.write(resp.content)
+        print(f"  Downloaded: {local_path}")
+        return "/" + local_path
+    except Exception as e:
+        print(f"  WARNING: could not download {url}: {e}")
+        return None
+
+
+def fetch_og_image(url):
+    """Fetch og:image URL from a page."""
+    try:
+        resp = requests.get(url, timeout=10, headers={"User-Agent": "Jekyll-cleanup/1.0"})
+        if resp.status_code != 200:
+            return None
+        soup = BeautifulSoup(resp.text, "html.parser")
+        tag = soup.find("meta", property="og:image")
+        if tag and tag.get("content"):
+            img = tag["content"]
+            if "blank.jpg" in img or not img.strip():
+                return None
+            return img
+    except Exception as e:
+        print(f"  WARNING: {e}")
+    return None
+
+
 def convert_wp_code_blocks(body):
-    """Convert <pre class='wp-block-code'> to fenced markdown."""
     soup = BeautifulSoup(body, "html.parser")
     changed = False
     for pre in soup.find_all("pre", class_=re.compile(r"wp-block-code")):
@@ -52,56 +86,26 @@ def convert_wp_code_blocks(body):
 
 
 def html_to_markdown(segment):
-    """Convert an HTML segment to markdown, skipping if it has no HTML."""
     if not re.search(r'<[a-zA-Z]', segment):
         return segment
     return md(segment, heading_style="ATX", bullets="-", strip=["script", "style"])
 
 
 def clean_body(body):
-    # Step 1: convert any remaining wp-block-code pre tags
     body = convert_wp_code_blocks(body)
-
-    # Step 2: split on fenced code blocks — even indices are HTML, odd are code
     parts = FENCED_BLOCK.split(body)
-
     result = []
     for i, part in enumerate(parts):
         if i % 2 == 1:
-            # Fenced code block — keep exactly as-is
             result.append(part)
         else:
-            # HTML segment — convert to markdown
             result.append(html_to_markdown(part))
-
     body = ''.join(result)
-
-    # Step 3: ensure blank lines before and after fenced code blocks
-    body = re.sub(r'([^\n])(```)', r'\1\n\n```', body)      # text immediately before opening fence
-    body = re.sub(r'```([^\n`])', r'```\n\n\1', body)       # text on same line as closing fence
-    body = re.sub(r'```\n([^\n`])', r'```\n\n\1', body)     # text on next line after closing fence, no blank
-
-    # Step 4: collapse excessive blank lines
+    body = re.sub(r'([^\n])(```)', r'\1\n\n```', body)
+    body = re.sub(r'```([^\n`])', r'```\n\n\1', body)
+    body = re.sub(r'```\n([^\n`])', r'```\n\n\1', body)
     body = re.sub(r'\n{3,}', '\n\n', body)
     return body.strip()
-
-
-def fetch_og_image(url):
-    try:
-        resp = requests.get(url, timeout=10,
-                            headers={"User-Agent": "Jekyll-cleanup-script/1.0"})
-        if resp.status_code != 200:
-            return None
-        soup = BeautifulSoup(resp.text, "html.parser")
-        tag = soup.find("meta", property="og:image")
-        if tag and tag.get("content"):
-            img = tag["content"]
-            if "blank.jpg" in img or not img.strip():
-                return None
-            return img
-    except Exception as e:
-        print(f"  WARNING: could not fetch {url}: {e}")
-    return None
 
 
 def parse_post(content):
@@ -110,9 +114,7 @@ def parse_post(content):
     end = content.find("\n---", 3)
     if end == -1:
         return None, content
-    fm = content[3:end].strip()
-    body = content[end+4:].strip()
-    return fm, body
+    return content[3:end].strip(), content[end+4:].strip()
 
 
 def has_real_image(fm):
@@ -120,76 +122,84 @@ def has_real_image(fm):
     if not m:
         return False
     val = m.group(1).strip().strip('"\'')
+    # Already a local path
+    if val.startswith("/assets/"):
+        return True
     return bool(val) and "blank.jpg" not in val
 
 
 def get_permalink(fm):
     m = re.search(r'^permalink\s*:\s*["\']?(.*?)["\']?\s*$', fm, re.MULTILINE)
-    if m:
-        return m.group(1).strip()
-    return None
+    return m.group(1).strip() if m else None
 
 
 def process_file(filepath):
     with open(filepath, "r", encoding="utf-8") as f:
         content = f.read()
-
     fm, body = parse_post(content)
     if fm is None:
-        print(f"  SKIP (no front matter): {filepath}")
+        print(f"  SKIP (no front matter)")
         return
-
     changed = False
 
-    # 1. Image fetching
-    if not SKIP_IMAGES and not has_real_image(fm):
-        permalink = get_permalink(fm)
-        if permalink:
-            base = "https://nerdian.ca"
-            url = base + permalink if permalink.startswith("/") else permalink
-            print(f"  Fetching og:image from {url}")
-            og_image = fetch_og_image(url)
-            time.sleep(REQUEST_DELAY)
-            if og_image:
-                fm = re.sub(r'\nimage:.*', '', fm)
-                fm = fm + f'\nimage: "{og_image}"'
-                print(f"  Found image: {og_image}")
-                changed = True
-            else:
-                print(f"  No og:image found")
+    if not SKIP_IMAGES:
+        # Check if image exists and is already local
+        m = re.search(r'^image\s*:\s*["\']?(.*?)["\']?\s*$', fm, re.MULTILINE)
+        current_image = m.group(1).strip().strip('"\'') if m else ""
 
-    # 2. Convert body to clean markdown
+        if current_image.startswith("/assets/"):
+            print(f"  Image already local, skipping")
+        elif current_image and "blank.jpg" not in current_image:
+            # Remote URL — download it
+            local_path = download_image(current_image)
+            if local_path:
+                fm = re.sub(r'\nimage:.*', '', fm)
+                fm += f'\nimage: "{local_path}"'
+                changed = True
+        else:
+            # No image or blank — fetch from WP site
+            permalink = get_permalink(fm)
+            if permalink:
+                url = "https://nerdian.ca" + permalink if permalink.startswith("/") else permalink
+                print(f"  Fetching og:image...")
+                og_url = fetch_og_image(url)
+                time.sleep(REQUEST_DELAY)
+                if og_url:
+                    local_path = download_image(og_url)
+                    if local_path:
+                        fm = re.sub(r'\nimage:.*', '', fm)
+                        fm += f'\nimage: "{local_path}"'
+                        changed = True
+                    else:
+                        print(f"  Could not download image")
+                else:
+                    print(f"  No og:image found")
+
     cleaned_body = clean_body(body)
     if cleaned_body != body:
         changed = True
-        print(f"  Body converted to markdown")
+        print(f"  Body converted")
 
     if changed:
-        new_content = f"---\n{fm}\n---\n\n{cleaned_body}\n"
         with open(filepath, "w", encoding="utf-8") as f:
-            f.write(new_content)
+            f.write(f"---\n{fm}\n---\n\n{cleaned_body}\n")
         print(f"  Updated.")
     else:
-        print(f"  No changes needed.")
+        print(f"  No changes.")
 
 
 def main():
-    if not os.path.isdir(POSTS_DIR):
-        print(f"ERROR: '{POSTS_DIR}' directory not found. Run from your Jekyll repo root.")
+    if not os.path.isdir(TARGET_DIR):
+        print(f"ERROR: '{TARGET_DIR}' not found. Run from repo root.")
         return
-
-    posts = sorted([f for f in os.listdir(POSTS_DIR) if f.endswith(".md") or f.endswith(".html")])
-    print(f"Found {len(posts)} posts in {POSTS_DIR}/")
-    print(f"Image fetching: {'DISABLED' if SKIP_IMAGES else 'ENABLED'}\n")
-
-    for i, filename in enumerate(posts, 1):
-        filepath = os.path.join(POSTS_DIR, filename)
-        print(f"[{i}/{len(posts)}] {filename}")
-        process_file(filepath)
+    files = sorted([f for f in os.listdir(TARGET_DIR) if f.endswith(".md") or f.endswith(".html")])
+    print(f"Found {len(files)} files in {TARGET_DIR}/")
+    print(f"Image fetching: {'DISABLED' if SKIP_IMAGES else 'ENABLED (downloading locally)'}\n")
+    for i, filename in enumerate(files, 1):
+        print(f"[{i}/{len(files)}] {filename}")
+        process_file(os.path.join(TARGET_DIR, filename))
         print()
-
     print("Done.")
-
 
 if __name__ == "__main__":
     main()

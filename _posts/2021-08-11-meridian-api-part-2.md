@@ -44,7 +44,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2021/08/11/meridian-api-part-2/"
-image: "https://nerdian.ca/files/2021/08/AdobeStock_418483281.jpeg"
+image: "/assets/images/2021/08/AdobeStock_418483281.jpeg"
 ---
 
 Yesterday, I [posted](https://nerdian.ca/2021/08/10/aruba-meridian-location/) about leveraging the Meridian API to get a list of placemarks into a CSV file. Today, We'll take that one step further, and go the other way - because bulk creating/updating placemarks is no fun by hand.

@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2016/10/17/nonprofit-tech-deals-microsoft-azure/"
-image: "https://nerdian.ca/files/2016/10/10915161_10152528597001956_1761227331268933044_n.png"
+image: "/assets/images/2016/10/10915161_10152528597001956_1761227331268933044_n.png"
 ---
 
 Last week while I was at the [Church IT Network](http://churchitnetwork.com) National Conference in Anderson, SC, a colleague pointed me to a fantastic donation from Microsoft via TechSoup: $5000/year in Azure credit. At a hair over $400/month, this means you can run a pretty substantial amount of stuff. Microsoft just [announced this program](https://blogs.microsoft.com/on-the-issues/2016/09/26/bringing-more-cloud-power-to-serve-nonprofits/#sm.000016swlxhvqdfnnyarx36kfn39v) at the end of September, so it's still very new. And very cool. Credits are good any time within the 12-month period, so you don't have to split them up month by month. They do not, however, roll over to the following year.

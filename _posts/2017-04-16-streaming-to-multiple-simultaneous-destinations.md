@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2017/04/16/streaming-to-multiple-simultaneous-destinations/"
-image: "https://nerdian.ca/files/2017/04/6820932624_b6ca9295c7_k.jpg"
+image: "/assets/images/2017/04/6820932624_b6ca9295c7_k.jpg"
 ---
 
 Live streaming has been a "thing" for some time. I work with many churches to help them solve their streaming challenges and develop their technology strategy for streaming. One of the most frequent questions I hear is, "can I stream to Facebook Live and still keep my other stream?" Fortunately, this is a lot easier than it used to be. There are variations on this question, but they all boil down to wanting to know how to send one stream to multiple outlets to expand audience reach.

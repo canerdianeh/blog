@@ -24,7 +24,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2012/01/09/css-wowza-load-graphs/"
-image: "http://blog.ianbeyer.com/files/2012/01/BigRack.png"
+image: "/assets/images/2012/01/BigRack.png"
 ---
 
 I've been experimenting with ways to generate load graphs for Wowza. The best way for doing bar graphs on a webpage is to go all crazy with CSS. It's really well suited to doing this. Here's a PHP script that will query a Wowza origin server for its repeaters, and then polls the repeaters for their load stats. This also provides buttons for launching/terminating repeaters, and visually representing them as a rack full of servers:

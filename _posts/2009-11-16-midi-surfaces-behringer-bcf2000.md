@@ -23,7 +23,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2009/11/16/midi-surfaces-behringer-bcf2000/"
-image: "http://blog.ianbeyer.com/files/2009/11/Behringer_BCF2000.jpg"
+image: "/assets/images/2009/11/Behringer_BCF2000.jpg"
 ---
 
 I ran up to Musician's Friend this afternoon with C so that my wife could have some peace and quiet to work on seminary and candidacy stuff, and picked up a [Behringer BCF2000](http://www.behringer.de/EN/Products/BCF2000.aspx). It's so very handy to have the MF outlet locally (their distribution warehouse is up near Liberty, MO), and it's unfortunate that they're closing the outlet center at the end of the year.

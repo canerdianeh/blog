@@ -40,7 +40,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2024/05/25/taking-a-fresh-look-at-ubiquiti/"
-image: "https://nerdian.ca/files/2024/05/Ubiquiti-UniFi-Pro-Max-24-PoE.png"
+image: "/assets/images/2024/05/Ubiquiti-UniFi-Pro-Max-24-PoE.png"
 ---
 
 Having spent most of the last 5 years steeped in the HPE/Aruba networking ecosystem, I didn't pay much attention to what [Ubiquiti](https://ui.com) has been doing, as their primarily Prosumer and small business market segment didn't significantly overlap with the large global customers I was working with at Aruba. HPE did venture into the SMB space with the InstantON product line, and have been reasonably successful at it, but the consulting work I was doing rarely went anywhere near that space. Now that I'm free of any competitive constraints. I'm taking another look at a product line that has clearly evolved.

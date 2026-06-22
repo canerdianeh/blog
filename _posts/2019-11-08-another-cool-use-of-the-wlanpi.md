@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2019/11/08/another-cool-use-of-the-wlanpi/"
-image: "https://nerdian.ca/files/2019/11/IMG_7577.jpg"
+image: "/assets/images/2019/11/IMG_7577.jpg"
 ---
 
 Recently, the nice people that employ me to be a wireless network engineer for them were kind enough to add a [WLANpi](http://wlanpi.com) to my [toolkit](https://blog.ianbeyer.com/2019/10/04/whats-in-that-survey-kit-fall-2019-edition/) (as well as that of several of my co-workers), and it is indeed a very handy gizmo for network engineering work.

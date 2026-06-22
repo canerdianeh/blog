@@ -44,7 +44,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2021/08/10/aruba-meridian-location/"
-image: "https://nerdian.ca/files/2021/08/AdobeStock_310180925-scaled.jpeg"
+image: "/assets/images/2021/08/AdobeStock_310180925-scaled.jpeg"
 ---
 
 It seems fitting that the week in which I became the first to pass the [CWIDP (Certified Wireless IoT Design Professional)](https://www.cwnp.com/certifications/cwidp/) certification would be one where I happened to be onsite doing a BLE location project with [Aruba Meridian](https://www.arubanetworks.com/products/location-services/app-platform/).

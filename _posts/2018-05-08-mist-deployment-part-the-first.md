@@ -39,7 +39,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2018/05/08/mist-deployment-part-the-first/"
-image: "https://nerdian.ca/files/2018/05/302569-nature-landscape-lake-mist-mountain-morning-forest-Scotland-trees-island-748x409.jpg"
+image: "/assets/images/2018/05/302569-nature-landscape-lake-mist-mountain-morning-forest-Scotland-trees-island-748x409.jpg"
 ---
 
 *First in a series about our first deployment of a Mist Systems wireless network.*![Mist Systems Logo]({{site.baseurl}}/assets/2018/05/MistLogo-300x289.png)

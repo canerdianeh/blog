@@ -36,7 +36,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2021/03/11/auditorium-wifi/"
-image: "https://nerdian.ca/files/2021/03/AdobeStock_340419808-scaled.jpeg"
+image: "/assets/images/2021/03/AdobeStock_340419808-scaled.jpeg"
 ---
 
 I was recently (March 2021) tasked to do a design for a small 450-seat auditorium and provide capacity and throughput numbers. Those who have known me for a while probably know that this type of auditorium is kind of a sweet spot for me, having done designs for a number of church sanctuaries of various sizes. In this post, I'm going to get into the nitty gritty details of making sure that not only does an auditorium have sufficient wireless capacity to meet the connectivity needs of the space, but also to have realistic expectations of what the performance will look like in order to build sufficient backend networking infrastructure without needlessly overbuilding it.

@@ -43,7 +43,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2021/08/19/bluetooth-beacons-for-location/"
-image: "https://nerdian.ca/files/2021/08/AdobeStock_16699558-scaled.jpeg"
+image: "/assets/images/2021/08/AdobeStock_16699558-scaled.jpeg"
 ---
 
 It's not uncommon for architects and interior designers to get on us wireless guys for cluttering up their aesthetic, so I always try to get on their good side whenever possible. They don't tend to complain about "necessary" stuff like light switches and fire alarms, but for some reason, they never see network infrastructure as "necessary".

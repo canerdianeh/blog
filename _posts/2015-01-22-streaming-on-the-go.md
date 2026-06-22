@@ -29,7 +29,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2015/01/22/streaming-on-the-go/"
-image: "http://blog.ianbeyer.com/files/2015/01/20150123_001350-204x300.jpg"
+image: "/assets/images/2015/01/20150123_001350-204x300.jpg"
 ---
 
 Over the past several months/years, I've been accumulating various pieces of gear that, when put together, give me a solid kit to take on the road for doing onsite streaming or demonstration events. It currently consists of:

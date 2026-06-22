@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2016/11/20/controlling-audio-with-propresenter/"
-image: "https://nerdian.ca/files/2016/11/ProQu24.png"
+image: "/assets/images/2016/11/ProQu24.png"
 ---
 
 Our church is a small one. So its not always especially easy to fully staff our tech booth, and sometimes, one must fly solo, which adds to the workload, and sometimes stuff gets forgotten, like unmuting microphones for the choir or the person reading the scripture.

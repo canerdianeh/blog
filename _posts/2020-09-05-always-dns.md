@@ -35,7 +35,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/09/05/always-dns/"
-image: "https://nerdian.ca/files/2020/09/WmRbmf5.png"
+image: "/assets/images/2020/09/WmRbmf5.png"
 ---
 
 There's a common saying among my network engineering peers: "It's ALWAYS DNS!". For those not familiar with the concept, this refers to the alarming regularity with which networking troubles end up being caused by something trivial, such as name resolution. And when it's not DNS, it's usually DHCP. Those two troublemakers alone are responsible for some ridiculously large percentage of network support issues. (At least until someone at a tier 1 provider inserts a typo into a route table advertised to half the internet via BGP, and takes *everything* down, but I digress.)

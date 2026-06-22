@@ -43,7 +43,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2010/12/20/sony-visca-rs-422-control/"
-image: "http://blog.ianbeyer.com/files/2010/12/visca-rj45-breakout.png"
+image: "/assets/images/2010/12/visca-rj45-breakout.png"
 ---
 
 **Update - January 2014:**Wow, 3 years later this is still one of the most popular posts on this blog! I've had some questions about using this with the EVI-HD1, which has only RS-232 DIN ports. Theoretically, it should work, but you might need to alter some pinouts in the breakout box, and I would highly recommend using shielded/grounded cable, as RS-232 is an unbalanced signal. A reader is going to give it a try, and if it's successful, I'll update the post with some pictures.

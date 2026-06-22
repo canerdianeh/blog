@@ -23,7 +23,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2013/02/26/wowza-ec2-capacity-update/"
-image: "http://blog.ianbeyer.com/files/2013/02/Screen-Shot-2013-02-26-at-1.31.38-PM-1024x404.png"
+image: "/assets/images/2013/02/Screen-Shot-2013-02-26-at-1.31.38-PM-1024x404.png"
 ---
 
 It's been a while since Wowza has updated their EC2 performance numbers (they date back to about 2009), and both Amazon and Wowza have made great improvements to their products. Since I have access to a high-capacity system outside of Amazon's cloud, I am able to use Wowza's load test tool on a variety of instance sizes to see how they perform.

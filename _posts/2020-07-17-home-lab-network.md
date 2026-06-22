@@ -34,7 +34,7 @@ author:
   last_name: Beyer
 permalink: "/2020/07/17/home-lab-network/"
 excerpt: 'A key component of any IT engineer''s toolkit is the lab. First in a series. '
-image: "https://nerdian.ca/files/2020/07/pi2ovc8v42e41-scaled-e1595011314435.jpg"
+image: "/assets/images/2020/07/pi2ovc8v42e41-scaled-e1595011314435.jpg"
 ---
 
 A key component of any IT engineer's toolkit is the lab. This can be at the office if you're not the type to work from home (if you're not, I highly recommend it - Productivity is so much better when you're not in an office). or the ubiquitous "home lab" that most of us have (even if we don't work from home), which can be anything from a haphazard pile of machines on a shelf, to a lovingly built rack full of gear that would look perfectly at home in any enterprise data center.

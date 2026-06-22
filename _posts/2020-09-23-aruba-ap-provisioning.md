@@ -34,7 +34,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/09/23/aruba-ap-provisioning/"
-image: "https://nerdian.ca/files/2020/09/AdobeStock_330987132-scaled.jpeg"
+image: "/assets/images/2020/09/AdobeStock_330987132-scaled.jpeg"
 ---
 
 As part of trying to wrap my own head around the various profile dependencies in actually provisioning an Aruba AP , I've mapped it out. This is the  that goes into this process:

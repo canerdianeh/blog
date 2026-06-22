@@ -26,7 +26,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2012/01/19/php-direct-upload-s3/"
-image: "http://blog.ianbeyer.com/files/2012/01/Screen-Shot-2012-08-29-at-11.20.00-AM.png"
+image: "/assets/images/2012/01/Screen-Shot-2012-08-29-at-11.20.00-AM.png"
 ---
 
 Here's an easy way to upload directly to S3 from an HTML form. No Java, no Flash. Thanks to [@RaamDev](http://twitter.com/raamdev "@RaamDev") for his handy little bit of [code for doing HMAC signatures](http://raamdev.com/2008/amazon-s3-hmac-signatures-without-pear-or-php5/ "S3 HMAC Signatures without PEAR"). Based on the [documentation from Amazon](http://aws.amazon.com/articles/1434 "Browser Uploads to S3 using HTML POST Forms"). Makes use of the [AWS SDK for PHP](http://aws.amazon.com/sdkforphp/ "Amazon Web Services SDK for PHP") to list the buckets.

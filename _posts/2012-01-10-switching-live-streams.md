@@ -23,7 +23,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2012/01/10/switching-live-streams/"
-image: "http://blog.ianbeyer.com/files/2012/01/rackmonitorscreencap.png"
+image: "/assets/images/2012/01/rackmonitorscreencap.png"
 ---
 
 Continuing on the rack theme mentioned yesterday, I got to wondering about a stream monitor that could be switched to any of a number of live streams, without reloading the page. Fortunately, JW Player makes this easy. I threw together a player embedded inside some CSS and then added a button panel. Each button is a DIV with an *onclick()* action that calls *jwplayer().load()*. While it's well known that you can use this to switch files simply by passing the filename to the *file* flashvar, we need to also pass the *streamer* value. Fortunately, the *load()* method has the ability to pass on not only files as a string value, but also objects, which are nothing more than an array of flashvars (it can also take playlist items, but that's beyond the scope of this post). So, all you need to do in order to switch streams with JW Player is call the following JavaScript method:

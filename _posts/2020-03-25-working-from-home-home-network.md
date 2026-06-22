@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/03/25/working-from-home-home-network/"
-image: "https://nerdian.ca/files/2020/03/AdobeStock_196481317.jpeg"
+image: "/assets/images/2020/03/AdobeStock_196481317.jpeg"
 ---
 
 Continuing the series about working from home, today I'm going to talk about the network inside your home, after it gets to your side of the router.

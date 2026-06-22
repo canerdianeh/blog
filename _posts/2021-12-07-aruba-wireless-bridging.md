@@ -40,7 +40,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2021/12/07/aruba-wireless-bridging/"
-image: "https://nerdian.ca/files/2021/12/AdobeStock_120498612-scaled.jpeg"
+image: "/assets/images/2021/12/AdobeStock_120498612-scaled.jpeg"
 ---
 
 One of the most underrated features of Aruba wireless hardware is its ability to be used as a wireless bridge. Running a cable to provide power and data to an AP is always the best way, but sometimes you just can't get one there and have to go wirelessly.

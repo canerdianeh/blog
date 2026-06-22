@@ -41,7 +41,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2017/04/08/a-story-of-cats/"
-image: "https://nerdian.ca/files/2017/04/IMG_4054-e1491636089427.jpg"
+image: "/assets/images/2017/04/IMG_4054-e1491636089427.jpg"
 ---
 
 This is the internet, so at some point we've got to talk about cats. It's in the rule book.  The Internet runs on cats. Cat pictures, cat videos, and... cat cables.

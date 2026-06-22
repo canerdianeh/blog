@@ -22,7 +22,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2010/06/03/why-bud-selig-was-right/"
-image: "http://blog.ianbeyer.com/files/2010/06/galaragg-screenshotjpg-a991e13b4cea8f27_large-300x223.jpg"
+image: "/assets/images/2010/06/galaragg-screenshotjpg-a991e13b4cea8f27_large-300x223.jpg"
 ---
 
 [![]({{site.baseurl}}/assets/2010/06/galaragg-screenshotjpg-a991e13b4cea8f27_large-300x223.jpg)](http://blog.ianbeyer.com/files/2010/06/galaragg-screenshotjpg-a991e13b4cea8f27_large.jpg)I don't often blog about sports. Sports writing is not my thing. There are others way [better at it than I](http://twitter.com/bradlocke). But I've had a passion for the game of baseball since I was little and my dad took me to a couple of [Expos](http://en.wikipedia.org/wiki/Montreal_Expos) games every summer (which, looking back, prepared me quite nicely for the perpetual disappointment that comes with being a [Royals](http://royals.com) fan these days)

@@ -30,7 +30,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2019/08/29/all-in-all-youre-just-another-brick-in-the-wall/"
-image: "https://nerdian.ca/files/2019/08/Header.png"
+image: "/assets/images/2019/08/Header.png"
 ---
 
 ### *How I learned to stop worrying and love predictive modeling*

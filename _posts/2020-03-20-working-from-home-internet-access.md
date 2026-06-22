@@ -36,7 +36,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/03/20/working-from-home-internet-access/"
-image: "https://nerdian.ca/files/2020/03/AdobeStock_234092604-scaled.jpeg"
+image: "/assets/images/2020/03/AdobeStock_234092604-scaled.jpeg"
 ---
 
 In my [previous post](https://nerdian.ca/2020/03/18/working-from-home-the-basics/), I went over the basics of working from home. It's worth noting here that many of these concepts can also be applied to your kids who might be taking school online - they're teleworking just like you are, and face many of the same challenges. In this and future posts, I'll be dealing with the tech basics required for a successful and productive home office.

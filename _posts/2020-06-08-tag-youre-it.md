@@ -38,7 +38,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/06/08/tag-youre-it/"
-image: "https://nerdian.ca/files/2020/06/unmasked.jpg"
+image: "/assets/images/2020/06/unmasked.jpg"
 ---
 
 *Cover Image:* [Unmasked](https://brianwallfineart.com/portfolio/unmasked/) *(detail), ([Brian Wall](https://brianwallfineart.com/), 2014)*

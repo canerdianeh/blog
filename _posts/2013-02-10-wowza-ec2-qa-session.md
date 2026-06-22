@@ -22,7 +22,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2013/02/10/wowza-ec2-qa-session/"
-image: "http://blog.ianbeyer.com/files/2013/02/Screen-Shot-2013-02-10-at-6.05.01-PM-1024x482.png"
+image: "/assets/images/2013/02/Screen-Shot-2013-02-10-at-6.05.01-PM-1024x482.png"
 ---
 
 I'll admit, the nerd meter on here has been running past redline for a while, so I'm going to step back and answer some questions that have come in via e-mail or [twitter](http://twitter.com/ianbeyer "Ian Beyer Twitter") from those of you still trying to get started with Wowza streaming.

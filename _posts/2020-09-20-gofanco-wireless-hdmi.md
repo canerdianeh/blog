@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/09/20/gofanco-wireless-hdmi/"
-image: "https://nerdian.ca/files/2020/09/IMG_1936.png"
+image: "/assets/images/2020/09/IMG_1936.png"
 ---
 
 A few weeks ago, I went to Amazon and picked up a [cheap wireless HDMI transmitter](https://amzn.to/3hK2ajj) to solve a camera connection challenge at the church. I needed to send a GoPro feed back to the booth without running cables all over the floor (or worrying about the GoPro's live streaming latency -- it uses HLS with a real short segment size-- and getting that stream into the switcher was not a trivial task).

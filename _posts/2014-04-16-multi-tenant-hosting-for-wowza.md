@@ -23,7 +23,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2014/04/16/multi-tenant-hosting-for-wowza/"
-image: "http://blog.ianbeyer.com/files/2014/04/self-support-multi-tenant-225x300.jpeg"
+image: "/assets/images/2014/04/self-support-multi-tenant-225x300.jpeg"
 ---
 
 [![]({{site.baseurl}}/assets/2014/04/self-support-multi-tenant-225x300.jpeg)](http://blog.ianbeyer.com/files/2014/04/self-support-multi-tenant.jpeg)For most users, running Wowza Media Server/Wowza Streaming Engine (which I'll refer to as just "Wowza") are perfectly content running it out of the box as is on a dedicated server. Where it gets a little more interesting is when you have to co-exist with other server applications that want some of the same ports (I'm lookin' at YOU, web servers!).

@@ -35,7 +35,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2020/03/22/working-from-home-firewalls-and-honeypots/"
-image: "https://nerdian.ca/files/2020/03/Screen-Shot-2020-03-22-at-1.24.27-PM.png"
+image: "/assets/images/2020/03/Screen-Shot-2020-03-22-at-1.24.27-PM.png"
 ---
 
 Yesterday, I saw a social media post from my friend Thorsten, who is an engineer for a large network security company, in which he shared some nifty dashboard graphics from his installation of a nifty little Linux distribution known as [T-Pot](https://github.com/dtag-dev-sec/tpotce) (I'm a total sucker for great dashboards!).

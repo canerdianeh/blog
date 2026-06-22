@@ -38,7 +38,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2022/11/15/setting-up-an-aruba-wireless-bridge-using-wi-fi-uplink/"
-image: "https://nerdian.ca/files/2022/11/AdobeStock_105367535.jpg"
+image: "/assets/images/2022/11/AdobeStock_105367535.jpg"
 ---
 
 A while back, I posted about [how to set up an Aruba wireless bridge](https://nerdian.ca/2021/12/07/aruba-wireless-bridging/) using the built-in mesh method. Today I'll show you how to accomplish a similar goal, but using the **Wi-Fi Uplink** approach. You'll need to do it this way if you:

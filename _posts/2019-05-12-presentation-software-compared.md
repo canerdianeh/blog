@@ -33,7 +33,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2019/05/12/presentation-software-compared/"
-image: "https://nerdian.ca/files/2019/05/New-2.jpg"
+image: "/assets/images/2019/05/New-2.jpg"
 ---
 
 I'm going to veer off the WiFi trail for a bit here and talk about presentation software that's used predominantly in the House of Worship space, but also increasingly in corporate production.

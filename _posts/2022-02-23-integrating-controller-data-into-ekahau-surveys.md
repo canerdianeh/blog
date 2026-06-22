@@ -41,7 +41,7 @@ author:
 permalink: "/2022/02/23/integrating-controller-data-into-ekahau-surveys/"
 excerpt: 'In which I describe how to enhance your survey data using controller data
   and a little Python. '
-image: "https://nerdian.ca/files/2022/02/Estudio-del-Wi-Fi-Ekahau.png"
+image: "/assets/images/2022/02/Estudio-del-Wi-Fi-Ekahau.png"
 ---
 
 If you've done a few post-install validation surveys with [Ekahau](https://ekahau.com), you've probably run into the dreaded "Measured AP-a1:b6", even if your AP/ESSID were supposed to have AP name broadcast in the beacon (or you just forgot to turn it on before surveying). You have probably also encountered the problem of null SSIDs (aka "hidden" SSIDs). Those aren't really useful in a survey, but when you survey a 10-story building with hundreds of access points, you sure don't want to go through and manually rename each and every AP, or manually add data tags that you looked up in an Excel table.

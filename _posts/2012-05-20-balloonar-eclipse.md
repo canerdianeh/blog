@@ -24,7 +24,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2012/05/20/balloonar-eclipse/"
-image: "http://blog.ianbeyer.com/files/2012/05/IMAG0532-1024x612.jpg"
+image: "/assets/images/2012/05/IMAG0532-1024x612.jpg"
 ---
 
 Here in Kansas City, we're on the very edge of the eclipse path, and it was a beautiful night for a balloon flight too. (KOJC 210053Z 34006KT 10SM CLR 22/09 A3013 RMK AO2 SLP196 T02170094). As I was out looking at the eclipse, along comes Jason Jones of [Old World Balloonery](http://oldworldballoonery.com/ "Old World Balloonery") with a load of passengers, and I got a balloonar eclipse as a bonus.
