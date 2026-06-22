@@ -36,21 +36,19 @@ author:
   last_name: Beyer
 permalink: "/2021/10/19/working-with-the-arubaos-api-reading-data/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<!-- wp:paragraph --><html><body></p>
-<p>Another quick bit today - this is the basic framework for using the <a href="https://developer.arubanetworks.com/aruba-aos/docs/getting-started-aos8-restapi">REST API in ArubaOS</a>. Lots of info at the <a href="https://developer.arubanetworks.com/">Aruba Developer Hub</a>. This is primarily for executing <strong>show</strong> commands and getting the data back in a structured JSON format. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>However, be aware that not all <strong>show</strong> commands return structured JSON - some will return something vaguely XMLish, and some will return the regular text output inside a JSON wrapper (originally the <strong>showcommand</strong> API endpoint was just a wrapper for the actual commands and would just return the CLI output, as it still does for several commands)</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>You can always go to <strong>https://&lt;controller IP&gt;:4343/api</strong> (after logging in) and get a Swagger doc for all the available API calls - although owing to system limitations, the description of those endpoints isn't generally there, but it can be found in the full <a href="https://developer.arubanetworks.com/aruba-aos/reference">AOS8 API reference</a>. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>This blog entry does not deal with sending data <em>to</em> the ArubaOS device. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code lang="python" class="language-python">#!/usr/bin/python3
+
+Another quick bit today - this is the basic framework for using the [REST API in ArubaOS](https://developer.arubanetworks.com/aruba-aos/docs/getting-started-aos8-restapi). Lots of info at the [Aruba Developer Hub](https://developer.arubanetworks.com/). This is primarily for executing **show** commands and getting the data back in a structured JSON format.
+
+However, be aware that not all **show** commands return structured JSON - some will return something vaguely XMLish, and some will return the regular text output inside a JSON wrapper (originally the **showcommand** API endpoint was just a wrapper for the actual commands and would just return the CLI output, as it still does for several commands)
+
+You can always go to **https://<controller IP>:4343/api** (after logging in) and get a Swagger doc for all the available API calls - although owing to system limitations, the description of those endpoints isn't generally there, but it can be found in the full [AOS8 API reference](https://developer.arubanetworks.com/aruba-aos/reference).
+
+This blog entry does not deal with sending data *to* the ArubaOS device.
+
+```
+
+python
+#!/usr/bin/python3
 
 import requests
 import json
@@ -58,13 +56,10 @@ import warnings
 import sys
 import xmltodict
 
-
 aosDevice = "1.2.3.4"
 username = "admin"
 password = "password"
 httpsVerify = False
-
-
 
 #Set things up
 
@@ -72,7 +67,6 @@ if httpsVerify == False :
 	warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
 baseurl = "https://"+aosDevice+":4343/v1/"
-
 
 headers = {}
 payload = ""
@@ -116,18 +110,11 @@ def showCmd(command, datatype):
 		returnData =response.json()['_data']
 	return returnData
 
-
-
-
 print(showCmd('clock', 'Text')[0])
-
 
 print(json.dumps(showCmd('dds debug peers', 'JSON'),indent=2, sort_keys=False))
 
-
-
 ## Log out and remove session
-
 
 response = session.get(baseurl+"api/logout", verify=False)
 jsonData = response.json()['_global_result']
@@ -141,9 +128,6 @@ if response.status_code == 200 :
 else :
 	del sessionToken
 	sys.exit("Logout failed:")
-</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>If you prefer, I have shared a <a href="https://www.getpostman.com/collections/21a541cccc8f4d24e970">Postman collection for working with the basics.</a></p>
-<p><!-- /wp:paragraph --><br />
-</body></html></p>
+```
+
+If you prefer, I have shared a [Postman collection for working with the basics.](https://www.getpostman.com/collections/21a541cccc8f4d24e970)

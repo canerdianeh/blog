@@ -26,9 +26,9 @@ author:
   last_name: Beyer
 permalink: "/2009/07/13/footnote-on-automating-ec2/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>Yesterday was the first live test of our <a title="Live Streaming on a Budget (Part 5) – Automating EC2" href="http://blog.ianbeyer.com/2009/07/08/live-streaming-on-a-budget-part-5-automating-ec2/" target="_blank">EC2 automation</a>, and it worked beautifully. One thing I discovered was that when the Wowza servers shut down, Flash Media Encoder simply attempts to reconnect to the server until it succeeds. This is very helpful, since I can just leave the VT5 system on a loop or on the program feed, and as soon as the servers are ready, they'll start broadcasting.</p>
-<p>That way, if something happens and nobody shows up, we'll at least have something going on the stream.</p>
-<p>If you're using an unattended encoder, you can also take advantage of this (and even schedule start/stop of the encoder software, but it doesn't have to be timed exactly to the server start/stop.</p>
-<p></body></html></p>
+
+Yesterday was the first live test of our [EC2 automation](http://blog.ianbeyer.com/2009/07/08/live-streaming-on-a-budget-part-5-automating-ec2/ "Live Streaming on a Budget (Part 5) – Automating EC2"), and it worked beautifully. One thing I discovered was that when the Wowza servers shut down, Flash Media Encoder simply attempts to reconnect to the server until it succeeds. This is very helpful, since I can just leave the VT5 system on a loop or on the program feed, and as soon as the servers are ready, they'll start broadcasting.
+
+That way, if something happens and nobody shows up, we'll at least have something going on the stream.
+
+If you're using an unattended encoder, you can also take advantage of this (and even schedule start/stop of the encoder software, but it doesn't have to be timed exactly to the server start/stop.

@@ -22,131 +22,157 @@ author:
   last_name: Beyer
 permalink: "/2012/09/11/adding-ec2-to-route53/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>Today's nifty bit of code is a startup/shutdown script for linux that allows you to add an EC2 instance to Amazon's Route53 DNS automatically when you start up the instance, and remove it when the instance is knocked down. This script also allows you to add the instance to a weighted round-robin group. </p>
-<p>This makes use of the very useful Python-based <a title="boto" href="https://github.com/boto/boto" target="_blank">boto </a>tool which is available in both Yum and Debian repositories under the package name <em>python-boto</em>.</p>
-<p>Create this script in /etc/init.d and make it executable, and then add it to the requisite rcX.d directory for startup/shutdown.</p>
-<p>[bash]</p>
-<p>#!/bin/bash<br />
-#<br />
-#       /etc/rc.d/init.d/&lt;servicename&gt;<br />
-#<br />
-#       Registers DNS with Route 53<br />
-#<br />
-# chkconfig 345 20 80<br />
-#</p>
-<p># Source function library.<br />
-. /etc/init.d/functions</p>
-<p># Best practice here is to create an IAM user/group with access to only<br />
-# Route53 and use this keypair.<br />
-export AWS_ACCESS_KEY_ID=&lt;Access Key ID Here&gt;<br />
-export AWS_SECRET_ACCESS_KEY=&lt;Secret Key ID here&gt;</p>
-<p># Use the domain you have configured in Route 53<br />
-export DOMAIN=ianbeyer.com</p>
-<p># This is the hostname of the Weighted Round Robin Group.<br />
-export RR=wrr</p>
-<p># Gets the current public hostname - you don't want to use an A record with<br />
-# the IP because the CNAME works in conjunction with Amazon's internal DNS<br />
-# to correctly resolve instances to their internal address<br />
-export PUB_HOSTNAME=`curl -s --fail http://169.254.169.254/latest/meta-data/public-hostname`</p>
-<p># Gets the Route 53 Zone ID<br />
-export ZONEID=`route53 ls | awk '($2 == "ID:"){printf "%s ",$3;getline;printf "%s\n",$3}' | grep $DOMAIN | awk '{print $1}'`</p>
-<p>start() {<br />
-        echo -n "Registering host with Route 53 : "</p>
-<p># This is the base name of the host you want to use. It will increase the index<br />
-# number until it finds one that's not in use, and then use that. </p>
-<p>        export HOST=amz<br />
-        export HOSTINDEX=1</p>
-<p>        INUSE=`route53 get $ZONEID | grep ${HOST}${HOSTINDEX}\.${DOMAIN} | wc -l`<br />
-        while [[ $INUSE &gt; 0 ]]<br />
-        do<br />
-            HOSTINDEX=$((HOSTINDEX + 1))<br />
-            INUSE=`route53 get $ZONEID | grep ${HOST}${HOSTINDEX}\.${DOMAIN} | wc -l`<br />
-        done<br />
-        if [[ "$HOSTINDEX" == "1" ]]; then<br />
-            FQDN="${HOST}${HOSTINDEX}.${DOMAIN}"<br />
-        else<br />
-            # set the new fqdn hostname and shortname<br />
-            FQDN="${HOST}${HOSTINDEX}.${DOMAIN}"<br />
-            SHORTNAME="${HOST}${HOSTINDEX}"<br />
-        fi</p>
-<p>        # Set the instance hostname -- If you want to make sure that bash<br />
-        # updates the prompt, run "exec bash" after the script. If you do so<br />
-        # in the script, bad stuff happens on startup.</p>
-<p>        hostname $FQDN<br />
-        echo -n $FQDN</p>
-<p>        # Add the DNS record<br />
-        RESULT=`route53 add_record $ZONEID $FQDN CNAME $PUB_HOSTNAME | grep "PENDING"`<br />
-        if [[ "$RESULT" == "" ]]; then<br />
-                echo "... failed.";<br />
-        else<br />
-                echo "... success.";<br />
-        fi</p>
-<p>        # Add the CNAME record<br />
-        echo -n "Adding host to round-robin group...";</p>
-<p>        # Checking to make sure it's not already there.<br />
-        CNAME=`route53 get $ZONEID | grep $RR | grep $PUB_HOSTNAME | wc -l`<br />
-        if [[ $CNAME = 0 ]]; then<br />
-                RESULT=`route53 add_record $ZONEID $RR.$DOMAIN CNAME $PUB_HOSTNAME 60 ${HOST}${HOSTINDEX} 1 | grep "PENDING"`<br />
-                if [[ "$RESULT" == "" ]]; then<br />
-                        echo "... failed.";<br />
-                else<br />
-                        echo "... success.";<br />
-                fi<br />
-        else<br />
-                echo "already exists, ignoring";<br />
-        fi</p>
-<p>}</p>
-<p>stop() {<br />
-        echo -n "Deregistering host with Route 53 : "<br />
-        HOST=`hostname | cut -f1 -d.`<br />
-        FQDN=`hostname`</p>
-<p>        # check to make sure it exists in Route53<br />
-        CNAME=`route53 get $ZONEID | grep $FQDN | grep $PUB_HOSTNAME | wc -l`<br />
-        if [[ $CNAME &gt; 0 ]]; then<br />
-                RESULT=`route53 del_record $ZONEID $FQDN CNAME $PUB_HOSTNAME | grep "PENDING"`<br />
-                if [[ "$RESULT" == "" ]]; then<br />
-                        echo "... failed.";<br />
-                else<br />
-                        echo "... success.";<br />
-                fi<br />
-        else<br />
-                echo "... not found, ignoring";<br />
-        fi</p>
-<p>        echo -n "Deregistering host from RR CNAME..."</p>
-<p>        # Checking to make sure it exists<br />
-        CNAME=`route53 get $ZONEID | grep $RR | grep $PUB_HOSTNAME | wc -l`<br />
-        if [[ $CNAME &gt; 0 ]]; then<br />
-                RESULT=`route53 del_record $ZONEID $RR.$DOMAIN CNAME $PUB_HOSTNAME 60 ${HOST} 1 | grep "PENDING"`<br />
-                if [[ "$RESULT" == "" ]]; then<br />
-                        echo "... failed.";<br />
-                else<br />
-                        echo "... success.";<br />
-                fi<br />
-        else<br />
-                echo "... not found, ignoring";<br />
-        fi</p>
-<p>        # resets the hostname to default<br />
-        hostname `curl -s --fail http://169.254.169.254/latest/meta-data/hostname`</p>
-<p>}</p>
-<p>case "$1" in<br />
-    start)<br />
-        start<br />
-        ;;<br />
-    stop)<br />
-        stop<br />
-        ;;<br />
-    restart)<br />
-        stop<br />
-        start<br />
-        ;;<br />
-    *)<br />
-        echo "Usage: &lt;servicename&gt; {start|stop|restart}"<br />
-        exit 1<br />
-        ;;<br />
-esac<br />
-exit $?<br />
-[/bash]</p>
-<p>Many thanks to Dave McCormick for his <a href="http://www.practicalclouds.com/content/blog/1/dave-mccormick/2012-02-28/route53-bring-back-some-dns-lovin-ec2">blog post on the subject</a> from which I borrowed heavily. </p>
-<p></body></html></p>
+
+Today's nifty bit of code is a startup/shutdown script for linux that allows you to add an EC2 instance to Amazon's Route53 DNS automatically when you start up the instance, and remove it when the instance is knocked down. This script also allows you to add the instance to a weighted round-robin group.
+
+This makes use of the very useful Python-based [boto](https://github.com/boto/boto "boto")tool which is available in both Yum and Debian repositories under the package name *python-boto*.
+
+Create this script in /etc/init.d and make it executable, and then add it to the requisite rcX.d directory for startup/shutdown.
+
+[bash]
+
+#!/bin/bash  
+#  
+# /etc/rc.d/init.d/<servicename>  
+#  
+# Registers DNS with Route 53  
+#  
+# chkconfig 345 20 80  
+#
+
+# Source function library.  
+. /etc/init.d/functions
+
+# Best practice here is to create an IAM user/group with access to only  
+# Route53 and use this keypair.  
+export AWS\_ACCESS\_KEY\_ID=<Access Key ID Here>  
+export AWS\_SECRET\_ACCESS\_KEY=<Secret Key ID here>
+
+# Use the domain you have configured in Route 53  
+export DOMAIN=ianbeyer.com
+
+# This is the hostname of the Weighted Round Robin Group.  
+export RR=wrr
+
+# Gets the current public hostname - you don't want to use an A record with  
+# the IP because the CNAME works in conjunction with Amazon's internal DNS  
+# to correctly resolve instances to their internal address  
+export PUB\_HOSTNAME=`curl -s --fail http://169.254.169.254/latest/meta-data/public-hostname`
+
+# Gets the Route 53 Zone ID  
+export ZONEID=`route53 ls | awk '($2 == "ID:"){printf "%s ",$3;getline;printf "%s\n",$3}' | grep $DOMAIN | awk '{print $1}'`
+
+start() {  
+echo -n "Registering host with Route 53 : "
+
+# This is the base name of the host you want to use. It will increase the index  
+# number until it finds one that's not in use, and then use that.
+
+export HOST=amz  
+export HOSTINDEX=1
+
+INUSE=`route53 get $ZONEID | grep ${HOST}${HOSTINDEX}\.${DOMAIN} | wc -l`  
+while [[ $INUSE > 0 ]]  
+do  
+HOSTINDEX=$((HOSTINDEX + 1))  
+INUSE=`route53 get $ZONEID | grep ${HOST}${HOSTINDEX}\.${DOMAIN} | wc -l`  
+done  
+if [[ "$HOSTINDEX" == "1" ]]; then  
+FQDN="${HOST}${HOSTINDEX}.${DOMAIN}"  
+else  
+# set the new fqdn hostname and shortname  
+FQDN="${HOST}${HOSTINDEX}.${DOMAIN}"  
+SHORTNAME="${HOST}${HOSTINDEX}"  
+fi
+
+# Set the instance hostname -- If you want to make sure that bash  
+# updates the prompt, run "exec bash" after the script. If you do so  
+# in the script, bad stuff happens on startup.
+
+hostname $FQDN  
+echo -n $FQDN
+
+# Add the DNS record  
+RESULT=`route53 add\_record $ZONEID $FQDN CNAME $PUB\_HOSTNAME | grep "PENDING"`  
+if [[ "$RESULT" == "" ]]; then  
+echo "... failed.";  
+else  
+echo "... success.";  
+fi
+
+# Add the CNAME record  
+echo -n "Adding host to round-robin group...";
+
+# Checking to make sure it's not already there.  
+CNAME=`route53 get $ZONEID | grep $RR | grep $PUB\_HOSTNAME | wc -l`  
+if [[ $CNAME = 0 ]]; then  
+RESULT=`route53 add\_record $ZONEID $RR.$DOMAIN CNAME $PUB\_HOSTNAME 60 ${HOST}${HOSTINDEX} 1 | grep "PENDING"`  
+if [[ "$RESULT" == "" ]]; then  
+echo "... failed.";  
+else  
+echo "... success.";  
+fi  
+else  
+echo "already exists, ignoring";  
+fi
+
+}
+
+stop() {  
+echo -n "Deregistering host with Route 53 : "  
+HOST=`hostname | cut -f1 -d.`  
+FQDN=`hostname`
+
+# check to make sure it exists in Route53  
+CNAME=`route53 get $ZONEID | grep $FQDN | grep $PUB\_HOSTNAME | wc -l`  
+if [[ $CNAME > 0 ]]; then  
+RESULT=`route53 del\_record $ZONEID $FQDN CNAME $PUB\_HOSTNAME | grep "PENDING"`  
+if [[ "$RESULT" == "" ]]; then  
+echo "... failed.";  
+else  
+echo "... success.";  
+fi  
+else  
+echo "... not found, ignoring";  
+fi
+
+echo -n "Deregistering host from RR CNAME..."
+
+# Checking to make sure it exists  
+CNAME=`route53 get $ZONEID | grep $RR | grep $PUB\_HOSTNAME | wc -l`  
+if [[ $CNAME > 0 ]]; then  
+RESULT=`route53 del\_record $ZONEID $RR.$DOMAIN CNAME $PUB\_HOSTNAME 60 ${HOST} 1 | grep "PENDING"`  
+if [[ "$RESULT" == "" ]]; then  
+echo "... failed.";  
+else  
+echo "... success.";  
+fi  
+else  
+echo "... not found, ignoring";  
+fi
+
+# resets the hostname to default  
+hostname `curl -s --fail http://169.254.169.254/latest/meta-data/hostname`
+
+}
+
+case "$1" in  
+start)  
+start  
+;;  
+stop)  
+stop  
+;;  
+restart)  
+stop  
+start  
+;;  
+\*)  
+echo "Usage: <servicename> {start|stop|restart}"  
+exit 1  
+;;  
+esac  
+exit $?  
+[/bash]
+
+Many thanks to Dave McCormick for his [blog post on the subject](http://www.practicalclouds.com/content/blog/1/dave-mccormick/2012-02-28/route53-bring-back-some-dns-lovin-ec2) from which I borrowed heavily.

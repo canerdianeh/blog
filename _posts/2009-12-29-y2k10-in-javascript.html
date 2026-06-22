@@ -25,10 +25,11 @@ author:
   last_name: Beyer
 permalink: "/2009/12/29/y2k10-in-javascript/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>On our <a href="http://live.cor.org" target="_blank">live stream page</a>, we have a nifty little <a title="JavaScript Countdown Timer" href="http://blog.ianbeyer.com/code/client/js-countdown-timer/" target="_blank">javascript counter</a> that lets you know when the next service is.</p>
-<p><a href="http://leojohns.com/" target="_blank">Leo</a> noticed today that in Internet Explorer, it's counting down properly, while in <a href="http://firefox.com" target="_blank">Firefox</a>, it's saying the event is already happening. On a hunch, we changed the target date to 12/31, and it started working properly again.</p>
-<p>So, IE's Javascript is smart enough to figure out that on December 29, the target date of January 3 is likely to be the one next week. Firefox is clinging to the past and assuming that I really meant the January 3 that happened 51 weeks ago.</p>
-<p>How is it that the same script can be interpreted so differently within the same language on two different browser platforms? This stuff is supposed to be standard!</p>
-<p></body></html></p>
+
+On our [live stream page](http://live.cor.org), we have a nifty little [javascript counter](http://blog.ianbeyer.com/code/client/js-countdown-timer/ "JavaScript Countdown Timer") that lets you know when the next service is.
+
+[Leo](http://leojohns.com/) noticed today that in Internet Explorer, it's counting down properly, while in [Firefox](http://firefox.com), it's saying the event is already happening. On a hunch, we changed the target date to 12/31, and it started working properly again.
+
+So, IE's Javascript is smart enough to figure out that on December 29, the target date of January 3 is likely to be the one next week. Firefox is clinging to the past and assuming that I really meant the January 3 that happened 51 weeks ago.
+
+How is it that the same script can be interpreted so differently within the same language on two different browser platforms? This stuff is supposed to be standard!

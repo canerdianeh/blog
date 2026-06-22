@@ -34,107 +34,55 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2018/03/31/on-network-models/"
+image: "https://nerdian.ca/files/2018/03/7-layer-burrito.jpg"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>One of the most fundamental concepts underlying modern data networking is that of the network</p>
-<p>"stack", which consists of individual "layers" that allow one to describe a network without actually getting lost in the weeds of specific underlying technologies. There are two models that are in common usage (there are several others as well but are less common):</p>
-<ul>
-<li>the seven-layer OSI Model (which is largely theoretical), published in 1984 as ISO <img class="size-full wp-image-1491 alignright" src="{{site.baseurl}}/assets/2018/03/layers.jpeg" alt="" width="225" height="225">standard 7498 and officially known as the "Open Systems Interconnection Reference Model" <em><small>(Kansas connection: the OSI model's designer, <a href="https://en.wikipedia.org/wiki/Charles_Bachman">Charles Bachman III</a>, was born in Manhattan, the son of the head football coach at K-State at the time)</small></em>
-</li>
-<li>the four-layer TCP/IP Model (which is a more practical model owing to the widespread use of the internet). The TCP/IP model predates the OSI model and can trace some of its roots to BBN's early work on internetworking in the late 1960s.</li>
-</ul>
-<p>One of the key principles of the model is that each layer is carried by the layer below it. The layers each have their own methods and protocols, which are (for the most part) independent of the layers below that are carrying them from A to B. In the TCP/IP column, I've also indicated what type of system operates at that layer.</p>
-<table style="margin: 1em auto 1em auto;">
-<tbody>
-<tr>
-<th colspan="6">Network Model</th>
-</tr>
-<tr>
-<th></th>
-<th>OSI</th>
-<th>TCP/IP</th>
-<th>OSI Protocol data unit (PDU)</th>
-<th>Function</th>
-</tr>
-<tr>
-<th rowspan="4">Host<br />
-layers</th>
-<td style="background: #d8ec9b;">7. Application</td>
-<td style="background: #d8ec9b; text-align: center;" rowspan="3">Application</p>
-<p>(Computer)</td>
-<td style="background: #d8ec9c; text-align: center;" rowspan="3">Data</td>
-<td style="background: #d8ec9c;"><small>High-level APIs, including resource sharing, remote file access</small></td>
-</tr>
-<tr>
-<td style="background: #d8ec9b;">6. Presentation</td>
-<td style="background: #d8ec9b;"><small>Translation of data between a networking service and an application; including </small></td>
-</tr>
-<tr>
-<td style="background: #d8ec9b;">5. Session</td>
-<td style="background: #d8ec9b;"><small>Managing communication sessions, i.e. continuous exchange of information in the form of multiple back-and-forth transmissions between two nodes</small></td>
-</tr>
-<tr>
-<td style="background: #e7ed9c;">4. Transport</td>
-<td style="background: #e7ed9c; text-align: center;">Transport</p>
-<p>(ISP)</td>
-<td style="background: #e7ed9c;">
-<p style="text-align: center;">Segment</p>
-</td>
-<td style="background: #e7ed9c;"><small>Reliable transmission of data segments between points on a network, including segmentation, acknowledgement and multiplexing</small></td>
-</tr>
-<tr>
-<th rowspan="3">Media<br />
-layers</th>
-<td style="background: #eddc9c;">3. Network</td>
-<td style="background: #eddc9c; text-align: center;">Internetwork</p>
-<p>(Router)</td>
-<td style="background: #eddc9c; text-align: center;">Packet</td>
-<td style="background: #eddc9c;"><small>Structuring and managing a multi-node network, including addressing, routing, and traffic control</small></td>
-</tr>
-<tr>
-<td style="background: #e9c189;">2. Data link</td>
-<td style="background: #e9c189; text-align: center;" rowspan="2">Link</p>
-<p>(Switch)</td>
-<td style="background: #e9c189; text-align: center;">Frame</td>
-<td style="background: #e9c189;"><small>Reliable transmission of data frames between two nodes connected by a physical layer</small></td>
-</tr>
-<tr>
-<td style="background: #e9988a;">1. Physical</td>
-<td style="background: #e9988a; text-align: center;">Bit</td>
-<td style="background: #e9988a;"><small>Transmission and reception of raw bit streams over a physical medium</small></td>
-</tr>
-</tbody>
-</table>
-<p>The importance of understanding these network models comes into play is when you are designing or troubleshooting a network. Understanding at what level your problem is happening is a major step towards solving it. I've seen and answered countless questions on Quora about "why doesn't X" work, or "can someone on the internet trace me by my MAC address?" and various other questions that can be enlightened by an understanding of the network models. As a general rule, the lower you are in the model, the more physically localised you're dealing with.</p>
-<p>It's probably difficult to wrap your head around if you're not used to this kind of stuff. So let me offer up an example of how this same network model manifests itself in the real world, completely unrelated to computer networking. You've almost certainly seen it in action. You've benefited from it in your life. I give you: Container Shipping.</p>
-<p>Container shipping relies on a standardized set of steel containers (also defined by the ISO) that can be used to haul goods efficiently around the world.</p>
-<p>Here's what the Transport Layer looks like:</p>
-<p><img class="aligncenter size-medium wp-image-1483" src="{{site.baseurl}}/assets/2018/03/Container-Boxes-300x150.jpg" alt="" width="300" height="150"></p>
-<p>Notice that the container is itself full of smaller containers (plain cardboard boxes: The session layer) - which themselves may contain additional boxes for retail (presentation layer), which contain an actual product (application layer). When the container is closed and sealed, its contents go wherever it goes.</p>
-<p>But how does it get there? It makes use of the Network Layer. This is where it goes through one or more shipping companies (like ISPs) that get the contents from the factory in China (server) to the buyer (client). As in computer networking, This transportation company can use multiple types of ways to get it there, such as trucks, trains, ships, and airplanes. These are Layer 2, the Link Layer, and are all capable of carrying these containers.</p>
-<p><img class="size-medium wp-image-1487 alignleft" src="{{site.baseurl}}/assets/2018/03/Container-Ship-300x200.jpg" alt="" width="300" height="200"></p>
-<p><img class="size-medium wp-image-1486 alignleft" src="{{site.baseurl}}/assets/2018/03/container-car-300x145.jpg" alt="" width="300" height="145"></p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p><img class="size-medium wp-image-1485 alignleft" src="{{site.baseurl}}/assets/2018/03/container-truck-300x130.jpg" alt="" width="300" height="130"> <img class="size-medium wp-image-1482 alignleft" src="{{site.baseurl}}/assets/2018/03/container-747-300x261.jpg" alt="" width="300" height="261"></p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p>Each of these Layer 2 conveyances rides on a different physical medium: Roads (land), Rails (land), Shipping routes (sea), flight paths (air).</p>
-<p>It's also worth noting that two of these physical media are bounded media (roads and rails) which constrain the path the vehicle takes. This is akin to a wire or fiber optic cable.  The other two (sea and air) are unbounded, which means the vehicles can take any path they choose. This is akin to free-space optical transmission and wireless RF transmission - it also means those are more susceptible to interception (hijacking/piracy).</p>
-<p>I mentioned earlier that a layer 3 device is a router. Its job is to get the data from one network to another. What does this look like in container shipping? One of these giant cranes that remove the containers from one conveyance, to be loaded onto another. Sometimes, it will buffer them in a container yard before sending it on to its destination.</p>
-<p><img class="aligncenter size-medium wp-image-1484" src="{{site.baseurl}}/assets/2018/03/container-crane-300x241.jpg" alt="" width="300" height="241"></p>
-<p> </p>
-<p>Once the container gets to its destination, it is signed for (an ACKnowledgement in the network world), and the signature is sent back to the shipper to confirm that it arrived at its destination - this is a transport layer function, as it is the shipper's responsibility to make sure stuff gets there on time. The buyer and shipper (Layer 7) don't really care *how* it got there, just that it did.</p>
-<p> </body></html></p>
+
+One of the most fundamental concepts underlying modern data networking is that of the network
+
+"stack", which consists of individual "layers" that allow one to describe a network without actually getting lost in the weeds of specific underlying technologies. There are two models that are in common usage (there are several others as well but are less common):
+
+- the seven-layer OSI Model (which is largely theoretical), published in 1984 as ISO ![]({{site.baseurl}}/assets/2018/03/layers.jpeg)standard 7498 and officially known as the "Open Systems Interconnection Reference Model" *(Kansas connection: the OSI model's designer, [Charles Bachman III](https://en.wikipedia.org/wiki/Charles_Bachman), was born in Manhattan, the son of the head football coach at K-State at the time)*
+- the four-layer TCP/IP Model (which is a more practical model owing to the widespread use of the internet). The TCP/IP model predates the OSI model and can trace some of its roots to BBN's early work on internetworking in the late 1960s.
+
+One of the key principles of the model is that each layer is carried by the layer below it. The layers each have their own methods and protocols, which are (for the most part) independent of the layers below that are carrying them from A to B. In the TCP/IP column, I've also indicated what type of system operates at that layer.
+
+| Network Model | | | | | |
+| --- | --- | --- | --- | --- | --- |
+|  | OSI | TCP/IP | OSI Protocol data unit (PDU) | Function |
+| Host  layers | 7. Application | Application (Computer) | Data | High-level APIs, including resource sharing, remote file access |
+| 6. Presentation | Translation of data between a networking service and an application; including |
+| 5. Session | Managing communication sessions, i.e. continuous exchange of information in the form of multiple back-and-forth transmissions between two nodes |
+| 4. Transport | Transport (ISP) | Segment | Reliable transmission of data segments between points on a network, including segmentation, acknowledgement and multiplexing |
+| Media  layers | 3. Network | Internetwork (Router) | Packet | Structuring and managing a multi-node network, including addressing, routing, and traffic control |
+| 2. Data link | Link (Switch) | Frame | Reliable transmission of data frames between two nodes connected by a physical layer |
+| 1. Physical | Bit | Transmission and reception of raw bit streams over a physical medium |
+
+The importance of understanding these network models comes into play is when you are designing or troubleshooting a network. Understanding at what level your problem is happening is a major step towards solving it. I've seen and answered countless questions on Quora about "why doesn't X" work, or "can someone on the internet trace me by my MAC address?" and various other questions that can be enlightened by an understanding of the network models. As a general rule, the lower you are in the model, the more physically localised you're dealing with.
+
+It's probably difficult to wrap your head around if you're not used to this kind of stuff. So let me offer up an example of how this same network model manifests itself in the real world, completely unrelated to computer networking. You've almost certainly seen it in action. You've benefited from it in your life. I give you: Container Shipping.
+
+Container shipping relies on a standardized set of steel containers (also defined by the ISO) that can be used to haul goods efficiently around the world.
+
+Here's what the Transport Layer looks like:
+
+![]({{site.baseurl}}/assets/2018/03/Container-Boxes-300x150.jpg)
+
+Notice that the container is itself full of smaller containers (plain cardboard boxes: The session layer) - which themselves may contain additional boxes for retail (presentation layer), which contain an actual product (application layer). When the container is closed and sealed, its contents go wherever it goes.
+
+But how does it get there? It makes use of the Network Layer. This is where it goes through one or more shipping companies (like ISPs) that get the contents from the factory in China (server) to the buyer (client). As in computer networking, This transportation company can use multiple types of ways to get it there, such as trucks, trains, ships, and airplanes. These are Layer 2, the Link Layer, and are all capable of carrying these containers.
+
+![]({{site.baseurl}}/assets/2018/03/Container-Ship-300x200.jpg)
+
+![]({{site.baseurl}}/assets/2018/03/container-car-300x145.jpg)
+
+![]({{site.baseurl}}/assets/2018/03/container-truck-300x130.jpg) ![]({{site.baseurl}}/assets/2018/03/container-747-300x261.jpg)
+
+Each of these Layer 2 conveyances rides on a different physical medium: Roads (land), Rails (land), Shipping routes (sea), flight paths (air).
+
+It's also worth noting that two of these physical media are bounded media (roads and rails) which constrain the path the vehicle takes. This is akin to a wire or fiber optic cable.  The other two (sea and air) are unbounded, which means the vehicles can take any path they choose. This is akin to free-space optical transmission and wireless RF transmission - it also means those are more susceptible to interception (hijacking/piracy).
+
+I mentioned earlier that a layer 3 device is a router. Its job is to get the data from one network to another. What does this look like in container shipping? One of these giant cranes that remove the containers from one conveyance, to be loaded onto another. Sometimes, it will buffer them in a container yard before sending it on to its destination.
+
+![]({{site.baseurl}}/assets/2018/03/container-crane-300x241.jpg)
+
+Once the container gets to its destination, it is signed for (an ACKnowledgement in the network world), and the signature is sent back to the shipper to confirm that it arrived at its destination - this is a transport layer function, as it is the shipper's responsibility to make sure stuff gets there on time. The buyer and shipper (Layer 7) don't really care \*how\* it got there, just that it did.

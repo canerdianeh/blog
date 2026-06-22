@@ -36,39 +36,34 @@ author:
   last_name: Beyer
 permalink: "/2021/11/05/aos8-api-ap-database/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<!-- wp:paragraph --><html><body></p>
-<p>In my previous posts about the ArubaOS API, I've given a general framework for pulling data from the AOS Mobility Conductor or a Mobility Controller. Today I'm going to show how to retrieve the AP database and dump it into a CSV file which you can then open in Excel or anything else and work all kinds of magic (yes, I know, Excel is not a database engine, but it still works rather well with tabular data)</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>The long-form AP database command (<strong>show ap database long</strong>) provides lots of useful information about the APs in the system: </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:list --></p>
-<ul>
-<li>AP Name</li>
-<li>AP Group</li>
-<li>AP Model</li>
-<li>AP IP Address</li>
-<li>Status (and uptime if it's up)</li>
-<li>Flags</li>
-<li>Switch IP (primary AP Anchor Controller)</li>
-<li>Standby IP (standby AAC)</li>
-<li>AP Wired MAC Address</li>
-<li>AP Serial #</li>
-<li>Port</li>
-<li>FQLN</li>
-<li>Outer IP (Public IP when it is a RAP)</li>
-<li>User</li>
-</ul>
-<p><!-- /wp:list --></p>
-<p><!-- wp:paragraph --></p>
-<p>This script will take the human-readable uptime string ("100d:12h:34m:28s") and convert that to seconds so uptime can be sorted in your favorite spreadsheet. It will also create a grid of all the AP flags so that you can sort/filter on those after converting the CSV to a data table. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>The code is extensively commented so you should be able to follow along. Also <a href="https://github.com/canerdianeh/aruba-campus/blob/main/apdb2csv.py">available on github</a>. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code lang="python" class="language-python">#!/usr/bin/python3
+
+In my previous posts about the ArubaOS API, I've given a general framework for pulling data from the AOS Mobility Conductor or a Mobility Controller. Today I'm going to show how to retrieve the AP database and dump it into a CSV file which you can then open in Excel or anything else and work all kinds of magic (yes, I know, Excel is not a database engine, but it still works rather well with tabular data)
+
+The long-form AP database command (**show ap database long**) provides lots of useful information about the APs in the system:
+
+- AP Name
+- AP Group
+- AP Model
+- AP IP Address
+- Status (and uptime if it's up)
+- Flags
+- Switch IP (primary AP Anchor Controller)
+- Standby IP (standby AAC)
+- AP Wired MAC Address
+- AP Serial #
+- Port
+- FQLN
+- Outer IP (Public IP when it is a RAP)
+- User
+
+This script will take the human-readable uptime string ("100d:12h:34m:28s") and convert that to seconds so uptime can be sorted in your favorite spreadsheet. It will also create a grid of all the AP flags so that you can sort/filter on those after converting the CSV to a data table.
+
+The code is extensively commented so you should be able to follow along. Also [available on github](https://github.com/canerdianeh/aruba-campus/blob/main/apdb2csv.py).
+
+```
+
+python
+#!/usr/bin/python3
 
 # ArubaOS 8 AP Database to CSV output via API call
 # (c) 2021 Ian Beyer, Aruba Networks &lt;canerdian@hpe.com&gt;
@@ -83,7 +78,6 @@ import sys
 import xmltodict
 import datetime
 
-
 aosDevice = "1.2.3.4"
 username = "admin"
 password = "password"
@@ -91,14 +85,12 @@ httpsVerify = False
 
 outfile="outputfilename.csv"
 
-
 #Set things up
 
 if httpsVerify == False :
     warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
 baseurl = "https://"+aosDevice+":4343/v1/"
-
 
 headers = {}
 payload = ""
@@ -236,13 +228,15 @@ if response.status_code == 200 :
 
 else :
     del sessionToken
-    sys.exit("Logout failed:")</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>The human-readable output of the <strong>show ap database</strong> gives you a list of what the flags are, but the API call does not, so in case you want a handy reference, here it is in JSON format so that you can easily adapt it. (<a href="https://github.com/canerdianeh/aruba-campus/blob/main/apflags.json">Github</a>)</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code lang="json" class="language-json">sheldon={
+    sys.exit("Logout failed:")
+```
+
+The human-readable output of the **show ap database** gives you a list of what the flags are, but the API call does not, so in case you want a handy reference, here it is in JSON format so that you can easily adapt it. ([Github](https://github.com/canerdianeh/aruba-campus/blob/main/apflags.json))
+
+```
+
+json
+sheldon={
 '1':'802.1x authenticated AP use EAP-PEAP',
 '1+':'802.1x use EST',
 '1-':'802.1x use factory cert',
@@ -275,6 +269,5 @@ else :
 'z':'Datazone AP',
 'p':'In deep-sleep status',
 '4':'WiFi Uplink'
-}</code></pre>
-<p><!-- /wp:code --><br />
-</body></html></p>
+}
+```

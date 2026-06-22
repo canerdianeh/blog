@@ -24,52 +24,63 @@ author:
   last_name: Administrator
 permalink: "/code/ec2/ec2-wowza-origin-server-shutdown/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>[bash]<br />
-#!/bin/bash</p>
-<p>export JAVA_HOME=/usr<br />
-export EC2_HOME=/opt/ec2/tools</p>
-<p>export index=$1<br />
-export date=`date +%m-%d-%y`</p>
-<p># Get instance ID</p>
-<p>if [ -f ~/var/origin.iid ]<br />
-then<br />
-export iid=`cat ~/var/origin.iid`<br />
-else<br />
-echo That instance does not exist!<br />
-exit<br />
-fi</p>
-<p># Get IP address<br />
-export ip=`${EC2_HOME}/bin/ec2-describe-instances ${iid} | grep INSTANCE | cut -f17`<br />
-echo Terminating Origin server at AMI ${iid} on IP address ${ip}</p>
-<p># Shut down Wowza</p>
-<p>echo Shutting down services...<br />
-ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} service WowzaMediaServer stop</p>
-<p># Back up content of archive directory to mounted S3 bucket<br />
-echo Archiving content directory<br />
-ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} rm -f /usr/local/WowzaMediaServer/content/s3*.smil<br />
-ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} rm -f /usr/local/WowzaMediaServer/content/s3*.mp4<br />
-ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} cp /usr/local/WowzaMediaServer/content/*.smil /usr/local/WowzaMediaServer/content/s3<br />
-ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} cp /usr/local/WowzaMediaServer/content/*.mp4 /usr/local/WowzaMediaServer/content/s3</p>
-<p># Zip up the logs<br />
-echo Archiving logs...<br />
-ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} gzip /usr/local/WowzaMediaServer/logs/*.log</p>
-<p># Save the logs to a local directory<br />
-echo Shipping logs...<br />
-mkdir -p ~/var/logs/origin/${date}/${iid}<br />
-scp -i ~/.ssh/gsg-keypair.priv.txt root@${ip}:/usr/local/WowzaMediaServer/logs/*.gz ~/var/logs/origin/${date}/${index}</p>
-<p># Shut 'er down<br />
-echo Terminating instance...<br />
-${EC2_HOME}/bin/ec2-terminate-instances ${iid}<br />
-if [ $? != 0 ]; then<br />
-echo Error terminating instance for image ${iid}<br />
-exit 1<br />
-fi</p>
-<p># clean up files<br />
-echo Removing temporary data files...<br />
-rm ~/var/origin.*<br />
-rm ~/var/wowza_current_instance_${ip}</p>
-<p>echo Instance ${iid} has been terminated.<br />
-[/bash]</p>
-<p></body></html></p>
+
+[bash]  
+#!/bin/bash
+
+export JAVA\_HOME=/usr  
+export EC2\_HOME=/opt/ec2/tools
+
+export index=$1  
+export date=`date +%m-%d-%y`
+
+# Get instance ID
+
+if [ -f ~/var/origin.iid ]  
+then  
+export iid=`cat ~/var/origin.iid`  
+else  
+echo That instance does not exist!  
+exit  
+fi
+
+# Get IP address  
+export ip=`${EC2\_HOME}/bin/ec2-describe-instances ${iid} | grep INSTANCE | cut -f17`  
+echo Terminating Origin server at AMI ${iid} on IP address ${ip}
+
+# Shut down Wowza
+
+echo Shutting down services...  
+ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} service WowzaMediaServer stop
+
+# Back up content of archive directory to mounted S3 bucket  
+echo Archiving content directory  
+ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} rm -f /usr/local/WowzaMediaServer/content/s3\*.smil  
+ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} rm -f /usr/local/WowzaMediaServer/content/s3\*.mp4  
+ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} cp /usr/local/WowzaMediaServer/content/\*.smil /usr/local/WowzaMediaServer/content/s3  
+ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} cp /usr/local/WowzaMediaServer/content/\*.mp4 /usr/local/WowzaMediaServer/content/s3
+
+# Zip up the logs  
+echo Archiving logs...  
+ssh -i ~/.ssh/gsg-keypair.priv.txt root@${ip} gzip /usr/local/WowzaMediaServer/logs/\*.log
+
+# Save the logs to a local directory  
+echo Shipping logs...  
+mkdir -p ~/var/logs/origin/${date}/${iid}  
+scp -i ~/.ssh/gsg-keypair.priv.txt root@${ip}:/usr/local/WowzaMediaServer/logs/\*.gz ~/var/logs/origin/${date}/${index}
+
+# Shut 'er down  
+echo Terminating instance...  
+${EC2\_HOME}/bin/ec2-terminate-instances ${iid}  
+if [ $? != 0 ]; then  
+echo Error terminating instance for image ${iid}  
+exit 1  
+fi
+
+# clean up files  
+echo Removing temporary data files...  
+rm ~/var/origin.\*  
+rm ~/var/wowza\_current\_instance\_${ip}
+
+echo Instance ${iid} has been terminated.  
+[/bash]

@@ -23,39 +23,47 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2012/01/10/switching-live-streams/"
+image: "http://blog.ianbeyer.com/files/2012/01/rackmonitorscreencap.png"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>Continuing on the rack theme mentioned yesterday, I got to wondering about a stream monitor that could be switched to any of a number of live streams, without reloading the page. Fortunately, JW Player makes this easy. I threw together a player embedded inside some CSS and then added a button panel. Each button is a DIV with an <em>onclick()</em> action that calls <em>jwplayer().load()</em>. While it's well known that you can use this to switch files simply by passing the filename to the <em>file</em> flashvar, we need to also pass the <em>streamer</em> value. Fortunately, the <em>load()</em> method has the ability to pass on not only files as a string value, but also objects, which are nothing more than an array of flashvars (it can also take playlist items, but that's beyond the scope of this post). So, all you need to do in order to switch streams with JW Player is call the following JavaScript method:</p>
-<pre>jwplayer().load({file: 'streamname', streamer: 'rtmp://w.streampunk.tv/live'})</pre>
-<p><span style="color: #333333; font-style: normal; line-height: 24px;">The result I got was this:</span><img class="aligncenter size-full wp-image-1085" title="Rack Monitor" src="{{site.baseurl}}/assets/2012/01/rackmonitorscreencap.png" alt="" width="606" height="384">Clicking on each of the buttons in the bar below the screen will switch the stream. A <a title="Stream Switch Example" href="http://v.streampunk.tv/jw/blog.html" target="_blank">live example can be found here</a>. If you want to see what else the JWPlayer API can do, head on over to the <a title="JW Player JavaScript API Documentation" href="http://www.longtailvideo.com/support/jw-player/jw-player-for-flash-v5/12540/javascript-api-reference" target="_blank">API docs</a>. FlowPlayer appears to have something similar in the <i>clip.update()</i> method (<a href="http://flowplayer.org/documentation/api/clip.html" target="_blank">flowplayer API documentation</a>), but I haven't tested it. </p>
-<p>Page code:</p>
-<pre>
+
+Continuing on the rack theme mentioned yesterday, I got to wondering about a stream monitor that could be switched to any of a number of live streams, without reloading the page. Fortunately, JW Player makes this easy. I threw together a player embedded inside some CSS and then added a button panel. Each button is a DIV with an *onclick()* action that calls *jwplayer().load()*. While it's well known that you can use this to switch files simply by passing the filename to the *file* flashvar, we need to also pass the *streamer* value. Fortunately, the *load()* method has the ability to pass on not only files as a string value, but also objects, which are nothing more than an array of flashvars (it can also take playlist items, but that's beyond the scope of this post). So, all you need to do in order to switch streams with JW Player is call the following JavaScript method:
+
+```
+
+jwplayer().load({file: 'streamname', streamer: 'rtmp://w.streampunk.tv/live'})
+```
+
+The result I got was this:![]({{site.baseurl}}/assets/2012/01/rackmonitorscreencap.png "Rack Monitor")Clicking on each of the buttons in the bar below the screen will switch the stream. A [live example can be found here](http://v.streampunk.tv/jw/blog.html "Stream Switch Example"). If you want to see what else the JWPlayer API can do, head on over to the [API docs](http://www.longtailvideo.com/support/jw-player/jw-player-for-flash-v5/12540/javascript-api-reference "JW Player JavaScript API Documentation"). FlowPlayer appears to have something similar in the *clip.update()* method ([flowplayer API documentation](http://flowplayer.org/documentation/api/clip.html)), but I haven't tested it.
+
+Page code:
+
+```
+
 [html]
 
-&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
-&lt;head&gt;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
 
-	&lt;title&gt;JW Player Switching&lt;/title&gt;
+	<title>JW Player Switching</title>
 
-	&lt;style type="text/css"&gt;
+	<style type="text/css">
 		body { background-color: #fff; padding: 0 20px; color:#000; font: 13px/18px Arial, sans-serif; }
 		a { color: #360; }
 		h3 { padding-top: 20px; }
 		ol { margin:5px 0 15px 16px; padding:0; list-style-type:square; }
-	&lt;/style&gt;
+	</style>
 
-&lt;/head&gt;
-&lt;body&gt;
-	&lt;!-- START OF THE PLAYER EMBEDDING TO COPY-PASTE --&gt;
-	&lt;div class="rack" style="width: 600px;"&gt;
-	&lt;div class="rackmonitor" style="width: 600px; height: 323px; background-image: url('rackmonitor.png'); position: relative"&gt;
-	&amp;nbsp;
-	&lt;div class="screen" style="width: 455px; height: 275px; position: absolute; left: 60px; top: 28px;"&gt;
-	&lt;div id="mediaplayer"&gt;Player...&lt;/div&gt;
-	&lt;script type="text/javascript" src="/jwplayer/jwplayer.js"&gt;&lt;/script&gt;
-	&lt;script type="text/javascript"&gt;
+</head>
+<body>
+	<!-- START OF THE PLAYER EMBEDDING TO COPY-PASTE -->
+	<div class="rack" style="width: 600px;">
+	<div class="rackmonitor" style="width: 600px; height: 323px; background-image: url('rackmonitor.png'); position: relative">
+	&nbsp;
+	<div class="screen" style="width: 455px; height: 275px; position: absolute; left: 60px; top: 28px;">
+	<div id="mediaplayer">Player...</div>
+	<script type="text/javascript" src="/jwplayer/jwplayer.js"></script>
+	<script type="text/javascript">
 		jwplayer("mediaplayer").setup({
 			flashplayer: "/jwplayer/player.swf",
 			height: "275",
@@ -66,17 +74,17 @@ permalink: "/2012/01/10/switching-live-streams/"
 			controlbar: 'none',
 			mute: true
 		});
-	&lt;/script&gt;
-	&lt;/div&gt;
-	&lt;/div&gt;
-	&lt;/div&gt;
-	&lt;div class="panel" 
+	</script>
+	</div>
+	</div>
+	</div>
+	<div class="panel" 
 	style="width: 600px; 
 	height: 57px; 
 	background-image: url('blankPanel.png'); 
 	position: relative
-	"&gt;	
-		&lt;div class="button1" 
+	">	
+		<div class="button1" 
 		style="width: 75px; 
 		height: 20px; 
 		position: absolute; 
@@ -88,10 +96,10 @@ permalink: "/2012/01/10/switching-live-streams/"
 		border: 1px solid black; 
 		text-align: center;" 
 		onclick="jwplayer().load({file: 'playlist-high', streamer: 'rtmp://wms.rezonline.org/redirect'})
-		"&gt;
+		">
 		RezOnline
-		&lt;/div&gt;
-		&lt;div class="button2" 
+		</div>
+		<div class="button2" 
 		style="width: 75px; 
 		height: 20px; 
 		position: absolute; 
@@ -101,10 +109,10 @@ permalink: "/2012/01/10/switching-live-streams/"
 		color: #cccccc; 
 		border: 1px solid black;text-align: center;" 
 		onclick="jwplayer().load({file: 'commons.stream', streamer: 'rtmp://w.streampunk.tv/live'})
-		"&gt;
+		">
 		Commons
-		&lt;/div&gt;
-		&lt;div class="button3" 
+		</div>
+		<div class="button3" 
 		style="width: 75px; 
 		height: 20px; 
 		position: absolute; 
@@ -114,10 +122,10 @@ permalink: "/2012/01/10/switching-live-streams/"
 		color: #cccccc; 
 		border: 1px solid black;text-align: center;" 
 		onclick="jwplayer().load({file: 'streamclass', streamer: 'rtmp://w.streampunk.tv/live'})
-		"&gt;
+		">
 		StreamClass
-		&lt;/div&gt;
-		&lt;div class="button4" 
+		</div>
+		<div class="button4" 
 		style="width: 75px; 
 		height: 20px; 
 		position: absolute; 
@@ -127,12 +135,11 @@ permalink: "/2012/01/10/switching-live-streams/"
 		color: #cccccc; 
 		border: 1px solid black;text-align: center;" 
 		onclick="jwplayer().load({file: 'aircam.stream', streamer: 'rtmp://w.streampunk.tv/live'})
-		"&gt;
+		">
 		AirCam
-		&lt;/div&gt;
-	&lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+		</div>
+	</div>
+</body>
+</html>
 [/html]
-</pre>
-<p></body></html></p>
+```

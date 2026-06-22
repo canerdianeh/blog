@@ -34,15 +34,21 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2010/03/03/fixing-network-priority-in-windows-win7-update/"
+image: "http://blog.ianbeyer.com/files/2010/03/NetworkAdvanced.png"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>A long time ago, I made a post about <a title="Fixing network priority in Windows" href="http://blog.ianbeyer.com/2008/10/10/fixing-network-priority-in-windows/" target="_blank">fixing network priority in Windows</a>, and I found myself having to do the same task again on my new Windows 7 system. The process isn't quite as easy to find under Windows 7/Vista. Here's the updated version:</p>
-<p>Right-click on your network icon and go to the "Network and Sharing center" (if the "Network" icon is on your desktop, you can also get there by right-clicking and going to properties)</p>
-<p>Click on "Change Adapter Settings"</p>
-<p><img class="aligncenter size-full wp-image-404" src="{{site.baseurl}}/assets/2010/03/NetworkAdvanced.png" alt="Network Advanced" width="413" height="220"></p>
-<p>Press the "Alt" Key to show the menu, and click on "Advanced", then "Advanced Settings".</p>
-<p>(from here, the process is unchanged)</p>
-<p>Move the Wired LAN Connection (By Default, “Local Area Connection”) to the top, followed by the wireless connection. Make sure that any VPN virtual adapters come after these, otherwise the VPN will only use the ones above it. This tends to be problematic if you’re using split tunneling, as it will kill any network connection you have.</p>
-<p>Once you've applied the settings, open a command prompt and run "nslookup" - it should default to the DNS server for your wired network.</p>
-<p></body></html></p>
+
+A long time ago, I made a post about [fixing network priority in Windows](http://blog.ianbeyer.com/2008/10/10/fixing-network-priority-in-windows/ "Fixing network priority in Windows"), and I found myself having to do the same task again on my new Windows 7 system. The process isn't quite as easy to find under Windows 7/Vista. Here's the updated version:
+
+Right-click on your network icon and go to the "Network and Sharing center" (if the "Network" icon is on your desktop, you can also get there by right-clicking and going to properties)
+
+Click on "Change Adapter Settings"
+
+![Network Advanced]({{site.baseurl}}/assets/2010/03/NetworkAdvanced.png)
+
+Press the "Alt" Key to show the menu, and click on "Advanced", then "Advanced Settings".
+
+(from here, the process is unchanged)
+
+Move the Wired LAN Connection (By Default, “Local Area Connection”) to the top, followed by the wireless connection. Make sure that any VPN virtual adapters come after these, otherwise the VPN will only use the ones above it. This tends to be problematic if you’re using split tunneling, as it will kill any network connection you have.
+
+Once you've applied the settings, open a command prompt and run "nslookup" - it should default to the DNS server for your wired network.

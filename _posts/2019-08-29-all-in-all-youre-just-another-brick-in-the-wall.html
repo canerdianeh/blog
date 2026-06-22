@@ -30,76 +30,51 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2019/08/29/all-in-all-youre-just-another-brick-in-the-wall/"
+image: "https://nerdian.ca/files/2019/08/Header.png"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<!-- wp:heading {"level":3} --><html><body></p>
-<h3><em>How I learned to stop worrying and love predictive modeling</em></h3>
-<p><!-- /wp:heading --></p>
-<p><!-- wp:paragraph --></p>
-<p><em>Due to this topic coming up regularly in the community, I'm posting this slightly edited version of one of the project documents I submitted as part of my CWNE application. The building in question has since been completed, but I have not had a chance to go see how the wireless ended up being implemented. </em></p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>When I was working at <a href="https://servant42.com">Servant42</a>, we were approached by another wireless integrator that we had met at a conference, and I was tasked with taking a preliminary design for a $125M academic research building currently in the early stages of construction, and come up with a usable wireless design in order for the integrator to plan cable placement. The RCDD who did the initial cabling design had put together a grid overlay of access points over each floor, and requested an outlet at each one. The integrator knew this wasn’t going to provide for functional Wi-Fi, and sent over the plans, with a note to pay very close attention to some of the wall types. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>The prints were exceedingly detailed, and the wall type schedule alone covered multiple sheets. Not having any real-world walls in this facility to measure attenuation with, I had to rely on published materials regarding attenuation of each type of common construction material. A valuable resource in developing this attenuation model was a 2002 paper<sup><a href="https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf">[1</a><a href="https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf" target="_blank" rel="noreferrer noopener">]</a></sup> published by <a href="https://www.linkedin.com/in/robdwilson/">Robert Wilson</a> (then a graduate student at USC, now a staff engineer at Qualcomm). Based on the various wall types listed on the sheet, I painstakingly added up all the attenuation values and created a wall type for each one in <a href="https://www.ekahau.com/products/ekahau-site-survey/overview/">Ekahau Site Survey Pro</a>, labeled to match the callouts on the prints. It wasn't perfect, but it would get me within about a dB. Some of the walls I had to deal with:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:list --></p>
-<ul>
-<li>2-hour rated walls, with double-thick 5/8” drywall on each side, filled with fiberglass</li>
-<li>Single layer drywall on only one side, open on the other, or wrapping a column</li>
-<li>Filled concrete block</li>
-<li>Cast concrete</li>
-<li>Security walls (more on that in a minute)</li>
-<li>Low-E glass curtain walls</li>
-<li>And so on…</li>
-</ul>
-<p><!-- /wp:list --></p>
-<p><!-- wp:image {"align":"center","id":1612,"width":359,"height":427} --></p>
-<div class="wp-block-image">
-<figure class="aligncenter is-resized"><img src="{{site.baseurl}}/assets/2019/08/WallPlan-862x1024.png" alt="" class="wp-image-1612" width="359" height="427"></figure>
-</div>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>Each of these wall types was also found in varying thicknesses throughout the building. As it turned out, the walls the client was telling me to pay special attention to were the security walls. Several areas of this building were slated to house medical laboratories, and as part of the security specification, it called for steel strapping, “to prevent penetration of a 100mm sphere.” This oddly specific requirement sounded like they were trying to stop small cannonballs, and I was more than a little curious because the specification didn't mention anything about the velocity of said sphere. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>The prints showed 6” wide 54mil steel straps spaced 3.75” apart (95mm) all the way up to the ceiling. And there were a LOT of these walls in the building. The nature of these walls is also such that they were certainly going to be grounded: </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:image {"id":1611} --></p>
-<figure class="wp-block-image"><img src="{{site.baseurl}}/assets/2019/08/Strapping.png" alt="" class="wp-image-1611"><br />
-<figcaption>A strapping young specimen of a wall. </figcaption>
-</figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>So I start digging back into the recesses of my brain where the RF theory is stashed, and consulted an RF engineer colleague, where he gave me a refresher on the RF transparency of various openings, where odd numbers of quarter waves are opaque to an RF frequency and even numbers are transparent. Some quick calculations told me that my 95mm openings were almost exactly ¾ wave on 2.4GHz. And because they ran horizontally, the gaps were about 16” wide between studs. So these lovely security walls were going to be opaque to 2.4GHz, but only one way. And transparent to 5GHz. Welcome to my nightmare! How in the heck was I going to model this? Ekahau didn’t give me the option for different attenuation values for frequencies or polarization. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Wilson’s paper also didn’t make any mention of this sort of thing. And I still couldn’t go out into the field to measure it, nor did the client have the budget or the time for us to set up a model of the wall and test that. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>As I’m trying to figure out my next move, I get a call from the client, and he tells me they’re starting to build those security walls on one of the lower floors. And then he sends me this picture. Sure enough, they deviated from the version of the plans that I had, and used an entirely different construction material on the security walls: an expanded metal diamond mesh rather than strapping, the type once commonly used as lath for plaster walls in the 1940s after wood lath fell out of favor (I've had to add data drops to those walls and cut in boxes, it's NOT fun.) </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:image {"align":"right","id":1610,"width":266,"height":248} --></p>
-<div class="wp-block-image">
-<figure class="alignright is-resized"><img src="{{site.baseurl}}/assets/2019/08/Mesh.png" alt="" class="wp-image-1610" width="266" height="248"><br />
-<figcaption><strong>The Mesh</strong>. Not that kind of meshing. </figcaption>
-</figure>
-</div>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>So now my calculations are out the window and I have to start over. I try to estimate the size of the holes in this mesh. I come up with about 6mm based on some rudimentary photogrammetry. This hole works out to 1/8 wave in 5GHz, and 1/16 wave in 2.4GHz. As far as the Wi-Fi is concerned, these might as well now be brick walls. I still don’t have a true idea of the actual attenuation. So I assume at this point that a layer of this stuff is going to stop the signal dead and dump it to ground, and put in 20dB. But at least I can model these now. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Now that I can put all my walls in, I build the model in Ekahau (and I was <em>really</em> wishing for a CAD file at this point) and I’m able to model the existing planned AP locations, show the numerous coverage problems caused by the security walls, and then re-plan the whole building (four occupied floors and a basement, including a few high-density lecture halls). Coverage was defined by the client for Cisco 3802i APs with -67dBm primary coverage, -75dBm secondary coverage, and not to worry about voice. Lecture halls needed to assume 2 client devices per seat. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>In several locations, I was having to place an AP just to cover a small pair of offices, because they were wrapped on three sides with these security walls. In a few cases, the office itself was fully wrapped in these secure walls, with a solid core door and safety glass window to the hall. I decided not to model the window and doors into the outer halls as the RF spilling from them would not be relied on for coverage outside the office. I made the recommendation to run these APs at lowest possible output power and specified a separate AP to cover these halls, preferably with a directional antenna. In other places, I had to place APs to cover RF shadows left by these walls. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Once complete, the client was then able to go back to the RCDD and request the additional cabling drops for the access points (the AP count through the entire building increased by nearly 50% just to deal with these Wi-Fi-eating walls)</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p><a href="applewebdata://8DCA190B-7037-4F64-98DA-21BB4211E2E4#_ftnref1"><sup>[1]</sup></a>Wilson, Robert, “<a href="https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf">Propagation Losses Through Common Building Materials: 2.4GHz vs. 5GHz</a>”</p>
-<p><!-- /wp:paragraph --><br />
-</body></html></p>
+
+### *How I learned to stop worrying and love predictive modeling*
+
+*Due to this topic coming up regularly in the community, I'm posting this slightly edited version of one of the project documents I submitted as part of my CWNE application. The building in question has since been completed, but I have not had a chance to go see how the wireless ended up being implemented.*
+
+When I was working at [Servant42](https://servant42.com), we were approached by another wireless integrator that we had met at a conference, and I was tasked with taking a preliminary design for a $125M academic research building currently in the early stages of construction, and come up with a usable wireless design in order for the integrator to plan cable placement. The RCDD who did the initial cabling design had put together a grid overlay of access points over each floor, and requested an outlet at each one. The integrator knew this wasn’t going to provide for functional Wi-Fi, and sent over the plans, with a note to pay very close attention to some of the wall types.
+
+The prints were exceedingly detailed, and the wall type schedule alone covered multiple sheets. Not having any real-world walls in this facility to measure attenuation with, I had to rely on published materials regarding attenuation of each type of common construction material. A valuable resource in developing this attenuation model was a 2002 paper[[1](https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf)[]](https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf) published by [Robert Wilson](https://www.linkedin.com/in/robdwilson/) (then a graduate student at USC, now a staff engineer at Qualcomm). Based on the various wall types listed on the sheet, I painstakingly added up all the attenuation values and created a wall type for each one in [Ekahau Site Survey Pro](https://www.ekahau.com/products/ekahau-site-survey/overview/), labeled to match the callouts on the prints. It wasn't perfect, but it would get me within about a dB. Some of the walls I had to deal with:
+
+- 2-hour rated walls, with double-thick 5/8” drywall on each side, filled with fiberglass
+- Single layer drywall on only one side, open on the other, or wrapping a column
+- Filled concrete block
+- Cast concrete
+- Security walls (more on that in a minute)
+- Low-E glass curtain walls
+- And so on…
+
+![]({{site.baseurl}}/assets/2019/08/WallPlan-862x1024.png)
+
+Each of these wall types was also found in varying thicknesses throughout the building. As it turned out, the walls the client was telling me to pay special attention to were the security walls. Several areas of this building were slated to house medical laboratories, and as part of the security specification, it called for steel strapping, “to prevent penetration of a 100mm sphere.” This oddly specific requirement sounded like they were trying to stop small cannonballs, and I was more than a little curious because the specification didn't mention anything about the velocity of said sphere.
+
+The prints showed 6” wide 54mil steel straps spaced 3.75” apart (95mm) all the way up to the ceiling. And there were a LOT of these walls in the building. The nature of these walls is also such that they were certainly going to be grounded:
+
+![]({{site.baseurl}}/assets/2019/08/Strapping.png)  
+
+A strapping young specimen of a wall.
+
+So I start digging back into the recesses of my brain where the RF theory is stashed, and consulted an RF engineer colleague, where he gave me a refresher on the RF transparency of various openings, where odd numbers of quarter waves are opaque to an RF frequency and even numbers are transparent. Some quick calculations told me that my 95mm openings were almost exactly ¾ wave on 2.4GHz. And because they ran horizontally, the gaps were about 16” wide between studs. So these lovely security walls were going to be opaque to 2.4GHz, but only one way. And transparent to 5GHz. Welcome to my nightmare! How in the heck was I going to model this? Ekahau didn’t give me the option for different attenuation values for frequencies or polarization.
+
+Wilson’s paper also didn’t make any mention of this sort of thing. And I still couldn’t go out into the field to measure it, nor did the client have the budget or the time for us to set up a model of the wall and test that.
+
+As I’m trying to figure out my next move, I get a call from the client, and he tells me they’re starting to build those security walls on one of the lower floors. And then he sends me this picture. Sure enough, they deviated from the version of the plans that I had, and used an entirely different construction material on the security walls: an expanded metal diamond mesh rather than strapping, the type once commonly used as lath for plaster walls in the 1940s after wood lath fell out of favor (I've had to add data drops to those walls and cut in boxes, it's NOT fun.)
+
+![]({{site.baseurl}}/assets/2019/08/Mesh.png)  
+
+**The Mesh**. Not that kind of meshing.
+
+So now my calculations are out the window and I have to start over. I try to estimate the size of the holes in this mesh. I come up with about 6mm based on some rudimentary photogrammetry. This hole works out to 1/8 wave in 5GHz, and 1/16 wave in 2.4GHz. As far as the Wi-Fi is concerned, these might as well now be brick walls. I still don’t have a true idea of the actual attenuation. So I assume at this point that a layer of this stuff is going to stop the signal dead and dump it to ground, and put in 20dB. But at least I can model these now.
+
+Now that I can put all my walls in, I build the model in Ekahau (and I was *really* wishing for a CAD file at this point) and I’m able to model the existing planned AP locations, show the numerous coverage problems caused by the security walls, and then re-plan the whole building (four occupied floors and a basement, including a few high-density lecture halls). Coverage was defined by the client for Cisco 3802i APs with -67dBm primary coverage, -75dBm secondary coverage, and not to worry about voice. Lecture halls needed to assume 2 client devices per seat.
+
+In several locations, I was having to place an AP just to cover a small pair of offices, because they were wrapped on three sides with these security walls. In a few cases, the office itself was fully wrapped in these secure walls, with a solid core door and safety glass window to the hall. I decided not to model the window and doors into the outer halls as the RF spilling from them would not be relied on for coverage outside the office. I made the recommendation to run these APs at lowest possible output power and specified a separate AP to cover these halls, preferably with a directional antenna. In other places, I had to place APs to cover RF shadows left by these walls.
+
+Once complete, the client was then able to go back to the RCDD and request the additional cabling drops for the access points (the AP count through the entire building increased by nearly 50% just to deal with these Wi-Fi-eating walls)
+
+[[1]](applewebdata://8DCA190B-7037-4F64-98DA-21BB4211E2E4#_ftnref1)Wilson, Robert, “[Propagation Losses Through Common Building Materials: 2.4GHz vs. 5GHz](https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf)”

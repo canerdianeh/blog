@@ -35,382 +35,430 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2016/10/16/wowza-stream-scheduler-hacks-google-calendar/"
+image: "https://nerdian.ca/files/2016/10/CDsqQFlWAAA7A5z.png"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>One of Wowza's most underutilized yet most powerful features is the stream scheduler. I've blogged about it extensively in the past, and I'll return from a long hiatus to do it again.</p>
-<p>To recap some of the things you can do with this add-on:</p>
-<ul>
-<li>Create a virtual stream that plays a loop of server-side content</li>
-<li>Play a sequence of video content (think TV programming)</li>
-<li>A combination of both</li>
-<li>Play portions of a video file (in/out points)</li>
-<li>In combination with the LoopUntilLive module, do all that and then interrupt with a live stream</li>
-</ul>
-<p>This gives you the ability to have a continuous 24/7 stream of programming including advertising. The output of this schedule is then treated by Wowza like any other stream, meaning it can be used as input to a transcoder, nDVR, or sent somewhere with Stream Targets.</p>
-<p>The challenge we run into is that building the schedule in XML is not the most obvious thing in the world as there is not currently any integration of the module into the Wowza Streaming Engine Manager's GUI.</p>
-<p>As the schedule is written as a SMIL file (a specific XML schema) in an application's content directory, It requires either logging in to the server and manipulating files with a text editor, or uploading into the content directory.</p>
-<p>The other way is to build the schedule programmatically. Command-line PHP is an easy way to do this as PHP has some excellent PHP processing tools.</p>
-<p>If you want to peek at the Java code for the scheduler module, <a href="https://github.com/WowzaMediaSystems/wse-plugin-streampublisher">Wowza has it up on GitHub</a>.</p>
-<p>A quick recap of the structure of the stream scheduler's XML Schema:</p>
-<ul>
-<li>The entire file is wrapped in &lt;SMIL&gt;&lt;/SMIL&gt; tags to indicate that this is in fact a SMIL file.</li>
-<li>an empty &lt;HEAD/&gt; block - Wowza doesn't currently make use of anything in here, but it's a good place to put comments, and it makes for good XML.</li>
-<li>The meat of the file, a &lt;BODY&gt;&lt;/BODY&gt; block that contains all the good stuff.</li>
-<li>Within the body block, there are two key element types:
-<ol>
-<li>One or more &lt;STREAM&gt; blocks that define the names of the virtual streams that are created by the schedule.</li>
-<li>One or more &lt;PLAYLIST&gt; blocks that define the content and timing of what gets published. Each playlist tag specifies the following attributes:
-<ul>
-<li>
-<strong>name</strong> : The name of the playlist. This is arbitrary but should be unique within the file</li>
-<li>
-<strong>playOnStream</strong>: specifies which of the streams created in the &lt;STREAM&gt; block this playlist's content will go to</li>
-<li>
-<strong>repeat</strong>: a boolean (true/false) value that specifies if this playlist loops until something else happens. If it runs out of content, the virtual stream will stop.</li>
-<li>
-<strong>scheduled</strong>: The date and time (based on server timezone) this playlist will be published to the stream. This is in <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 format</a> without the T delimiter (YYYY-MM-DD HH:MM:SS)</li>
-</ul>
-</li>
-<li>Within the &lt;PLAYLIST&gt; block are one or more &lt;VIDEO&gt; tags with the following attributes:
-<ul>
-<li>
-<strong>src</strong>: The path and filename (relative to the application's content directory) of the video file to play. This should be prefixed with <strong>mp4: </strong>as you would any other video file within Wowza. You can also put in the name of a live stream published within the same application.</li>
-<li>
-<strong>start</strong>: The offset (in seconds) from the beginning of the file where playback is to begin.</li>
-<li>
-<strong>length</strong>: Play duration (in seconds) from the <strong>start</strong> point. A value of <strong>-1</strong> will play to the end of the file. A value of <strong>-2</strong> indicates that this is a live stream.</li>
-<li>Once the end of this item is reached, it will move to the next element in the playlist. If there is no more content it will either loop (if <strong>repeat</strong> is set to true) or stop. If there is nothing further on the schedule, the stream will unpublish and stop. If this is not a repeating playlist, It's generally a good idea to put a buffer video (a number of minutes of black video or a logo works just fine) at the end of it to fill any gaps to the next playlist.</li>
-</ul>
-</li>
-</ol>
-</li>
-</ul>
-<p>So, the schedule is pretty straightforward, but it can get tedious to build. I previously posted about a <a href="http://blog.ianbeyer.com/2011/07/18/wowza-stream-class-playlist-generator/">way to generate this with a spreadsheet in Excel</a>. This is clunky, but can save a lot of typing, and is good for repeating events.</p>
-<p>But this lacked a good visual interface. As I was working on a project for a client to translate a schedule generated from their video content management system into the Wowza Stream Scheduler's XML, it occurred to me that there was another structured schedule format that could be translated easily into XML: iCal. This calendar format is defined in <a href="https://www.ietf.org/rfc/rfc2445.txt">RFC 2445</a> and is widely used by many calendaring systems.</p>
-<p>Unfortunately, iCal is not XML to begin with (iCal/RFC2445 predates XML by a decade), which would be WAY too easy. Here is a sample of iCal data out of Google Calendar that contains two events (Google <em>used</em> to make their calendar shares available in XML but it seems that is no longer the case):</p>
-<p>[code]<br />
-BEGIN:VCALENDAR<br />
-PRODID:-//Google Inc//Google Calendar 70.9054//EN<br />
-VERSION:2.0<br />
-CALSCALE:GREGORIAN<br />
-METHOD:PUBLISH<br />
-X-WR-CALNAME:Wowza Event Scheduler Calendar<br />
-X-WR-TIMEZONE:America/Chicago<br />
-X-WR-CALDESC:<br />
-BEGIN:VEVENT<br />
-DTSTART:20161017T160000Z<br />
-DTEND:20161017T170000Z<br />
-DTSTAMP:20161016T164145Z<br />
-UID:xxxxxx@google.com<br />
-CREATED:20161012T212924Z<br />
-DESCRIPTION:mp4:video1.mp4\,0\,-1<br />
-LAST-MODIFIED:20161016T164138Z<br />
-LOCATION:teststream<br />
-SEQUENCE:3<br />
-STATUS:CONFIRMED<br />
-SUMMARY:11am Broadcast<br />
-TRANSP:OPAQUE<br />
-END:VEVENT<br />
-BEGIN:VEVENT<br />
-DTSTART:20161017T170000Z<br />
-DTEND:20161017T180000Z<br />
-DTSTAMP:20161016T164145Z<br />
-UID:xxxxxx@google.com<br />
-CREATED:20161016T164116Z<br />
-DESCRIPTION:mp4:video2.mp4\,0\,1800\nmp4:video3.mp4\,0\,1800<br />
-LAST-MODIFIED:20161016T164118Z<br />
-LOCATION:teststream<br />
-SEQUENCE:1<br />
-STATUS:CONFIRMED<br />
-SUMMARY:Noon Broadcast<br />
-TRANSP:OPAQUE<br />
-END:VEVENT<br />
-END:VCALENDAR<br />
-[/code]</p>
-<p>As you can see, this has some hints of XML: Opening and closing tags, attributes, and the like. Fortunately, Evert Pot wrote a <a href="https://evertpot.com/248/">handy little PHP function</a> to make the conversion to XML.</p>
-<p>One of the really nice things about JSON and XML in PHP is that the objects that contain them work just like any other nested arrays, and so extracting specific items is ridiculously easy. There's a lot of data within the VEVENT block that we just aren't interested in. We really only care about the start and stop times, and a few other fields like DESCRIPTION, LOCATION and SUMMARY, which we can hack to contain the names of the streams and content. In this example, I use DESCRIPTION to contain the names of the video files on each line (and additional comma-separated data regarding start and end points, and LOCATION to specify what stream it should be published on. SUMMARY can be used as the playlist name attribute There are a number of other iCal fields that can be used for this as well.</p>
-<p>In order to use this data, we need to do the following:</p>
-<ul>
-<li>Use the start/end times to calculate a duration</li>
-<li>Make a list of the streams to publish to</li>
-<li>figure out what video to play when</li>
-<li>Convert datestamps to the local server time</li>
-</ul>
-<p>For starters, we're going to need to set a few defaults:</p>
-<p>[php]<br />
-ini_set("allow_url_fopen", 1);<br />
-error_reporting(0);<br />
-date_default_timezone_set("US/Central");<br />
-[/php]</p>
-<p>Using Evert's conversion function, we get the schedule into an XML object:</p>
-<p>[php]<br />
-$calUrl = "https://calendar.google.com/calendar/ical/xxxxxxxxxxxxx8%40group.calendar.google.com/private-xxxxx/basic.ics";<br />
-// get your private calendar URL from the calendar settings.<br />
-$CalData=file_get_contents($calUrl);<br />
-$xmlString=iCalendarToXML($CalData);<br />
-$xmlObj = simplexml_load_string($xmlString);<br />
-[/php]</p>
-<p>The object now looks like this:</p>
-<p>[code]<br />
-SimpleXMLElement Object<br />
-(<br />
-    [PRODID] =&gt; -//Google Inc//Google Calendar 70.9054//EN<br />
-    [VERSION] =&gt; 2.0<br />
-    [CALSCALE] =&gt; GREGORIAN<br />
-    [METHOD] =&gt; PUBLISH<br />
-    [X-WR-CALNAME] =&gt; Wowza Event Scheduler Calendar<br />
-    [X-WR-TIMEZONE] =&gt; America/Chicago<br />
-    [X-WR-CALDESC] =&gt; SimpleXMLElement Object<br />
-        (<br />
-        )</p>
-<p>    [VEVENT] =&gt; Array<br />
-        (<br />
-            [0] =&gt; SimpleXMLElement Object<br />
-                (<br />
-                    [DTSTART] =&gt; 20161017T160000Z<br />
-                    [DTEND] =&gt; 20161017T170000Z<br />
-                    [DTSTAMP] =&gt; 20161016T182755Z<br />
-                    [UID] =&gt; 72klt8s5ssrbjp9ofdk8ucovoo@google.com<br />
-                    [CREATED] =&gt; 20161012T212924Z<br />
-                    [DESCRIPTION] =&gt; mp4:video1.mp4\,0\,-1<br />
-                    [LAST-MODIFIED] =&gt; 20161016T164138Z<br />
-                    [LOCATION] =&gt; teststream<br />
-                    [SEQUENCE] =&gt; 3<br />
-                    [STATUS] =&gt; CONFIRMED<br />
-                    [SUMMARY] =&gt; 11am Broadcast<br />
-                    [TRANSP] =&gt; OPAQUE<br />
-                )</p>
-<p>            [1] =&gt; SimpleXMLElement Object<br />
-                (<br />
-                    [DTSTART] =&gt; 20161017T170000Z<br />
-                    [DTEND] =&gt; 20161017T180000Z<br />
-                    [DTSTAMP] =&gt; 20161016T182755Z<br />
-                    [UID] =&gt; ac3lgjmjmijj2910au0fnv5vig@google.com<br />
-                    [CREATED] =&gt; 20161016T164116Z<br />
-                    [DESCRIPTION] =&gt; mp4:video2.mp4\,0\,1800\nmp4:video3.mp4\,0\,1800<br />
-                    [LAST-MODIFIED] =&gt; 20161016T164118Z<br />
-                    [LOCATION] =&gt; teststream<br />
-                    [SEQUENCE] =&gt; 1<br />
-                    [STATUS] =&gt; CONFIRMED<br />
-                    [SUMMARY] =&gt; Noon Broadcast<br />
-                    [TRANSP] =&gt; OPAQUE<br />
-                )</p>
-<p>        )</p>
-<p>)</p>
-<p>[/code]</p>
-<p>So now we need to create another XML object for our schedule and give it the basic structure:</p>
-<p>[php]<br />
-$smilXml = new SimpleXMLElement('&lt;smil/&gt;');<br />
-$smilHead = $smilXml-&gt;addChild('head');<br />
-$smilBody = $smilXml-&gt;addChild('body');<br />
-[/php]</p>
-<p>Now we need to iterate once through the VEVENT objects to get stream names:</p>
-<p>[php]<br />
-$playonstream = [];</p>
-<p>foreach ($xmlObj-&gt;VEVENT as $event) {<br />
-        $loc = $event-&gt;LOCATION;<br />
-        $playOnStream["$loc"]=true;<br />
-        // We don't really care about the value of this array element, as long as it exists.<br />
-        // This way we only get one array element for each unique stream name<br />
-}</p>
-<p>// Iterate through the list of streams and create them in the SMIL<br />
-foreach ($playOnStream as $key =&gt; $value) {</p>
-<p>$smilStream = $smilBody-&gt;addChild('stream');<br />
-$smilStream-&gt;addAttribute('name',$key);</p>
-<p>}<br />
-[/php]</p>
-<p>So now we have the beginnings of a schedule:</p>
-<p>[xml]<br />
-&lt;?xml version="1.0"?&gt;<br />
-&lt;smil&gt;<br />
-  &lt;head/&gt;<br />
-  &lt;body&gt;<br />
-    &lt;stream name="teststream"/&gt;<br />
-  &lt;/body&gt;<br />
-&lt;/smil&gt;<br />
-[/xml]</p>
-<p>We now need to iterate through the list again to add in the fallback items for each stream that starts when the stream starts (this is done as a separate loop to keep the output XML cleaner):</p>
-<p>[php]<br />
-// Add in default fallback entries<br />
-foreach ($playOnStream as $key =&gt; $value) {<br />
-        $defaultPl=$smilBody-&gt;addChild('playlist');<br />
-        $defaultPl-&gt;addAttribute('name',"default-$key");<br />
-        $defaultPl-&gt;addAttribute('playOnStream',$key);<br />
-        $defaultPl-&gt;addAttribute('repeat','true');<br />
-        $defaultPl-&gt;addAttribute('scheduled',"2016-01-01 00:00:01");<br />
-        $contentItem = $defaultPl-&gt;addChild('video');<br />
-        $contentItem-&gt;addAttribute('src','mp4:padding.mp4');<br />
-        $contentItem-&gt;addAttribute('start','0');<br />
-        $contentItem-&gt;addAttribute('length','-1');</p>
-<p>}<br />
-[/php]</p>
-<p>Which then gives us these new items:</p>
-<p>[xml]<br />
-&lt;smil&gt;<br />
-  &lt;head/&gt;<br />
-  &lt;body&gt;<br />
-    &lt;stream name="teststream"/&gt;<br />
-    &lt;playlist name="default-teststream" playOnStream="teststream" repeat="true" scheduled="2016-01-01 00:00:01"&gt;<br />
-      &lt;video src="mp4:padding.mp4" start="0" length="-1"/&gt;<br />
-    &lt;/playlist&gt;<br />
-  &lt;/body&gt;<br />
-&lt;/smil&gt;<br />
-[/xml]</p>
-<p>And then we need to iterate again through the VEVENTS to create the actual schedule items:</p>
-<p>[php]<br />
-foreach ($xmlObj-&gt;VEVENT as $event) {</p>
-<p>        //parse the times into Unix time stamps using the ever-useful strtotime() function;<br />
-        $eventStart = strtotime($event-&gt;DTSTART);<br />
-        $eventEnd = strtotime($event-&gt;DTEND);</p>
-<p>        //format them into the ISO 8601 format for use in the schedule<br />
-        //Note that we're using H:i:s rather than h:i:s because 24-hour time is important here<br />
-        $start = date("Y-m-d H:i:s", $eventStart);<br />
-        $end = date("Y-m-d H:i:s", $eventEnd);</p>
-<p>        //extract summary for playlist name<br />
-        $plName = $event-&gt;SUMMARY;<br />
-        $plLoc = $event-&gt;LOCATION;</p>
-<p>        //extract description for content<br />
-        $description = $event-&gt;DESCRIPTION;<br />
-        $videos=preg_split('/\\\\n/',$description);<br />
-        // add on a padding video at the end of this list<br />
-        $videos[]="mp4:padding.mp4";</p>
-<p>        //create playlist<br />
-        $playlist = $smilBody-&gt;addChild('playlist');<br />
-        $playlist-&gt;addAttribute('name',$plName);<br />
-        $playlist-&gt;addAttribute('playOnStream',$plLoc);<br />
-        $playlist-&gt;addAttribute('repeat','false');<br />
-        $playlist-&gt;addAttribute('scheduled',$start);</p>
-<p>        //iterate through playlist items<br />
-        foreach($videos as $plItem) {<br />
-                echo "$plItem\n";<br />
-                $attrs=preg_split('/\\\\,/',$plItem);<br />
-                // set defaults for stream start/duration if not specified<br />
-                // assume start at beginning and play all the way through<br />
-                if(!$attrs[1]) { $attrs[1] = 0; }<br />
-                if(!$attrs[2]) { $attrs[2] = -1; }</p>
-<p>                $contentItem = $playlist-&gt;addChild('video');<br />
-                $contentItem-&gt;addAttribute('src',$attrs[0]);<br />
-                $contentItem-&gt;addAttribute('start',$attrs[1]);<br />
-                $contentItem-&gt;addAttribute('length',$attrs[2]);</p>
-<p>        } // end of playlist loop</p>
-<p>} // end of event loop</p>
-<p>[/php]</p>
-<p>And, finally, we need to add a little bit of code to format the XML object for use with Wowza:</p>
-<p>[php]<br />
-$dom = dom_import_simplexml($smilXml)-&gt;ownerDocument;<br />
-$dom-&gt;formatOutput = true;<br />
-$output=$dom-&gt;saveXML();<br />
-echo "$output\n"; // outputs to STDOUT<br />
-$dom-&gt;save('streamschedule.smil'); // save to file</p>
-<p>[/php]</p>
-<p>For the purposes of this last section, I've created some additional events to add a secondary stream:</p>
-<p><a href="http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.25.18.png"><img class="alignnone wp-image-1383" src="{{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.25.18-300x185.png" alt="Schedule Overview" width="600" height="370"></a></p>
-<p><a href="http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.45.png"><img class="alignnone wp-image-1381" src="{{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.45-300x182.png" alt="11am Broadcast Event" width="600" height="365"></a></p>
-<p><a href="http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.29.png"><img class="alignnone wp-image-1382" src="{{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.29-300x179.png" alt="11am Alternate Broadcast Event" width="600" height="358"></a></p>
-<p><a href="http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.55.png"><img class="alignnone wp-image-1380" src="{{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.55-300x183.png" alt="Noon Broadcast Event" width="600" height="366"></a></p>
-<p><a href="http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.20.08.png"><img class="alignnone wp-image-1379" src="{{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.20.08-300x181.png" alt="Event Broadcast" width="600" height="361"></a></p>
-<p>The iCal looks like this:</p>
-<p>[code]<br />
-BEGIN:VCALENDAR<br />
-PRODID:-//Google Inc//Google Calendar 70.9054//EN<br />
-VERSION:2.0<br />
-CALSCALE:GREGORIAN<br />
-METHOD:PUBLISH<br />
-X-WR-CALNAME:Wowza Event Scheduler Calendar<br />
-X-WR-TIMEZONE:America/Chicago<br />
-X-WR-CALDESC:<br />
-BEGIN:VEVENT<br />
-DTSTART:20161017T160000Z<br />
-DTEND:20161017T170000Z<br />
-DTSTAMP:20161016T182604Z<br />
-UID:8m4hcp98fmuosuoe48o20drl7k@google.com<br />
-CREATED:20161016T180813Z<br />
-DESCRIPTION:mp4:video5.mp4\nmp4:video6.mp4<br />
-LAST-MODIFIED:20161016T180813Z<br />
-LOCATION:altstream<br />
-SEQUENCE:0<br />
-STATUS:CONFIRMED<br />
-SUMMARY:11am alternate broadcast<br />
-TRANSP:OPAQUE<br />
-END:VEVENT<br />
-BEGIN:VEVENT<br />
-DTSTART:20161017T180000Z<br />
-DTEND:20161017T190000Z<br />
-DTSTAMP:20161016T182604Z<br />
-UID:c1ijl48srikc22vkkvrgvpb718@google.com<br />
-CREATED:20161016T180725Z<br />
-DESCRIPTION:mp4:video4.mp4<br />
-LAST-MODIFIED:20161016T180725Z<br />
-LOCATION:teststream<br />
-SEQUENCE:0<br />
-STATUS:CONFIRMED<br />
-SUMMARY:Event<br />
-TRANSP:OPAQUE<br />
-END:VEVENT<br />
-BEGIN:VEVENT<br />
-DTSTART:20161017T160000Z<br />
-DTEND:20161017T170000Z<br />
-DTSTAMP:20161016T182604Z<br />
-UID:72klt8s5ssrbjp9ofdk8ucovoo@google.com<br />
-CREATED:20161012T212924Z<br />
-DESCRIPTION:mp4:video1.mp4\,0\,-1<br />
-LAST-MODIFIED:20161016T164138Z<br />
-LOCATION:teststream<br />
-SEQUENCE:3<br />
-STATUS:CONFIRMED<br />
-SUMMARY:11am Broadcast<br />
-TRANSP:OPAQUE<br />
-END:VEVENT<br />
-BEGIN:VEVENT<br />
-DTSTART:20161017T170000Z<br />
-DTEND:20161017T180000Z<br />
-DTSTAMP:20161016T182604Z<br />
-UID:ac3lgjmjmijj2910au0fnv5vig@google.com<br />
-CREATED:20161016T164116Z<br />
-DESCRIPTION:mp4:video2.mp4\,0\,1800\nmp4:video3.mp4\,0\,1800<br />
-LAST-MODIFIED:20161016T164118Z<br />
-LOCATION:teststream<br />
-SEQUENCE:1<br />
-STATUS:CONFIRMED<br />
-SUMMARY:Noon Broadcast<br />
-TRANSP:OPAQUE<br />
-END:VEVENT<br />
-END:VCALENDAR<br />
-[/code]</p>
-<p>And when we run the process, we get this spiffy code coming out:</p>
-<p>[xml]<br />
-&lt;smil&gt;<br />
-  &lt;head/&gt;<br />
-  &lt;body&gt;<br />
-    &lt;stream name="altstream"/&gt;<br />
-    &lt;stream name="teststream"/&gt;<br />
-    &lt;playlist name="default-altstream" playOnStream="altstream" repeat="true" scheduled="2016-01-01 00:00:01"&gt;<br />
-      &lt;video src="mp4:padding.mp4" start="0" length="-1"/&gt;<br />
-    &lt;/playlist&gt;<br />
-    &lt;playlist name="default-teststream" playOnStream="teststream" repeat="true" scheduled="2016-01-01 00:00:01"&gt;<br />
-      &lt;video src="mp4:padding.mp4" start="0" length="-1"/&gt;<br />
-    &lt;/playlist&gt;<br />
-    &lt;playlist name="11am alternate broadcast" playOnStream="altstream" repeat="false" scheduled="2016-10-17 11:00:00"&gt;<br />
-      &lt;video src="mp4:video5.mp4" start="0" length="-1"/&gt;<br />
-      &lt;video src="mp4:video6.mp4" start="0" length="-1"/&gt;<br />
-      &lt;video src="mp4:padding.mp4" start="0" length="-1"/&gt;<br />
-    &lt;/playlist&gt;<br />
-    &lt;playlist name="Event" playOnStream="teststream" repeat="false" scheduled="2016-10-17 13:00:00"&gt;<br />
-      &lt;video src="mp4:video4.mp4" start="0" length="-1"/&gt;<br />
-      &lt;video src="mp4:padding.mp4" start="0" length="-1"/&gt;<br />
-    &lt;/playlist&gt;<br />
-    &lt;playlist name="11am Broadcast" playOnStream="teststream" repeat="false" scheduled="2016-10-17 11:00:00"&gt;<br />
-      &lt;video src="mp4:video1.mp4" start="0" length="-1"/&gt;<br />
-      &lt;video src="mp4:padding.mp4" start="0" length="-1"/&gt;<br />
-    &lt;/playlist&gt;<br />
-    &lt;playlist name="Noon Broadcast" playOnStream="teststream" repeat="false" scheduled="2016-10-17 12:00:00"&gt;<br />
-      &lt;video src="mp4:video2.mp4" start="0" length="1800"/&gt;<br />
-      &lt;video src="mp4:video3.mp4" start="0" length="1800"/&gt;<br />
-      &lt;video src="mp4:padding.mp4" start="0" length="-1"/&gt;<br />
-    &lt;/playlist&gt;<br />
-  &lt;/body&gt;<br />
-&lt;/smil&gt;<br />
-[/xml]</p>
-<p>So there you have a relatively simple one-way hack to spit Google Calendar/iCal events out into a Wowza Schedule. You would still need to manually run this every time you wanted to update the broadcast schedule (and reload the Wowza server), and this does not send any confirmation back to your iCal that the event has been scheduled.</p>
-<p>Stay tuned for a variation on this code that uses the Google Calendar API (a much more elegant approach)</body></html></p>
+
+One of Wowza's most underutilized yet most powerful features is the stream scheduler. I've blogged about it extensively in the past, and I'll return from a long hiatus to do it again.
+
+To recap some of the things you can do with this add-on:
+
+- Create a virtual stream that plays a loop of server-side content
+- Play a sequence of video content (think TV programming)
+- A combination of both
+- Play portions of a video file (in/out points)
+- In combination with the LoopUntilLive module, do all that and then interrupt with a live stream
+
+This gives you the ability to have a continuous 24/7 stream of programming including advertising. The output of this schedule is then treated by Wowza like any other stream, meaning it can be used as input to a transcoder, nDVR, or sent somewhere with Stream Targets.
+
+The challenge we run into is that building the schedule in XML is not the most obvious thing in the world as there is not currently any integration of the module into the Wowza Streaming Engine Manager's GUI.
+
+As the schedule is written as a SMIL file (a specific XML schema) in an application's content directory, It requires either logging in to the server and manipulating files with a text editor, or uploading into the content directory.
+
+The other way is to build the schedule programmatically. Command-line PHP is an easy way to do this as PHP has some excellent PHP processing tools.
+
+If you want to peek at the Java code for the scheduler module, [Wowza has it up on GitHub](https://github.com/WowzaMediaSystems/wse-plugin-streampublisher).
+
+A quick recap of the structure of the stream scheduler's XML Schema:
+
+- The entire file is wrapped in <SMIL></SMIL> tags to indicate that this is in fact a SMIL file.
+- an empty <HEAD/> block - Wowza doesn't currently make use of anything in here, but it's a good place to put comments, and it makes for good XML.
+- The meat of the file, a <BODY></BODY> block that contains all the good stuff.
+- Within the body block, there are two key element types:
+  1. One or more <STREAM> blocks that define the names of the virtual streams that are created by the schedule.
+  2. One or more <PLAYLIST> blocks that define the content and timing of what gets published. Each playlist tag specifies the following attributes:
+     - **name** : The name of the playlist. This is arbitrary but should be unique within the file
+     - **playOnStream**: specifies which of the streams created in the <STREAM> block this playlist's content will go to
+     - **repeat**: a boolean (true/false) value that specifies if this playlist loops until something else happens. If it runs out of content, the virtual stream will stop.
+     - **scheduled**: The date and time (based on server timezone) this playlist will be published to the stream. This is in [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601#Dates) without the T delimiter (YYYY-MM-DD HH:MM:SS)
+  3. Within the <PLAYLIST> block are one or more <VIDEO> tags with the following attributes:
+     - **src**: The path and filename (relative to the application's content directory) of the video file to play. This should be prefixed with **mp4:**as you would any other video file within Wowza. You can also put in the name of a live stream published within the same application.
+     - **start**: The offset (in seconds) from the beginning of the file where playback is to begin.
+     - **length**: Play duration (in seconds) from the **start** point. A value of **-1** will play to the end of the file. A value of **-2** indicates that this is a live stream.
+     - Once the end of this item is reached, it will move to the next element in the playlist. If there is no more content it will either loop (if **repeat** is set to true) or stop. If there is nothing further on the schedule, the stream will unpublish and stop. If this is not a repeating playlist, It's generally a good idea to put a buffer video (a number of minutes of black video or a logo works just fine) at the end of it to fill any gaps to the next playlist.
+
+So, the schedule is pretty straightforward, but it can get tedious to build. I previously posted about a [way to generate this with a spreadsheet in Excel](http://blog.ianbeyer.com/2011/07/18/wowza-stream-class-playlist-generator/). This is clunky, but can save a lot of typing, and is good for repeating events.
+
+But this lacked a good visual interface. As I was working on a project for a client to translate a schedule generated from their video content management system into the Wowza Stream Scheduler's XML, it occurred to me that there was another structured schedule format that could be translated easily into XML: iCal. This calendar format is defined in [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt) and is widely used by many calendaring systems.
+
+Unfortunately, iCal is not XML to begin with (iCal/RFC2445 predates XML by a decade), which would be WAY too easy. Here is a sample of iCal data out of Google Calendar that contains two events (Google *used* to make their calendar shares available in XML but it seems that is no longer the case):
+
+[code]  
+BEGIN:VCALENDAR  
+PRODID:-//Google Inc//Google Calendar 70.9054//EN  
+VERSION:2.0  
+CALSCALE:GREGORIAN  
+METHOD:PUBLISH  
+X-WR-CALNAME:Wowza Event Scheduler Calendar  
+X-WR-TIMEZONE:America/Chicago  
+X-WR-CALDESC:  
+BEGIN:VEVENT  
+DTSTART:20161017T160000Z  
+DTEND:20161017T170000Z  
+DTSTAMP:20161016T164145Z  
+UID:xxxxxx@google.com  
+CREATED:20161012T212924Z  
+DESCRIPTION:mp4:video1.mp4\,0\,-1  
+LAST-MODIFIED:20161016T164138Z  
+LOCATION:teststream  
+SEQUENCE:3  
+STATUS:CONFIRMED  
+SUMMARY:11am Broadcast  
+TRANSP:OPAQUE  
+END:VEVENT  
+BEGIN:VEVENT  
+DTSTART:20161017T170000Z  
+DTEND:20161017T180000Z  
+DTSTAMP:20161016T164145Z  
+UID:xxxxxx@google.com  
+CREATED:20161016T164116Z  
+DESCRIPTION:mp4:video2.mp4\,0\,1800\nmp4:video3.mp4\,0\,1800  
+LAST-MODIFIED:20161016T164118Z  
+LOCATION:teststream  
+SEQUENCE:1  
+STATUS:CONFIRMED  
+SUMMARY:Noon Broadcast  
+TRANSP:OPAQUE  
+END:VEVENT  
+END:VCALENDAR  
+[/code]
+
+As you can see, this has some hints of XML: Opening and closing tags, attributes, and the like. Fortunately, Evert Pot wrote a [handy little PHP function](https://evertpot.com/248/) to make the conversion to XML.
+
+One of the really nice things about JSON and XML in PHP is that the objects that contain them work just like any other nested arrays, and so extracting specific items is ridiculously easy. There's a lot of data within the VEVENT block that we just aren't interested in. We really only care about the start and stop times, and a few other fields like DESCRIPTION, LOCATION and SUMMARY, which we can hack to contain the names of the streams and content. In this example, I use DESCRIPTION to contain the names of the video files on each line (and additional comma-separated data regarding start and end points, and LOCATION to specify what stream it should be published on. SUMMARY can be used as the playlist name attribute There are a number of other iCal fields that can be used for this as well.
+
+In order to use this data, we need to do the following:
+
+- Use the start/end times to calculate a duration
+- Make a list of the streams to publish to
+- figure out what video to play when
+- Convert datestamps to the local server time
+
+For starters, we're going to need to set a few defaults:
+
+[php]  
+ini\_set("allow\_url\_fopen", 1);  
+error\_reporting(0);  
+date\_default\_timezone\_set("US/Central");  
+[/php]
+
+Using Evert's conversion function, we get the schedule into an XML object:
+
+[php]  
+$calUrl = "https://calendar.google.com/calendar/ical/xxxxxxxxxxxxx8%40group.calendar.google.com/private-xxxxx/basic.ics";  
+// get your private calendar URL from the calendar settings.  
+$CalData=file\_get\_contents($calUrl);  
+$xmlString=iCalendarToXML($CalData);  
+$xmlObj = simplexml\_load\_string($xmlString);  
+[/php]
+
+The object now looks like this:
+
+[code]  
+SimpleXMLElement Object  
+(  
+[PRODID] => -//Google Inc//Google Calendar 70.9054//EN  
+[VERSION] => 2.0  
+[CALSCALE] => GREGORIAN  
+[METHOD] => PUBLISH  
+[X-WR-CALNAME] => Wowza Event Scheduler Calendar  
+[X-WR-TIMEZONE] => America/Chicago  
+[X-WR-CALDESC] => SimpleXMLElement Object  
+(  
+)
+
+[VEVENT] => Array  
+(  
+[0] => SimpleXMLElement Object  
+(  
+[DTSTART] => 20161017T160000Z  
+[DTEND] => 20161017T170000Z  
+[DTSTAMP] => 20161016T182755Z  
+[UID] => 72klt8s5ssrbjp9ofdk8ucovoo@google.com  
+[CREATED] => 20161012T212924Z  
+[DESCRIPTION] => mp4:video1.mp4\,0\,-1  
+[LAST-MODIFIED] => 20161016T164138Z  
+[LOCATION] => teststream  
+[SEQUENCE] => 3  
+[STATUS] => CONFIRMED  
+[SUMMARY] => 11am Broadcast  
+[TRANSP] => OPAQUE  
+)
+
+[1] => SimpleXMLElement Object  
+(  
+[DTSTART] => 20161017T170000Z  
+[DTEND] => 20161017T180000Z  
+[DTSTAMP] => 20161016T182755Z  
+[UID] => ac3lgjmjmijj2910au0fnv5vig@google.com  
+[CREATED] => 20161016T164116Z  
+[DESCRIPTION] => mp4:video2.mp4\,0\,1800\nmp4:video3.mp4\,0\,1800  
+[LAST-MODIFIED] => 20161016T164118Z  
+[LOCATION] => teststream  
+[SEQUENCE] => 1  
+[STATUS] => CONFIRMED  
+[SUMMARY] => Noon Broadcast  
+[TRANSP] => OPAQUE  
+)
+
+)
+
+)
+
+[/code]
+
+So now we need to create another XML object for our schedule and give it the basic structure:
+
+[php]  
+$smilXml = new SimpleXMLElement('<smil/>');  
+$smilHead = $smilXml->addChild('head');  
+$smilBody = $smilXml->addChild('body');  
+[/php]
+
+Now we need to iterate once through the VEVENT objects to get stream names:
+
+[php]  
+$playonstream = [];
+
+foreach ($xmlObj->VEVENT as $event) {  
+$loc = $event->LOCATION;  
+$playOnStream["$loc"]=true;  
+// We don't really care about the value of this array element, as long as it exists.  
+// This way we only get one array element for each unique stream name  
+}
+
+// Iterate through the list of streams and create them in the SMIL  
+foreach ($playOnStream as $key => $value) {
+
+$smilStream = $smilBody->addChild('stream');  
+$smilStream->addAttribute('name',$key);
+
+}  
+[/php]
+
+So now we have the beginnings of a schedule:
+
+[xml]  
+<?xml version="1.0"?>  
+<smil>  
+<head/>  
+<body>  
+<stream name="teststream"/>  
+</body>  
+</smil>  
+[/xml]
+
+We now need to iterate through the list again to add in the fallback items for each stream that starts when the stream starts (this is done as a separate loop to keep the output XML cleaner):
+
+[php]  
+// Add in default fallback entries  
+foreach ($playOnStream as $key => $value) {  
+$defaultPl=$smilBody->addChild('playlist');  
+$defaultPl->addAttribute('name',"default-$key");  
+$defaultPl->addAttribute('playOnStream',$key);  
+$defaultPl->addAttribute('repeat','true');  
+$defaultPl->addAttribute('scheduled',"2016-01-01 00:00:01");  
+$contentItem = $defaultPl->addChild('video');  
+$contentItem->addAttribute('src','mp4:padding.mp4');  
+$contentItem->addAttribute('start','0');  
+$contentItem->addAttribute('length','-1');
+
+}  
+[/php]
+
+Which then gives us these new items:
+
+[xml]  
+<smil>  
+<head/>  
+<body>  
+<stream name="teststream"/>  
+<playlist name="default-teststream" playOnStream="teststream" repeat="true" scheduled="2016-01-01 00:00:01">  
+<video src="mp4:padding.mp4" start="0" length="-1"/>  
+</playlist>  
+</body>  
+</smil>  
+[/xml]
+
+And then we need to iterate again through the VEVENTS to create the actual schedule items:
+
+[php]  
+foreach ($xmlObj->VEVENT as $event) {
+
+//parse the times into Unix time stamps using the ever-useful strtotime() function;  
+$eventStart = strtotime($event->DTSTART);  
+$eventEnd = strtotime($event->DTEND);
+
+//format them into the ISO 8601 format for use in the schedule  
+//Note that we're using H:i:s rather than h:i:s because 24-hour time is important here  
+$start = date("Y-m-d H:i:s", $eventStart);  
+$end = date("Y-m-d H:i:s", $eventEnd);
+
+//extract summary for playlist name  
+$plName = $event->SUMMARY;  
+$plLoc = $event->LOCATION;
+
+//extract description for content  
+$description = $event->DESCRIPTION;  
+$videos=preg\_split('/\\\\n/',$description);  
+// add on a padding video at the end of this list  
+$videos[]="mp4:padding.mp4";
+
+//create playlist  
+$playlist = $smilBody->addChild('playlist');  
+$playlist->addAttribute('name',$plName);  
+$playlist->addAttribute('playOnStream',$plLoc);  
+$playlist->addAttribute('repeat','false');  
+$playlist->addAttribute('scheduled',$start);
+
+//iterate through playlist items  
+foreach($videos as $plItem) {  
+echo "$plItem\n";  
+$attrs=preg\_split('/\\\\,/',$plItem);  
+// set defaults for stream start/duration if not specified  
+// assume start at beginning and play all the way through  
+if(!$attrs[1]) { $attrs[1] = 0; }  
+if(!$attrs[2]) { $attrs[2] = -1; }
+
+$contentItem = $playlist->addChild('video');  
+$contentItem->addAttribute('src',$attrs[0]);  
+$contentItem->addAttribute('start',$attrs[1]);  
+$contentItem->addAttribute('length',$attrs[2]);
+
+} // end of playlist loop
+
+} // end of event loop
+
+[/php]
+
+And, finally, we need to add a little bit of code to format the XML object for use with Wowza:
+
+[php]  
+$dom = dom\_import\_simplexml($smilXml)->ownerDocument;  
+$dom->formatOutput = true;  
+$output=$dom->saveXML();  
+echo "$output\n"; // outputs to STDOUT  
+$dom->save('streamschedule.smil'); // save to file
+
+[/php]
+
+For the purposes of this last section, I've created some additional events to add a secondary stream:
+
+[![Schedule Overview]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.25.18-300x185.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.25.18.png)
+
+[![11am Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.45-300x182.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.45.png)
+
+[![11am Alternate Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.29-300x179.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.29.png)
+
+[![Noon Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.55-300x183.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.55.png)
+
+[![Event Broadcast]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.20.08-300x181.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.20.08.png)
+
+The iCal looks like this:
+
+[code]  
+BEGIN:VCALENDAR  
+PRODID:-//Google Inc//Google Calendar 70.9054//EN  
+VERSION:2.0  
+CALSCALE:GREGORIAN  
+METHOD:PUBLISH  
+X-WR-CALNAME:Wowza Event Scheduler Calendar  
+X-WR-TIMEZONE:America/Chicago  
+X-WR-CALDESC:  
+BEGIN:VEVENT  
+DTSTART:20161017T160000Z  
+DTEND:20161017T170000Z  
+DTSTAMP:20161016T182604Z  
+UID:8m4hcp98fmuosuoe48o20drl7k@google.com  
+CREATED:20161016T180813Z  
+DESCRIPTION:mp4:video5.mp4\nmp4:video6.mp4  
+LAST-MODIFIED:20161016T180813Z  
+LOCATION:altstream  
+SEQUENCE:0  
+STATUS:CONFIRMED  
+SUMMARY:11am alternate broadcast  
+TRANSP:OPAQUE  
+END:VEVENT  
+BEGIN:VEVENT  
+DTSTART:20161017T180000Z  
+DTEND:20161017T190000Z  
+DTSTAMP:20161016T182604Z  
+UID:c1ijl48srikc22vkkvrgvpb718@google.com  
+CREATED:20161016T180725Z  
+DESCRIPTION:mp4:video4.mp4  
+LAST-MODIFIED:20161016T180725Z  
+LOCATION:teststream  
+SEQUENCE:0  
+STATUS:CONFIRMED  
+SUMMARY:Event  
+TRANSP:OPAQUE  
+END:VEVENT  
+BEGIN:VEVENT  
+DTSTART:20161017T160000Z  
+DTEND:20161017T170000Z  
+DTSTAMP:20161016T182604Z  
+UID:72klt8s5ssrbjp9ofdk8ucovoo@google.com  
+CREATED:20161012T212924Z  
+DESCRIPTION:mp4:video1.mp4\,0\,-1  
+LAST-MODIFIED:20161016T164138Z  
+LOCATION:teststream  
+SEQUENCE:3  
+STATUS:CONFIRMED  
+SUMMARY:11am Broadcast  
+TRANSP:OPAQUE  
+END:VEVENT  
+BEGIN:VEVENT  
+DTSTART:20161017T170000Z  
+DTEND:20161017T180000Z  
+DTSTAMP:20161016T182604Z  
+UID:ac3lgjmjmijj2910au0fnv5vig@google.com  
+CREATED:20161016T164116Z  
+DESCRIPTION:mp4:video2.mp4\,0\,1800\nmp4:video3.mp4\,0\,1800  
+LAST-MODIFIED:20161016T164118Z  
+LOCATION:teststream  
+SEQUENCE:1  
+STATUS:CONFIRMED  
+SUMMARY:Noon Broadcast  
+TRANSP:OPAQUE  
+END:VEVENT  
+END:VCALENDAR  
+[/code]
+
+And when we run the process, we get this spiffy code coming out:
+
+[xml]  
+<smil>  
+<head/>  
+<body>  
+<stream name="altstream"/>  
+<stream name="teststream"/>  
+<playlist name="default-altstream" playOnStream="altstream" repeat="true" scheduled="2016-01-01 00:00:01">  
+<video src="mp4:padding.mp4" start="0" length="-1"/>  
+</playlist>  
+<playlist name="default-teststream" playOnStream="teststream" repeat="true" scheduled="2016-01-01 00:00:01">  
+<video src="mp4:padding.mp4" start="0" length="-1"/>  
+</playlist>  
+<playlist name="11am alternate broadcast" playOnStream="altstream" repeat="false" scheduled="2016-10-17 11:00:00">  
+<video src="mp4:video5.mp4" start="0" length="-1"/>  
+<video src="mp4:video6.mp4" start="0" length="-1"/>  
+<video src="mp4:padding.mp4" start="0" length="-1"/>  
+</playlist>  
+<playlist name="Event" playOnStream="teststream" repeat="false" scheduled="2016-10-17 13:00:00">  
+<video src="mp4:video4.mp4" start="0" length="-1"/>  
+<video src="mp4:padding.mp4" start="0" length="-1"/>  
+</playlist>  
+<playlist name="11am Broadcast" playOnStream="teststream" repeat="false" scheduled="2016-10-17 11:00:00">  
+<video src="mp4:video1.mp4" start="0" length="-1"/>  
+<video src="mp4:padding.mp4" start="0" length="-1"/>  
+</playlist>  
+<playlist name="Noon Broadcast" playOnStream="teststream" repeat="false" scheduled="2016-10-17 12:00:00">  
+<video src="mp4:video2.mp4" start="0" length="1800"/>  
+<video src="mp4:video3.mp4" start="0" length="1800"/>  
+<video src="mp4:padding.mp4" start="0" length="-1"/>  
+</playlist>  
+</body>  
+</smil>  
+[/xml]
+
+So there you have a relatively simple one-way hack to spit Google Calendar/iCal events out into a Wowza Schedule. You would still need to manually run this every time you wanted to update the broadcast schedule (and reload the Wowza server), and this does not send any confirmation back to your iCal that the event has been scheduled.
+
+Stay tuned for a variation on this code that uses the Google Calendar API (a much more elegant approach)

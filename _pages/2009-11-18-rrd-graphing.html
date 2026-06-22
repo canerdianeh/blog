@@ -24,100 +24,105 @@ author:
   last_name: Beyer
 permalink: "/code/backend/rrd-graphing/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>Live Graph (<a title="RRD File Structure" href="http://blog.ianbeyer.com/code/stream-counter-rrd-structure" target="_blank">Source RRD Database is here</a>):</p>
-<p>[bash]<br />
-#!/bin/bash</p>
-<p>rrdtool graph<br />
-'/var/www/streams.png'<br />
---title 'Resurrection Online (Mobile)'<br />
---vertical-label 'Streams'<br />
---units-exponent 0<br />
---width '720'<br />
---height '400'<br />
---upper-limit '10'<br />
---lower-limit '0'<br />
---y-grid 1:5<br />
---start end-2h<br />
-'DEF:Flash=/var/rrd/streams-2011.rrd:Flash:LAST'<br />
-'DEF:HLS=/var/rrd/streams-2011.rrd:HLS:LAST'<br />
-'DEF:RTSP=/var/rrd/streams-2011.rrd:RTSP:LAST'<br />
-'DEF:iPad=/var/rrd/streams-2011.rrd:iPad:LAST'<br />
-'DEF:Roku=/var/rrd/streams-2011.rrd:Roku:LAST'<br />
-'CDEF:Total=HLS,RTSP,+,Flash,+'<br />
-'VDEF:Peak=Total,MAXIMUM'<br />
-'VDEF:FlashPk=Flash,MAXIMUM'<br />
-'VDEF:HLSPk=HLS,MAXIMUM'<br />
-'VDEF:RTSPPk=RTSP,MAXIMUM'<br />
-'VDEF:iPadPk=iPad,MAXIMUM'<br />
-'VDEF:RokuPk=Roku,MAXIMUM'<br />
-'AREA:Total#FFCC99:Totalt'<br />
-'GPRINT:Total:LAST:%3.0lf Currentt'<br />
-'GPRINT:Peak:%3.0lf Peakn'<br />
-'LINE1:Flash#993333:Flasht'<br />
-'GPRINT:Flash:LAST:%3.0lf Currentt'<br />
-'GPRINT:FlashPk:%3.0lf Peakn'<br />
-'LINE1:HLS#336633:HLStt'<br />
-'GPRINT:HLS:LAST:%3.0lf Currentt'<br />
-'GPRINT:HLSPk:%3.0lf Peakn'<br />
-'LINE1:RTSP#FF6600:RTSPt'<br />
-'GPRINT:RTSP:LAST:%3.0lf Currentt'<br />
-'GPRINT:RTSPPk:%3.0lf Peakn'<br />
-'LINE1:iPad#000000:iPadt'<br />
-'GPRINT:iPad:LAST:%3.0lf Currentt'<br />
-'GPRINT:iPadPk:%3.0lf Peakn'<br />
-'LINE1:Roku#330099:Rokut'<br />
-'GPRINT:Roku:LAST:%3.0lf Currentt'<br />
-'GPRINT:RokuPk:%3.0lf Peakn'<br />
-'VRULE:Peak#CC0000'<br />
-'LINE:Peak#CC0000'<br />
-[/bash]</p>
-<p>Archive version:</p>
-<p>[bash]<br />
-#!/bin/bash</p>
-<p>FILE="streams-$(date +%Y%m%d%H%M).png"<br />
-DATESTAMP="$(date +%B %d, %Y)"<br />
-TIMESTAMP="$(date +%H:%M)"</p>
-<p>rrdtool graph<br />
-"/var/www/$FILE"<br />
---title "Resurrection Online Mobile Attendance ($DATESTAMP)"<br />
---vertical-label 'Streams'<br />
---units-exponent 0<br />
---width '720'<br />
---height '400'<br />
---y-grid 1:5<br />
---start end-3h<br />
-'DEF:Flash=/var/rrd/streams-2011.rrd:Flash:LAST'<br />
-'DEF:HLS=/var/rrd/streams-2011.rrd:HLS:LAST'<br />
-'DEF:RTSP=/var/rrd/streams-2011.rrd:RTSP:LAST'<br />
-'DEF:iPad=/var/rrd/streams-2011.rrd:iPad:LAST'<br />
-'DEF:Roku=/var/rrd/streams-2011.rrd:Roku:LAST'<br />
-'CDEF:Total=HLS,RTSP,+,Flash,+'<br />
-'VDEF:Peak=Total,MAXIMUM'<br />
-'VDEF:FlashPk=Flash,MAXIMUM'<br />
-'VDEF:HLSPk=HLS,MAXIMUM'<br />
-'VDEF:RTSPPk=RTSP,MAXIMUM'<br />
-'VDEF:iPadPk=iPad,MAXIMUM'<br />
-'VDEF:RokuPk=Roku,MAXIMUM'<br />
-'AREA:Total#FFCC99:Totalt'<br />
-'GPRINT:Total:LAST:%3.0lf Currentt'<br />
-'GPRINT:Peak:%3.0lf Peakn'<br />
-'LINE1:Flash#993333:Flasht'<br />
-'GPRINT:Flash:LAST:%3.0lf Currentt'<br />
-'GPRINT:FlashPk:%3.0lf Peakn'<br />
-'LINE1:HLS#336633:HLStt'<br />
-'GPRINT:HLS:LAST:%3.0lf Currentt'<br />
-'GPRINT:HLSPk:%3.0lf Peakn'<br />
-'LINE1:RTSP#FF6600:RTSPt'<br />
-'GPRINT:RTSP:LAST:%3.0lf Currentt'<br />
-'GPRINT:RTSPPk:%3.0lf Peakn'<br />
-'LINE1:iPad#000000:iPadt'<br />
-'GPRINT:iPad:LAST:%3.0lf Currentt'<br />
-'GPRINT:iPadPk:%3.0lf Peakn'<br />
-'LINE1:Roku#330099:Rokut'<br />
-'GPRINT:Roku:LAST:%3.0lf Currentt'<br />
-'GPRINT:RokuPk:%3.0lf Peakn'</p>
-<p>echo "&lt;A HREF="$FILE"&gt;$DATESTAMP $TIMESTAMP&lt;/A&gt;&lt;BR&gt;" &gt;&gt; /var/www/archives.html<br />
-[/bash]</p>
-<p></body></html></p>
+
+Live Graph ([Source RRD Database is here](http://blog.ianbeyer.com/code/stream-counter-rrd-structure "RRD File Structure")):
+
+[bash]  
+#!/bin/bash
+
+rrdtool graph  
+'/var/www/streams.png'  
+--title 'Resurrection Online (Mobile)'  
+--vertical-label 'Streams'  
+--units-exponent 0  
+--width '720'  
+--height '400'  
+--upper-limit '10'  
+--lower-limit '0'  
+--y-grid 1:5  
+--start end-2h  
+'DEF:Flash=/var/rrd/streams-2011.rrd:Flash:LAST'  
+'DEF:HLS=/var/rrd/streams-2011.rrd:HLS:LAST'  
+'DEF:RTSP=/var/rrd/streams-2011.rrd:RTSP:LAST'  
+'DEF:iPad=/var/rrd/streams-2011.rrd:iPad:LAST'  
+'DEF:Roku=/var/rrd/streams-2011.rrd:Roku:LAST'  
+'CDEF:Total=HLS,RTSP,+,Flash,+'  
+'VDEF:Peak=Total,MAXIMUM'  
+'VDEF:FlashPk=Flash,MAXIMUM'  
+'VDEF:HLSPk=HLS,MAXIMUM'  
+'VDEF:RTSPPk=RTSP,MAXIMUM'  
+'VDEF:iPadPk=iPad,MAXIMUM'  
+'VDEF:RokuPk=Roku,MAXIMUM'  
+'AREA:Total#FFCC99:Totalt'  
+'GPRINT:Total:LAST:%3.0lf Currentt'  
+'GPRINT:Peak:%3.0lf Peakn'  
+'LINE1:Flash#993333:Flasht'  
+'GPRINT:Flash:LAST:%3.0lf Currentt'  
+'GPRINT:FlashPk:%3.0lf Peakn'  
+'LINE1:HLS#336633:HLStt'  
+'GPRINT:HLS:LAST:%3.0lf Currentt'  
+'GPRINT:HLSPk:%3.0lf Peakn'  
+'LINE1:RTSP#FF6600:RTSPt'  
+'GPRINT:RTSP:LAST:%3.0lf Currentt'  
+'GPRINT:RTSPPk:%3.0lf Peakn'  
+'LINE1:iPad#000000:iPadt'  
+'GPRINT:iPad:LAST:%3.0lf Currentt'  
+'GPRINT:iPadPk:%3.0lf Peakn'  
+'LINE1:Roku#330099:Rokut'  
+'GPRINT:Roku:LAST:%3.0lf Currentt'  
+'GPRINT:RokuPk:%3.0lf Peakn'  
+'VRULE:Peak#CC0000'  
+'LINE:Peak#CC0000'  
+[/bash]
+
+Archive version:
+
+[bash]  
+#!/bin/bash
+
+FILE="streams-$(date +%Y%m%d%H%M).png"  
+DATESTAMP="$(date +%B %d, %Y)"  
+TIMESTAMP="$(date +%H:%M)"
+
+rrdtool graph  
+"/var/www/$FILE"  
+--title "Resurrection Online Mobile Attendance ($DATESTAMP)"  
+--vertical-label 'Streams'  
+--units-exponent 0  
+--width '720'  
+--height '400'  
+--y-grid 1:5  
+--start end-3h  
+'DEF:Flash=/var/rrd/streams-2011.rrd:Flash:LAST'  
+'DEF:HLS=/var/rrd/streams-2011.rrd:HLS:LAST'  
+'DEF:RTSP=/var/rrd/streams-2011.rrd:RTSP:LAST'  
+'DEF:iPad=/var/rrd/streams-2011.rrd:iPad:LAST'  
+'DEF:Roku=/var/rrd/streams-2011.rrd:Roku:LAST'  
+'CDEF:Total=HLS,RTSP,+,Flash,+'  
+'VDEF:Peak=Total,MAXIMUM'  
+'VDEF:FlashPk=Flash,MAXIMUM'  
+'VDEF:HLSPk=HLS,MAXIMUM'  
+'VDEF:RTSPPk=RTSP,MAXIMUM'  
+'VDEF:iPadPk=iPad,MAXIMUM'  
+'VDEF:RokuPk=Roku,MAXIMUM'  
+'AREA:Total#FFCC99:Totalt'  
+'GPRINT:Total:LAST:%3.0lf Currentt'  
+'GPRINT:Peak:%3.0lf Peakn'  
+'LINE1:Flash#993333:Flasht'  
+'GPRINT:Flash:LAST:%3.0lf Currentt'  
+'GPRINT:FlashPk:%3.0lf Peakn'  
+'LINE1:HLS#336633:HLStt'  
+'GPRINT:HLS:LAST:%3.0lf Currentt'  
+'GPRINT:HLSPk:%3.0lf Peakn'  
+'LINE1:RTSP#FF6600:RTSPt'  
+'GPRINT:RTSP:LAST:%3.0lf Currentt'  
+'GPRINT:RTSPPk:%3.0lf Peakn'  
+'LINE1:iPad#000000:iPadt'  
+'GPRINT:iPad:LAST:%3.0lf Currentt'  
+'GPRINT:iPadPk:%3.0lf Peakn'  
+'LINE1:Roku#330099:Rokut'  
+'GPRINT:Roku:LAST:%3.0lf Currentt'  
+'GPRINT:RokuPk:%3.0lf Peakn'
+
+echo "<A HREF="$FILE">$DATESTAMP $TIMESTAMP</A><BR>" >> /var/www/archives.html  
+[/bash]

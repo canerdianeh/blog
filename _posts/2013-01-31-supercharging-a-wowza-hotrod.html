@@ -23,65 +23,58 @@ author:
   last_name: Beyer
 permalink: "/2013/01/31/supercharging-a-wowza-hotrod/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body><br />
-<img class="alignright  wp-image-1194" style="border: 2px solid black; margin: 5px;" alt="sp1-larry dixon-photo/steve kohls" src="{{site.baseurl}}/assets/2013/01/engine-flames-300x205.jpg" width="180" height="123">I've posted in the past about running Wowza on large server instances. When running Wowza on systems with a 10Gbps network interface, you run into a 5Gbps limitation inherent to the Java Virtual Machine. With Wowza tuning parameters maxing out at 12 virtual cores, most machines with a 10Gbps interface will have processing power to spare, but why let all that horsepower go to waste?</p>
-<p>For relatively little money (under $1000/month), you can get <a title="100TB Servers" href="http://ianbeyer.com/servers" target="_blank">server from 100TB.com</a> with 12 or 16 physical cores (24 or 32 virtual) and park it in the Softlayer datacenter in Washington, DC with a 10Gbps interface, pretty much in the middle of the Internet. With 100TB/month of data transfer included in the price (and for an extra charge, they'll take the meter off entirely), this is a great option for heavy or full-time streaming. But there's that pesky JVM throughput limitation. It's time to take the governor off this hotrod.</p>
-<p>What you'll need:</p>
-<ul>
-<li>A big honkin' server</li>
-<li>A big honkin' pipe</li>
-<li>Some extra IP addresses (the 100TB servers at Softlayer come with 8 usable addresses)</li>
-<li>Wowza with either a subscription license key or two perpetual license keys</li>
-</ul>
-<p>Note that I've done this in Linux, I'm not quite sure how it would work in Windows with registering the second instance with the services.</p>
-<h3>Step 1</h3>
-<ol>
-<li>Install Wowza and tune</li>
-<li>Configure it with a license</li>
-<li>Choose an IP address on the system</li>
-<li>In VHost.xml, and Server.xml replace all instances of &lt;IpAddress&gt;*&lt;/IpAddress&gt; with the IP.</li>
-<li>Set up <a title="Wowza Dynamic Load Balancing" href="http://www.wowza.com/forums/content.php?108" target="_blank">load balancing</a> (both sender and listener) with redirect</li>
-<li>Add an origin application (type live).</li>
-<li>Add an edge application (type liverepeater-edge) pulling from the origin app</li>
-</ol>
-<h3>Step 2</h3>
-<ul>
-<li>
-<span style="line-height: 12.796875px;">Make a duplicate of the following (I appended a -2):</span></p>
-<ul>
-<li>/usr/local/WowzaMediaServer-3.5.0</li>
-<li>/etc/init.d/WowzaMediaServer *</li>
-<li>/usr/bin/WowzaMediaServerd *</li>
-</ul>
-</li>
-<li>Edit all references to WowzaMediaServer in the files indicated by a *</li>
-<li>in the cloned installation:
-<ul>
-<li>change bin/setenv.sh and bin/startup.sh to point to the cloned install</li>
-<li>delete conf/Server.guid</li>
-<li>Edit conf/VHost.xml to point to a second IP address</li>
-<li>Edit conf/Server.xml to point to a second IP address</li>
-<li>Edit conf/Server.xml to bind jmx to ports 8081/8082</li>
-<li>Set up load balancing as a Sender (edge) pointing to load balancer IP in primary install</li>
-<li>Create edge application</li>
-</ul>
-</li>
-</ul>
-<h3>Step 3</h3>
-<ul>
-<li>Start the primary instance</li>
-<li>Check http://primary.ip:1935/loadbalancer?serverInfoXML to verify the primary edge is connected</li>
-<li>Start the secondary instance</li>
-<li>Check  load balancer again and make sure secondary instance is connected</li>
-<li>Publish a stream</li>
-<li>Pull a stream directly from each edge to make sure the repeaters are working</li>
-<li>use http://primary.ip:1935/loadbalancer to get least loaded server for load-balancing non-RTMP clients</li>
-<li>use rtmp://primary.ip/redirect/stream to get load balanced RTMP.</li>
-</ul>
-<h3>Step 4</h3>
-<ul>
-<li>Sit back, relax, and enjoy the fact that you now have a server that can handle 10,000 connections.</li>
-<li>If you need more, build up a second server just like this one, and just make both instances edge instances</li>
-</ul>
-<p></body></html></p>
+
+![sp1-larry dixon-photo/steve kohls]({{site.baseurl}}/assets/2013/01/engine-flames-300x205.jpg)I've posted in the past about running Wowza on large server instances. When running Wowza on systems with a 10Gbps network interface, you run into a 5Gbps limitation inherent to the Java Virtual Machine. With Wowza tuning parameters maxing out at 12 virtual cores, most machines with a 10Gbps interface will have processing power to spare, but why let all that horsepower go to waste?
+
+For relatively little money (under $1000/month), you can get [server from 100TB.com](http://ianbeyer.com/servers "100TB Servers") with 12 or 16 physical cores (24 or 32 virtual) and park it in the Softlayer datacenter in Washington, DC with a 10Gbps interface, pretty much in the middle of the Internet. With 100TB/month of data transfer included in the price (and for an extra charge, they'll take the meter off entirely), this is a great option for heavy or full-time streaming. But there's that pesky JVM throughput limitation. It's time to take the governor off this hotrod.
+
+What you'll need:
+
+- A big honkin' server
+- A big honkin' pipe
+- Some extra IP addresses (the 100TB servers at Softlayer come with 8 usable addresses)
+- Wowza with either a subscription license key or two perpetual license keys
+
+Note that I've done this in Linux, I'm not quite sure how it would work in Windows with registering the second instance with the services.
+
+### Step 1
+
+1. Install Wowza and tune
+2. Configure it with a license
+3. Choose an IP address on the system
+4. In VHost.xml, and Server.xml replace all instances of <IpAddress>\*</IpAddress> with the IP.
+5. Set up [load balancing](http://www.wowza.com/forums/content.php?108 "Wowza Dynamic Load Balancing") (both sender and listener) with redirect
+6. Add an origin application (type live).
+7. Add an edge application (type liverepeater-edge) pulling from the origin app
+
+### Step 2
+
+- Make a duplicate of the following (I appended a -2):
+  - /usr/local/WowzaMediaServer-3.5.0
+  - /etc/init.d/WowzaMediaServer \*
+  - /usr/bin/WowzaMediaServerd \*
+- Edit all references to WowzaMediaServer in the files indicated by a \*
+- in the cloned installation:
+  - change bin/setenv.sh and bin/startup.sh to point to the cloned install
+  - delete conf/Server.guid
+  - Edit conf/VHost.xml to point to a second IP address
+  - Edit conf/Server.xml to point to a second IP address
+  - Edit conf/Server.xml to bind jmx to ports 8081/8082
+  - Set up load balancing as a Sender (edge) pointing to load balancer IP in primary install
+  - Create edge application
+
+### Step 3
+
+- Start the primary instance
+- Check http://primary.ip:1935/loadbalancer?serverInfoXML to verify the primary edge is connected
+- Start the secondary instance
+- Check  load balancer again and make sure secondary instance is connected
+- Publish a stream
+- Pull a stream directly from each edge to make sure the repeaters are working
+- use http://primary.ip:1935/loadbalancer to get least loaded server for load-balancing non-RTMP clients
+- use rtmp://primary.ip/redirect/stream to get load balanced RTMP.
+
+### Step 4
+
+- Sit back, relax, and enjoy the fact that you now have a server that can handle 10,000 connections.
+- If you need more, build up a second server just like this one, and just make both instances edge instances

@@ -22,63 +22,79 @@ author:
   last_name: Administrator
 permalink: "/code/ec2/php-startup/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>[php]<br />
-&lt;?php<br />
-require_once '/usr/share/php/AWSSDKforPHP/sdk.class.php';</p>
-<p>define('AWS_KEY', 'XXXX');<br />
-define('AWS_SECRET_KEY', 'YYYY');</p>
-<p>$ec2 = new AmazonEC2();</p>
-<p>$filename = "startup.zip";<br />
-$userdata = base64_encode(file_get_contents($filename));</p>
-<p>if (filesize($filename) &gt; 16383 ) { die('Startup package exceeeds 16KB. Please adjust and try again'); }</p>
-<p>$startup_opts = array (<br />
-"KeyName" =&gt; 'keypair'],<br />
-"SecurityGroup" =&gt; 'security'],<br />
-"InstanceType" =&gt; 'm1.small',<br />
-"UserData" =&gt; $userdata<br />
-);</p>
-<p>$ec2-&gt;set_region('us-east-1');</p>
-<p>$startup_response = $ec2-&gt;run_instances($ami,1,1,$startup_opts);<br />
-if ($startup_response-&gt;status != "200") {<br />
-print_r($startup_response);<br />
-die('Error starting up.');<br />
-}</p>
-<p># Get instance ID<br />
-$instance_id = $startup_response-&gt;body-&gt;instancesSet-&gt;item-&gt;instanceId;</p>
-<p># Set instance tags<br />
-# These tags are arbitrary key/value pairs<br />
-$tags = array (<br />
-array("Key"=&gt;'Name', "Value" =&gt; 'Name'),<br />
-array("Key"=&gt;'Type', "Value" =&gt; 'Type'),<br />
-array("Key"=&gt;'Client', "Value" =&gt; 'Client')<br />
-);</p>
-<p>$tags_response = $ec2-&gt;create_tags($instance_id,$tags);<br />
-$tags_status = $tags_response-&gt;status;</p>
-<p>if ($tags_status != "200")<br />
-{ print "Tags error : $tags_response\n"; }</p>
-<p># Query every few seconds and see if the instance is running yet </p>
-<p>print "Waiting for instance to enter running state ...";<br />
-$running = false;<br />
-while (! $running ) {<br />
- $describe_opts = array( "InstanceId" =&gt; $instance_id);<br />
- $response = $ec2-&gt;describe_instances($describe_opts);</p>
-<p> $state = $response-&gt;body-&gt;reservationSet-&gt;item-&gt;instancesSet-&gt;item-&gt;instanceState-&gt;name;</p>
-<p> if ($state == 'running') {<br />
-  $running = TRUE;<br />
-  #print "Complete.\n";<br />
- }<br />
- else {<br />
-  #print ".";<br />
-  sleep (5);<br />
- }</p>
-<p>}</p>
-<p># Optionally associate Elastic IP<br />
-$elastic_ip = '1.2.3.4';<br />
-$ip_response = $ec2-&gt;associate_address($instance_id,$elastic_ip);<br />
-if ($ip_response-&gt;status != "200") {print "IP Address allocation error"; }<br />
-flush();</p>
-<p>?&gt;<br />
-[/php]</p>
-<p></body></html></p>
+
+[php]  
+<?php  
+require\_once '/usr/share/php/AWSSDKforPHP/sdk.class.php';
+
+define('AWS\_KEY', 'XXXX');  
+define('AWS\_SECRET\_KEY', 'YYYY');
+
+$ec2 = new AmazonEC2();
+
+$filename = "startup.zip";  
+$userdata = base64\_encode(file\_get\_contents($filename));
+
+if (filesize($filename) > 16383 ) { die('Startup package exceeeds 16KB. Please adjust and try again'); }
+
+$startup\_opts = array (  
+"KeyName" => 'keypair'],  
+"SecurityGroup" => 'security'],  
+"InstanceType" => 'm1.small',  
+"UserData" => $userdata  
+);
+
+$ec2->set\_region('us-east-1');
+
+$startup\_response = $ec2->run\_instances($ami,1,1,$startup\_opts);  
+if ($startup\_response->status != "200") {  
+print\_r($startup\_response);  
+die('Error starting up.');  
+}
+
+# Get instance ID  
+$instance\_id = $startup\_response->body->instancesSet->item->instanceId;
+
+# Set instance tags  
+# These tags are arbitrary key/value pairs  
+$tags = array (  
+array("Key"=>'Name', "Value" => 'Name'),  
+array("Key"=>'Type', "Value" => 'Type'),  
+array("Key"=>'Client', "Value" => 'Client')  
+);
+
+$tags\_response = $ec2->create\_tags($instance\_id,$tags);  
+$tags\_status = $tags\_response->status;
+
+if ($tags\_status != "200")  
+{ print "Tags error : $tags\_response\n"; }
+
+# Query every few seconds and see if the instance is running yet
+
+print "Waiting for instance to enter running state ...";  
+$running = false;  
+while (! $running ) {  
+$describe\_opts = array( "InstanceId" => $instance\_id);  
+$response = $ec2->describe\_instances($describe\_opts);
+
+$state = $response->body->reservationSet->item->instancesSet->item->instanceState->name;
+
+if ($state == 'running') {  
+$running = TRUE;  
+#print "Complete.\n";  
+}  
+else {  
+#print ".";  
+sleep (5);  
+}
+
+}
+
+# Optionally associate Elastic IP  
+$elastic\_ip = '1.2.3.4';  
+$ip\_response = $ec2->associate\_address($instance\_id,$elastic\_ip);  
+if ($ip\_response->status != "200") {print "IP Address allocation error"; }  
+flush();
+
+?>  
+[/php]

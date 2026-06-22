@@ -37,105 +37,64 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2021/02/02/moca/"
+image: "https://nerdian.ca/files/2021/02/AdobeStock_212578774-scaled.jpeg"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<!-- wp:paragraph --><html><body></p>
-<p>Let's jump into the time machine and head back to the turn of the century (21 years ago, y'all... can you believe it?). It was a time when cable TV was king, and you could usually count on a cable outlet in almost every room of the house, when a cable TV package could easily come with half a dozen converter boxes, before the term "cord-cutter" struck fear into the hearts of cable executives. and when Netflix was an upstart DVD by mail company. This was also when a brand new technology called "Wi-Fi" had just showed up on the scene. Broadband internet (a whole 5 megabits!) was starting to find its way into homes served by cable TV, and it made dialup look severely lame. Usually these "cable modems" were hooked directly up to a single computer, either via USB, or via Ethernet if your computer was really snazzy. Often, these computers were directly connected to the internet with no firewall software, which led to all kinds of shenanigans.</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Ah, those were the days. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>If you had a home built around that time, chances are, the builder put coaxial cable into every room they could think of so you could have TV everywhere. And they'd usually string a daisy chained chunk of Cat5 for telephones. If they were really fancy, they would run each cable and phone outlet back to a central point where you could pick and chose where the signals went. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>The challenge is that while technology changes every few years, the wiring in a house is generally put in place with little thought given to even the near future. In 2000, only the serious nerds (such as yours truly) had computers (plural) in their homes. The idea of the networked home and the Internet of Things was still a long way off. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>If you were a nerd with computers (plural) and so fortunate as to have a home whose Cat5 phone cables were "home-run" back to a central interconnect (where they were usually all spliced together on a single pair for voice), you could reterminate them on both ends with a modular jack and use them for Ethernet (the idea of a router at home with NAT was still pretty new back then as well). In most cases, the runs were short enough that when gigabit Ethernet started showing up, you could still make the Cat5 work. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Recently, I had to figure out how to connect up a bunch of access points in a few homes that were built in the 1999-2000 time frame. One is the rental I just moved into, and the other is a moderately sized home owned by a client who has found himself and his family working from home a lot more lately, just like the rest of us. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>My home was wired to nearly every room with home run Cat5 and coax (lucky me!). Since I have buckets full of Cat5e jacks, it was a pretty simple swap on both ends and I got gigabit. Didn't require much effort, and thankfully didn't require causing any damage to the rental house, which the landlord tends to get cranky about. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>The client's home, on the other hand, had daisy chained telephone line and coaxial cable throughout. And since it's a higher end home, running ethernet cable to each room is a non-starter (not to mention expensive and disruptive). And, of course, the cable modem/router/wireless/waffle iron/juicer/vacuum combo device provided by the cable company is as far across the house from the home office as you can possibly get without actually putting it in the neighbors' house. Cable installers love outside walls, which are about the worst possible place to put a wireless access point. Zoom calls can get a little frustrating and embarrassing when you're the presenter and your connection sucks...</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>So how to get a decent connection up to the office and elsewhere in the client's house to blanket it with wifi? Thankfully, 20 years of innovation has happened, and the chip makers and the cable companies got together to solve this problem, because they needed to deliver services over IP within the homes as well. What they came up with is the deliciously named "<a href="https://mocalliance.org">MoCA</a>", which stands for "Multimedia over Coax Alliance". They figured out a way to be able to run a digital network signal over the existing coax wires present in most houses, and make it compatible with Ethernet. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Early versions weren't very fast (version 1.0 in 2006 was capable of 100Mbps), but as they applied some of the same RF tricks that Wi-Fi used, they were able to make it perform at a much higher level (Version 2.5, released in 2016, is capable of 2.5Gbps). Version 3 aims to provide 10Gbps.</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>MoCA will support up to 16 nodes on the wire, and can coexist with some shockingly bad signal conditions. It operates from 1125MHz up to 1675MHz, which is above where cable TV signals live but still quite functional over short distances with existing coaxial cable and splitters. It forms a full mesh where each node talks directly to the other nodes that it needs to, using a combination of Time-Division Multiple Access (TDMA) and Orthogonal Frequency Division Multiple Access (OFDMA), a trick that is also used by WiFi 6/802.11ax to make better use of airtime. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>If you want a quick summary of how it works, device maker <a href="https://www.gocoax.com/">GoCoax has a great rundown on their home page</a>.</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>MoCA also requires putting in a filter between the pole and your house so that your MoCA signals don't end up putting your neighbors on the same network or screwing with the cable company's lines. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Most current cable company provided gateways also support MoCA, and adding a MoCA transceiver to a live coaxial port on the wall in your house basically acts as another ethernet port on the gateway device. Cable companies commonly use this for IP based set-top boxes (over coax!) and additional wireless access points (such as Cox's "Panoramic WiFi" and XFinity's "XFi pods"). </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>While I haven't tested the cable company's wireless offerings (because I'm not a masochist, and I have access to vastly better wifi gear), I did want to find out how well MoCA performed as a straight Ethernet bridge for connecting up the client's access points in such a way that I didn't have to use wireless meshing, which performs quite poorly in most residential environments. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>So I grabbed a <a href="https://amzn.to/3rgcepo">couple of MoCA adapters</a> (and a <a href="https://amzn.to/3tlwVSB">splitter</a>) from Amazon and tried it out in a couple of different configurations. Testing was done from a MacBook Pro connected to the network via Ethernet, and a <a href="https://wlanpi.com">WLANpi</a> connected on the other end of a MoCA adapter. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:image {"id":1819,"sizeSlug":"large"} --></p>
-<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-4.59.24-PM-902x1024.png" alt="" class="wp-image-1819"><br />
-<figcaption>The test setup.</figcaption>
-</figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>The first thing I noticed is that these devices are truly "plug and play". I hooked one up to the coax in my office and the Ethernet side went into my switch. I then hooked 3 more up around the house, and on two of them, hooked up an access point, and on the third, the WLANpi. The access points came up and showed up in the controller just like they would on Ethernet (caveat: I had to power them externally). The WLANpi grabbed a DHCP address, and I started testing, using the <a href="https://librespeed.org">librespeed</a> web speed test built into the WLANpi, as well as <a href="https://iperf.fr">iPerf3</a>, also built into the Pi. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>First, the baseline with the WLANpi connected directly to the switch. Pretty solid, about what you would expect from a gigabit network. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:image {"id":1814,"sizeSlug":"large"} --></p>
-<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-10.13.04-AM-1024x582.png" alt="" class="wp-image-1814"></figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:image {"id":1815,"sizeSlug":"large"} --></p>
-<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-10.13.20-AM-1024x100.png" alt="" class="wp-image-1815"></figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>Next: The WLANpi at the other end of a 4-node MoCA 2.5 network:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:image {"id":1817,"sizeSlug":"large"} --></p>
-<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-10.19.40-AM-1024x601.png" alt="" class="wp-image-1817"></figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:image {"id":1816,"sizeSlug":"large"} --></p>
-<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-10.21.00-AM-1024x96.png" alt="" class="wp-image-1816"></figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>An ever so slight reduction in throughput, and an extra few milliseconds of latency.</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Directly connecting two nodes performed similarly. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>So, bottom line, MoCA is a pretty solid option if all you have available is coax. It has the full wire speed, and doesn't introduce the kind of latency that a wifi mesh does.</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Downside: The MoCA spec doesn't seem to provide for any means of powering converters centrally, or pushing PoE to the Ethernet device. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Other MoCA devices worth looking at:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:list --></p>
-<ul>
-<li>
-<a href="https://amzn.to/3tnMSrx">Kiwee Broadband</a>, has a passthru port as well as a second Ethernet port.</li>
-<li>
-<a href="https://amzn.to/2LeyQqO">GoCoax</a>, another inexpensive option that works on v2.5. </li>
-</ul>
-<p><!-- /wp:list --></p>
-<p><!-- wp:paragraph --></p>
-<p><!-- /wp:paragraph --><br />
-</body></html></p>
+
+Let's jump into the time machine and head back to the turn of the century (21 years ago, y'all... can you believe it?). It was a time when cable TV was king, and you could usually count on a cable outlet in almost every room of the house, when a cable TV package could easily come with half a dozen converter boxes, before the term "cord-cutter" struck fear into the hearts of cable executives. and when Netflix was an upstart DVD by mail company. This was also when a brand new technology called "Wi-Fi" had just showed up on the scene. Broadband internet (a whole 5 megabits!) was starting to find its way into homes served by cable TV, and it made dialup look severely lame. Usually these "cable modems" were hooked directly up to a single computer, either via USB, or via Ethernet if your computer was really snazzy. Often, these computers were directly connected to the internet with no firewall software, which led to all kinds of shenanigans.
+
+Ah, those were the days.
+
+If you had a home built around that time, chances are, the builder put coaxial cable into every room they could think of so you could have TV everywhere. And they'd usually string a daisy chained chunk of Cat5 for telephones. If they were really fancy, they would run each cable and phone outlet back to a central point where you could pick and chose where the signals went.
+
+The challenge is that while technology changes every few years, the wiring in a house is generally put in place with little thought given to even the near future. In 2000, only the serious nerds (such as yours truly) had computers (plural) in their homes. The idea of the networked home and the Internet of Things was still a long way off.
+
+If you were a nerd with computers (plural) and so fortunate as to have a home whose Cat5 phone cables were "home-run" back to a central interconnect (where they were usually all spliced together on a single pair for voice), you could reterminate them on both ends with a modular jack and use them for Ethernet (the idea of a router at home with NAT was still pretty new back then as well). In most cases, the runs were short enough that when gigabit Ethernet started showing up, you could still make the Cat5 work.
+
+Recently, I had to figure out how to connect up a bunch of access points in a few homes that were built in the 1999-2000 time frame. One is the rental I just moved into, and the other is a moderately sized home owned by a client who has found himself and his family working from home a lot more lately, just like the rest of us.
+
+My home was wired to nearly every room with home run Cat5 and coax (lucky me!). Since I have buckets full of Cat5e jacks, it was a pretty simple swap on both ends and I got gigabit. Didn't require much effort, and thankfully didn't require causing any damage to the rental house, which the landlord tends to get cranky about.
+
+The client's home, on the other hand, had daisy chained telephone line and coaxial cable throughout. And since it's a higher end home, running ethernet cable to each room is a non-starter (not to mention expensive and disruptive). And, of course, the cable modem/router/wireless/waffle iron/juicer/vacuum combo device provided by the cable company is as far across the house from the home office as you can possibly get without actually putting it in the neighbors' house. Cable installers love outside walls, which are about the worst possible place to put a wireless access point. Zoom calls can get a little frustrating and embarrassing when you're the presenter and your connection sucks...
+
+So how to get a decent connection up to the office and elsewhere in the client's house to blanket it with wifi? Thankfully, 20 years of innovation has happened, and the chip makers and the cable companies got together to solve this problem, because they needed to deliver services over IP within the homes as well. What they came up with is the deliciously named "[MoCA](https://mocalliance.org)", which stands for "Multimedia over Coax Alliance". They figured out a way to be able to run a digital network signal over the existing coax wires present in most houses, and make it compatible with Ethernet.
+
+Early versions weren't very fast (version 1.0 in 2006 was capable of 100Mbps), but as they applied some of the same RF tricks that Wi-Fi used, they were able to make it perform at a much higher level (Version 2.5, released in 2016, is capable of 2.5Gbps). Version 3 aims to provide 10Gbps.
+
+MoCA will support up to 16 nodes on the wire, and can coexist with some shockingly bad signal conditions. It operates from 1125MHz up to 1675MHz, which is above where cable TV signals live but still quite functional over short distances with existing coaxial cable and splitters. It forms a full mesh where each node talks directly to the other nodes that it needs to, using a combination of Time-Division Multiple Access (TDMA) and Orthogonal Frequency Division Multiple Access (OFDMA), a trick that is also used by WiFi 6/802.11ax to make better use of airtime.
+
+If you want a quick summary of how it works, device maker [GoCoax has a great rundown on their home page](https://www.gocoax.com/).
+
+MoCA also requires putting in a filter between the pole and your house so that your MoCA signals don't end up putting your neighbors on the same network or screwing with the cable company's lines.
+
+Most current cable company provided gateways also support MoCA, and adding a MoCA transceiver to a live coaxial port on the wall in your house basically acts as another ethernet port on the gateway device. Cable companies commonly use this for IP based set-top boxes (over coax!) and additional wireless access points (such as Cox's "Panoramic WiFi" and XFinity's "XFi pods").
+
+While I haven't tested the cable company's wireless offerings (because I'm not a masochist, and I have access to vastly better wifi gear), I did want to find out how well MoCA performed as a straight Ethernet bridge for connecting up the client's access points in such a way that I didn't have to use wireless meshing, which performs quite poorly in most residential environments.
+
+So I grabbed a [couple of MoCA adapters](https://amzn.to/3rgcepo) (and a [splitter](https://amzn.to/3tlwVSB)) from Amazon and tried it out in a couple of different configurations. Testing was done from a MacBook Pro connected to the network via Ethernet, and a [WLANpi](https://wlanpi.com) connected on the other end of a MoCA adapter.
+
+![]({{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-4.59.24-PM-902x1024.png)  
+
+The test setup.
+
+The first thing I noticed is that these devices are truly "plug and play". I hooked one up to the coax in my office and the Ethernet side went into my switch. I then hooked 3 more up around the house, and on two of them, hooked up an access point, and on the third, the WLANpi. The access points came up and showed up in the controller just like they would on Ethernet (caveat: I had to power them externally). The WLANpi grabbed a DHCP address, and I started testing, using the [librespeed](https://librespeed.org) web speed test built into the WLANpi, as well as [iPerf3](https://iperf.fr), also built into the Pi.
+
+First, the baseline with the WLANpi connected directly to the switch. Pretty solid, about what you would expect from a gigabit network.
+
+![]({{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-10.13.04-AM-1024x582.png)![]({{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-10.13.20-AM-1024x100.png)
+
+Next: The WLANpi at the other end of a 4-node MoCA 2.5 network:
+
+![]({{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-10.19.40-AM-1024x601.png)![]({{site.baseurl}}/assets/2021/02/Screen-Shot-2021-02-02-at-10.21.00-AM-1024x96.png)
+
+An ever so slight reduction in throughput, and an extra few milliseconds of latency.
+
+Directly connecting two nodes performed similarly.
+
+So, bottom line, MoCA is a pretty solid option if all you have available is coax. It has the full wire speed, and doesn't introduce the kind of latency that a wifi mesh does.
+
+Downside: The MoCA spec doesn't seem to provide for any means of powering converters centrally, or pushing PoE to the Ethernet device.
+
+Other MoCA devices worth looking at:
+
+- [Kiwee Broadband](https://amzn.to/3tnMSrx), has a passthru port as well as a second Ethernet port.
+- [GoCoax](https://amzn.to/2LeyQqO), another inexpensive option that works on v2.5.

@@ -23,69 +23,90 @@ author:
   last_name: Beyer
 permalink: "/code/ec2/shutdown/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>[perl]<br />
-#!/usr/bin/perl</p>
-<p>use Net::Amazon::EC2;<br />
-my $ec2 = Net::Amazon::EC2-&gt;new(<br />
-AWSAccessKeyId =&gt; 'XXXX',<br />
-SecretAccessKey =&gt; 'XXXX'</p>
-<p>);</p>
-<p>my $running_instances = $ec2-&gt;describe_instances;</p>
-<p>foreach my $reservation (@$running_instances) {</p>
-<p>foreach my $instance ($reservation-&gt;instances_set) {</p>
-<p>my $instance_id = $instance-&gt;instance_id;</p>
-<p>my $result = $ec2-&gt;terminate_instances(InstanceId =&gt; $instance_id);</p>
-<p>print "terminating" . $instance_id . "n";</p>
-<p>}</p>
-<p>}<br />
-[/perl]</p>
-<p>Alternate method in bash:</p>
-<p>[bash]<br />
-#!/bin/bash</p>
-<p>    export JAVA_HOME=/usr<br />
-    export EC2_HOME=/opt/ec2/tools<br />
-    export EC2_PRIVATE_KEY=/root/ec2/pk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.pem<br />
-    export EC2_CERT=/root/ec2/cert-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.pem</p>
-<p>    echo "Terminating Origin Server..."<br />
-    if test -f /root/ec2/origin.iid<br />
-    then<br />
-    date &gt;&gt; /root/term.log</p>
-<p>    /opt/ec2/tools/bin/ec2-terminate-instances `cat /root/ec2/origin.iid` &gt;&gt; /root/term.log<br />
-    else<br />
-    echo "Instance ID not found!"<br />
-    fi<br />
-[/bash]</p>
-<p>PHP (requires <a title="AWS SDK for PHP" href="http://aws.amazon.com/sdkforphp/" target="_blank">AWS SDK for PHP</a>):</p>
-<p>[php]<br />
-&lt;?php<br />
-error_reporting(-1);<br />
-header("Content-type: text/html; charset=utf-8");<br />
-require_once '/usr/share/php/AWSSDKforPHP/sdk.class.php';</p>
-<p>define('AWS_KEY', 'access key here');<br />
-define('AWS_SECRET_KEY', 'secret key here']);<br />
-$startup_region = 'us-east-1';</p>
-<p>$ec2 = new AmazonEC2();</p>
-<p>?&gt;<br />
-&lt;HTML&gt;<br />
-&lt;HEAD&gt;<br />
-&lt;TITLE&gt;Instance Termination&lt;/TITLE&gt;<br />
-&lt;link href="loginmodule.css" rel="stylesheet" type="text/css" /&gt;<br />
-&lt;/TITLE&gt;<br />
-&lt;/HEAD&gt;<br />
-&lt;BODY&gt;<br />
-&lt;H1&gt;Terminate Instances&lt;/H1&gt;<br />
-&lt;?php</p>
-<p>$instances[] = 'i-xxxxxxxx';</p>
-<p>$term_result = $ec2-&gt;terminate_instances($instances);<br />
-if ($term_result-&gt;status != "200") {<br />
-print "Termination error&lt;BR&gt;";<br />
-print_r($term_result);<br />
-die('ERROR');</p>
-<p>print "Instance termination complete. \n";<br />
-?&gt;<br />
-&lt;/BODY&gt;<br />
-&lt;/HTML&gt;<br />
-[/php]</p>
-<p></body></html></p>
+
+[perl]  
+#!/usr/bin/perl
+
+use Net::Amazon::EC2;  
+my $ec2 = Net::Amazon::EC2->new(  
+AWSAccessKeyId => 'XXXX',  
+SecretAccessKey => 'XXXX'
+
+);
+
+my $running\_instances = $ec2->describe\_instances;
+
+foreach my $reservation (@$running\_instances) {
+
+foreach my $instance ($reservation->instances\_set) {
+
+my $instance\_id = $instance->instance\_id;
+
+my $result = $ec2->terminate\_instances(InstanceId => $instance\_id);
+
+print "terminating" . $instance\_id . "n";
+
+}
+
+}  
+[/perl]
+
+Alternate method in bash:
+
+[bash]  
+#!/bin/bash
+
+export JAVA\_HOME=/usr  
+export EC2\_HOME=/opt/ec2/tools  
+export EC2\_PRIVATE\_KEY=/root/ec2/pk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.pem  
+export EC2\_CERT=/root/ec2/cert-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.pem
+
+echo "Terminating Origin Server..."  
+if test -f /root/ec2/origin.iid  
+then  
+date >> /root/term.log
+
+/opt/ec2/tools/bin/ec2-terminate-instances `cat /root/ec2/origin.iid` >> /root/term.log  
+else  
+echo "Instance ID not found!"  
+fi  
+[/bash]
+
+PHP (requires [AWS SDK for PHP](http://aws.amazon.com/sdkforphp/ "AWS SDK for PHP")):
+
+[php]  
+<?php  
+error\_reporting(-1);  
+header("Content-type: text/html; charset=utf-8");  
+require\_once '/usr/share/php/AWSSDKforPHP/sdk.class.php';
+
+define('AWS\_KEY', 'access key here');  
+define('AWS\_SECRET\_KEY', 'secret key here']);  
+$startup\_region = 'us-east-1';
+
+$ec2 = new AmazonEC2();
+
+?>  
+<HTML>  
+<HEAD>  
+<TITLE>Instance Termination</TITLE>  
+<link href="loginmodule.css" rel="stylesheet" type="text/css" />  
+</TITLE>  
+</HEAD>  
+<BODY>  
+<H1>Terminate Instances</H1>  
+<?php
+
+$instances[] = 'i-xxxxxxxx';
+
+$term\_result = $ec2->terminate\_instances($instances);  
+if ($term\_result->status != "200") {  
+print "Termination error<BR>";  
+print\_r($term\_result);  
+die('ERROR');
+
+print "Instance termination complete. \n";  
+?>  
+</BODY>  
+</HTML>  
+[/php]

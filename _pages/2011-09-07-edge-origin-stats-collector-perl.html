@@ -24,132 +24,171 @@ author:
   last_name: Administrator
 permalink: "/code/backend/edge-origin-stats-collector-perl/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>[perl]<br />
-#!/usr/bin/perl<br />
-use strict;</p>
-<p># use module<br />
-use XML::Simple;<br />
-use Data::Dumper;<br />
-use LWP::UserAgent;<br />
-use Getopt::Std;<br />
-use RRDs;<br />
-use Scalar::Util 'reftype';</p>
-<p># Parse Commandline options:<br />
-# q: quiet<br />
-# r: write to RRD<br />
-# i: specify refresh interval (default 10s)</p>
-<p>my $interval;</p>
-<p>our($opt_r,$opt_q,$opt_i);<br />
-getopts('rqi:');</p>
-<p>if (!$opt_i) { $interval = 10; } else { $interval = $opt_i; }</p>
-<p>while (1) {     #establish forever loop</p>
-<p># Poll Origin server for list of active edge servers</p>
-<p>my $lb_ua = new LWP::UserAgent;<br />
-my $lb_url = "http://wms.rezonline.org:1935/loadbalancer?serverInfoXML";<br />
-my $lb_req = new HTTP::Request GET =&gt; $lb_url;<br />
-my $lb_res = $lb_ua-&gt;request($lb_req);<br />
-my @lb_ip;</p>
-<p>if($lb_res-&gt;is_success) {</p>
-<p>my $lb_xml = new XML::Simple;<br />
-my $lb_data = $lb_xml-&gt;XMLin($lb_res-&gt;content);</p>
-<p># Dump raw XML (for debugging)<br />
-# print Dumper($lb_data);</p>
-<p># check reference type:<br />
-# if HASH, only single server is running, and XML returns without an array wrapping single element<br />
-# if ARRAY, multiple servers, each one inside an array element.</p>
-<p>my $reference = reftype $lb_data-&gt;{LoadBalancerServer};        # Check to see how to handle this...</p>
-<p>if ( $reference eq 'ARRAY' )<br />
-{<br />
-for my $lb_server (@{$lb_data-&gt;{LoadBalancerServer}})<br />
-{<br />
-if ($lb_server-&gt;{status} eq "RUNNING")<br />
-{<br />
-#print "ID: $lb_server-&gt;{serverId} at $lb_server-&gt;{redirect}n";<br />
-push @lb_ip, $lb_server-&gt;{redirect};<br />
-}<br />
-}<br />
-}</p>
-<p>elsif ( $reference eq 'HASH' )<br />
-{<br />
-if ($lb_data-&gt;{LoadBalancerServer}-&gt;{status} eq "RUNNING")<br />
-{<br />
-push @lb_ip, $lb_data-&gt;{LoadBalancerServer}-&gt;{redirect};<br />
-}<br />
-}</p>
-<p>else {<br />
-print "unknown reference type - abortingn";<br />
-}</p>
-<p>}     # End is_success loop</p>
-<p>my $arraysize = @lb_ip;</p>
-<p>#print "Array size: $arraysize elements: n";</p>
-<p># Step through the returned array of edge IPs and gather stats</p>
-<p># Scope total variables<br />
-my %streamTotal = 0;</p>
-<p>foreach (@lb_ip) {</p>
-<p># print "Gathering stats for edge server at $_n";<br />
-my $ua = new LWP::UserAgent;<br />
-$ua-&gt;timeout(10);</p>
-<p>my $edgeurl = "http://$_:1935/connectioncounts.xml?flat";    # Make sure you use FLAT mode here, otherwise the XML is a pain to parse when there are multiple server applications<br />
-my $edgereq = new HTTP::Request GET =&gt; $edgeurl;<br />
-my $edgeres = $ua-&gt;request($edgereq);</p>
-<p># create object</p>
-<p>my $cupertinosum = 0;     #Apple HLS<br />
-my $rtspsum = 0;    #RTSP<br />
-my $flashsum = 0;    #RTMP<br />
-my $sanjosesum = 0;    #Flash HTTP<br />
-my $smoothsum = 0;    #Silverlight Smooth Streaming</p>
-<p>my $streamcount = 0;    #Total Streams<br />
-my %namecount = 0;    #Streams per published stream</p>
-<p>if($edgeres-&gt;is_success) {<br />
-my $edgexml = new XML::Simple;<br />
-my $edgedata = $edgexml-&gt;XMLin($edgeres-&gt;content, ForceArray =&gt; 1);</p>
-<p>my $loopindex = 0;<br />
-for my $stream (@{$edgedata-&gt;{Stream}})<br />
-{<br />
-# At some point we're going to want to filter out the publishing points and only look at the edge application<br />
-# in which case, check for applicationName and ignore based on that</p>
-<p>$loopindex++;<br />
-$flashsum += $stream-&gt;{sessionsFlash};<br />
-$rtspsum += $stream-&gt;{sessionsRTSP};<br />
-$cupertinosum += $stream-&gt;{sessionsCupertino};<br />
-$sanjosesum += $stream-&gt;{sessionsSanJose};<br />
-$smoothsum += $stream-&gt;{sessionsSmooth};<br />
-$streamcount += $stream-&gt;{sessionsTotal};<br />
-$namecount{$stream-&gt;{streamName}} = $streamcount;</p>
-<p>}    # End of FOR loop</p>
-<p>} else {<br />
-print " X "; # Indicate that server poll was not successful<br />
-}     # End of if loop</p>
-<p>my $rokusum = $namecount{'roku.smil'} + $namecount {'mobile.smil'};</p>
-<p>#$start60 = $circbuf[-6];<br />
-#$start90 = $circbuf[-9];<br />
-#<br />
-#shift (@circbuf);<br />
-#<br />
-#push (@circbuf,$flashsum);<br />
-#$delta60=$flashsum-$start60;<br />
-#$delta90=$flashsum-$start90;</p>
-<p>!$opt_q &amp;&amp; print "$_ : $streamcount ";<br />
-!$opt_q &amp;&amp; print "[ F: $flashsum: H $cupertinosum : R $rtspsum ]";<br />
-!$opt_q &amp;&amp; print "[ Low: $namecount{'mobile-1'} High: $namecount{'mobile-2'} ]";<br />
-!$opt_q &amp;&amp; print "[ iOS: $namecount{'ipad.smil'} Roku: $namecount{'roku.smil'},$namecount{'mobile.smil'} ]n";<br />
-#!$opt_q &amp;&amp; print "[ StreamClass | High: $namecount{'playlist-high'} Low: $namecount{'playlist-low'} ]n";</p>
-<p>$streamTotal{'Cupertino'} += $cupertinosum;<br />
-$streamTotal{'Flash'} += $flashsum;<br />
-$streamTotal{'SanJose'} += $sanjosesum;<br />
-$streamTotal{'Smooth'} += $smoothsum;<br />
-$streamTotal{'RTSP'} += $rtspsum;<br />
-$streamTotal{'Roku'} += $namecount{'roku.smil'};<br />
-$streamTotal{'iOS'} += $namecount{'ipad.smil'};<br />
-$streamTotal{'Total'} += $streamcount;</p>
-<p>}    # End stats gathering loop per server</p>
-<p>!$opt_q &amp;&amp; print "Total: $streamTotal{'Total'} [F: $streamTotal{'Flash'} H: $streamTotal{'Cupertino'}(iOS: $streamTotal{'iOS'} Roku: $streamTotal{'Roku'}) SJ: $streamTotal{'SanJose'} SL: $streamTotal{'Smooth'}]";</p>
-<p>$opt_r &amp;&amp; RRDs::update("/var/rrd/streams-2011.rrd","N:$streamTotal{'Smooth'}:$streamTotal{'SanJose'}:$streamTotal{'Cupertino'}:$streamTotal{'RTSP'}:$streamTotal{'Flash'}:$streamTotal{'iOS'}:$streamTotal{'Roku'}");<br />
-if (!$opt_q) { $opt_r &amp;&amp; print "[RRD] "; }</p>
-<p>!$opt_q &amp;&amp; print "n";</p>
-<p>sleep($interval);<br />
-}    # End of Forever Loop<br />
-[/perl]</p>
-<p></body></html></p>
+
+[perl]  
+#!/usr/bin/perl  
+use strict;
+
+# use module  
+use XML::Simple;  
+use Data::Dumper;  
+use LWP::UserAgent;  
+use Getopt::Std;  
+use RRDs;  
+use Scalar::Util 'reftype';
+
+# Parse Commandline options:  
+# q: quiet  
+# r: write to RRD  
+# i: specify refresh interval (default 10s)
+
+my $interval;
+
+our($opt\_r,$opt\_q,$opt\_i);  
+getopts('rqi:');
+
+if (!$opt\_i) { $interval = 10; } else { $interval = $opt\_i; }
+
+while (1) { #establish forever loop
+
+# Poll Origin server for list of active edge servers
+
+my $lb\_ua = new LWP::UserAgent;  
+my $lb\_url = "http://wms.rezonline.org:1935/loadbalancer?serverInfoXML";  
+my $lb\_req = new HTTP::Request GET => $lb\_url;  
+my $lb\_res = $lb\_ua->request($lb\_req);  
+my @lb\_ip;
+
+if($lb\_res->is\_success) {
+
+my $lb\_xml = new XML::Simple;  
+my $lb\_data = $lb\_xml->XMLin($lb\_res->content);
+
+# Dump raw XML (for debugging)  
+# print Dumper($lb\_data);
+
+# check reference type:  
+# if HASH, only single server is running, and XML returns without an array wrapping single element  
+# if ARRAY, multiple servers, each one inside an array element.
+
+my $reference = reftype $lb\_data->{LoadBalancerServer}; # Check to see how to handle this...
+
+if ( $reference eq 'ARRAY' )  
+{  
+for my $lb\_server (@{$lb\_data->{LoadBalancerServer}})  
+{  
+if ($lb\_server->{status} eq "RUNNING")  
+{  
+#print "ID: $lb\_server->{serverId} at $lb\_server->{redirect}n";  
+push @lb\_ip, $lb\_server->{redirect};  
+}  
+}  
+}
+
+elsif ( $reference eq 'HASH' )  
+{  
+if ($lb\_data->{LoadBalancerServer}->{status} eq "RUNNING")  
+{  
+push @lb\_ip, $lb\_data->{LoadBalancerServer}->{redirect};  
+}  
+}
+
+else {  
+print "unknown reference type - abortingn";  
+}
+
+} # End is\_success loop
+
+my $arraysize = @lb\_ip;
+
+#print "Array size: $arraysize elements: n";
+
+# Step through the returned array of edge IPs and gather stats
+
+# Scope total variables  
+my %streamTotal = 0;
+
+foreach (@lb\_ip) {
+
+# print "Gathering stats for edge server at $\_n";  
+my $ua = new LWP::UserAgent;  
+$ua->timeout(10);
+
+my $edgeurl = "http://$\_:1935/connectioncounts.xml?flat"; # Make sure you use FLAT mode here, otherwise the XML is a pain to parse when there are multiple server applications  
+my $edgereq = new HTTP::Request GET => $edgeurl;  
+my $edgeres = $ua->request($edgereq);
+
+# create object
+
+my $cupertinosum = 0; #Apple HLS  
+my $rtspsum = 0; #RTSP  
+my $flashsum = 0; #RTMP  
+my $sanjosesum = 0; #Flash HTTP  
+my $smoothsum = 0; #Silverlight Smooth Streaming
+
+my $streamcount = 0; #Total Streams  
+my %namecount = 0; #Streams per published stream
+
+if($edgeres->is\_success) {  
+my $edgexml = new XML::Simple;  
+my $edgedata = $edgexml->XMLin($edgeres->content, ForceArray => 1);
+
+my $loopindex = 0;  
+for my $stream (@{$edgedata->{Stream}})  
+{  
+# At some point we're going to want to filter out the publishing points and only look at the edge application  
+# in which case, check for applicationName and ignore based on that
+
+$loopindex++;  
+$flashsum += $stream->{sessionsFlash};  
+$rtspsum += $stream->{sessionsRTSP};  
+$cupertinosum += $stream->{sessionsCupertino};  
+$sanjosesum += $stream->{sessionsSanJose};  
+$smoothsum += $stream->{sessionsSmooth};  
+$streamcount += $stream->{sessionsTotal};  
+$namecount{$stream->{streamName}} = $streamcount;
+
+} # End of FOR loop
+
+} else {  
+print " X "; # Indicate that server poll was not successful  
+} # End of if loop
+
+my $rokusum = $namecount{'roku.smil'} + $namecount {'mobile.smil'};
+
+#$start60 = $circbuf[-6];  
+#$start90 = $circbuf[-9];  
+#  
+#shift (@circbuf);  
+#  
+#push (@circbuf,$flashsum);  
+#$delta60=$flashsum-$start60;  
+#$delta90=$flashsum-$start90;
+
+!$opt\_q && print "$\_ : $streamcount ";  
+!$opt\_q && print "[ F: $flashsum: H $cupertinosum : R $rtspsum ]";  
+!$opt\_q && print "[ Low: $namecount{'mobile-1'} High: $namecount{'mobile-2'} ]";  
+!$opt\_q && print "[ iOS: $namecount{'ipad.smil'} Roku: $namecount{'roku.smil'},$namecount{'mobile.smil'} ]n";  
+#!$opt\_q && print "[ StreamClass | High: $namecount{'playlist-high'} Low: $namecount{'playlist-low'} ]n";
+
+$streamTotal{'Cupertino'} += $cupertinosum;  
+$streamTotal{'Flash'} += $flashsum;  
+$streamTotal{'SanJose'} += $sanjosesum;  
+$streamTotal{'Smooth'} += $smoothsum;  
+$streamTotal{'RTSP'} += $rtspsum;  
+$streamTotal{'Roku'} += $namecount{'roku.smil'};  
+$streamTotal{'iOS'} += $namecount{'ipad.smil'};  
+$streamTotal{'Total'} += $streamcount;
+
+} # End stats gathering loop per server
+
+!$opt\_q && print "Total: $streamTotal{'Total'} [F: $streamTotal{'Flash'} H: $streamTotal{'Cupertino'}(iOS: $streamTotal{'iOS'} Roku: $streamTotal{'Roku'}) SJ: $streamTotal{'SanJose'} SL: $streamTotal{'Smooth'}]";
+
+$opt\_r && RRDs::update("/var/rrd/streams-2011.rrd","N:$streamTotal{'Smooth'}:$streamTotal{'SanJose'}:$streamTotal{'Cupertino'}:$streamTotal{'RTSP'}:$streamTotal{'Flash'}:$streamTotal{'iOS'}:$streamTotal{'Roku'}");  
+if (!$opt\_q) { $opt\_r && print "[RRD] "; }
+
+!$opt\_q && print "n";
+
+sleep($interval);  
+} # End of Forever Loop  
+[/perl]

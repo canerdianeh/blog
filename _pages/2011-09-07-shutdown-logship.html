@@ -24,66 +24,83 @@ author:
   last_name: Administrator
 permalink: "/code/ec2/shutdown-logship/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>Shuts down an instance and ships the Wowza logs.<br />
-[bash]<br />
-#!/bin/bash</p>
-<p>export JAVA_HOME=/usr<br />
-export EC2_HOME=/opt/ec2/tools</p>
-<p>export date=`date +%m-%d-%y`<br />
-export var_loc = $HOME/var<br />
-export count=`cat ${var_loc}/repcount.txt`<br />
-export start=0<br />
-export end=`expr $count - 1`<br />
-echo terminating ${count} repeaters from ${start} to ${end}<br />
-echo setting shutdown flag...<br />
-touch ~/var/shutdown.sem</p>
-<p># instantiate a loop to shut down each repeater</p>
-<p>for (( i=0;i&amp;lt;=${end};i++))<br />
-do<br />
-export index=${i}<br />
-echo Terminating Repeater ${index}<br />
-if [ -f ~/var/repeater-${index}.iid ]<br />
-then</p>
-<p># Capture the instance ID<br />
-export iid=`cat ~/var/repeater-${index}.iid`</p>
-<p># Capture the instance IP address<br />
-export ip=`${EC2_HOME}/bin/ec2-describe-instances ${iid} | grep INSTANCE | cut -f17`</p>
-<p>echo Terminating Repeater ${index} at AMI ${iid} on IP address ${ip}<br />
-echo Shutting down services...</p>
-<p># Shut down Wowza service, so that the load balancer is notified of the server being stopped<br />
-ssh -o StrictHostKeyChecking=no -i ~/.ssh/gsg-keypair.priv.txt root@${ip} service WowzaMediaServer stop</p>
-<p># zip up the logs<br />
-echo Archiving logs...<br />
-ssh -o StrictHostKeyChecking=no -i ~/.ssh/gsg-keypair.priv.txt root@${ip} gzip /usr/local/WowzaMediaServer/logs/*.log</p>
-<p># ship the logs to a local directory, organized by date and instance ID.<br />
-echo Shipping logs...<br />
-mkdir -p ${var_loc}/logs/repeaters/${date}/${iid}<br />
-scp -o StrictHostKeyChecking=no -i ~/.ssh/gsg-keypair.priv.txt root@${ip}:/usr/local/WowzaMediaServer/logs/*.gz ~/var/logs/repeaters/${date}/${index}</p>
-<p># Now we can actually shut it off.<br />
-echo Terminating instance...<br />
-${EC2_HOME}/bin/ec2-terminate-instances ${iid}<br />
-if [ $? != 0 ]; then<br />
-echo Error terminating instance for image ${iid}<br />
-exit 1<br />
-fi</p>
-<p># Clean up temp files from startup script.</p>
-<p>echo Removing temporary data files...<br />
-rm ~/var/repeater-${index}.*<br />
-rm ~/var/wowza_current_instance_${ip}</p>
-<p>echo Instance ${iid} has been terminated.<br />
-fi</p>
-<p>done</p>
-<p>## End of loop</p>
-<p># check to see if there's anything left over<br />
-if [ `ls -l ${var_loc}/repeater-*.iid | wc -l` -gt 0 ]<br />
-then<br />
-echo Some AMI ID files still exist. Please manually shut down those instances if necessary<br />
-fi</p>
-<p># reset the repeater counter<br />
-echo 0 &amp;gt; ${var_loc}/repcount.txt</p>
-<p># remove the shutdown semaphore<br />
-rm ${var_loc}/shutdown.sem<br />
-[/bash]</p>
-<p></body></html></p>
+
+Shuts down an instance and ships the Wowza logs.  
+[bash]  
+#!/bin/bash
+
+export JAVA\_HOME=/usr  
+export EC2\_HOME=/opt/ec2/tools
+
+export date=`date +%m-%d-%y`  
+export var\_loc = $HOME/var  
+export count=`cat ${var\_loc}/repcount.txt`  
+export start=0  
+export end=`expr $count - 1`  
+echo terminating ${count} repeaters from ${start} to ${end}  
+echo setting shutdown flag...  
+touch ~/var/shutdown.sem
+
+# instantiate a loop to shut down each repeater
+
+for (( i=0;i&lt;=${end};i++))  
+do  
+export index=${i}  
+echo Terminating Repeater ${index}  
+if [ -f ~/var/repeater-${index}.iid ]  
+then
+
+# Capture the instance ID  
+export iid=`cat ~/var/repeater-${index}.iid`
+
+# Capture the instance IP address  
+export ip=`${EC2\_HOME}/bin/ec2-describe-instances ${iid} | grep INSTANCE | cut -f17`
+
+echo Terminating Repeater ${index} at AMI ${iid} on IP address ${ip}  
+echo Shutting down services...
+
+# Shut down Wowza service, so that the load balancer is notified of the server being stopped  
+ssh -o StrictHostKeyChecking=no -i ~/.ssh/gsg-keypair.priv.txt root@${ip} service WowzaMediaServer stop
+
+# zip up the logs  
+echo Archiving logs...  
+ssh -o StrictHostKeyChecking=no -i ~/.ssh/gsg-keypair.priv.txt root@${ip} gzip /usr/local/WowzaMediaServer/logs/\*.log
+
+# ship the logs to a local directory, organized by date and instance ID.  
+echo Shipping logs...  
+mkdir -p ${var\_loc}/logs/repeaters/${date}/${iid}  
+scp -o StrictHostKeyChecking=no -i ~/.ssh/gsg-keypair.priv.txt root@${ip}:/usr/local/WowzaMediaServer/logs/\*.gz ~/var/logs/repeaters/${date}/${index}
+
+# Now we can actually shut it off.  
+echo Terminating instance...  
+${EC2\_HOME}/bin/ec2-terminate-instances ${iid}  
+if [ $? != 0 ]; then  
+echo Error terminating instance for image ${iid}  
+exit 1  
+fi
+
+# Clean up temp files from startup script.
+
+echo Removing temporary data files...  
+rm ~/var/repeater-${index}.\*  
+rm ~/var/wowza\_current\_instance\_${ip}
+
+echo Instance ${iid} has been terminated.  
+fi
+
+done
+
+## End of loop
+
+# check to see if there's anything left over  
+if [ `ls -l ${var\_loc}/repeater-\*.iid | wc -l` -gt 0 ]  
+then  
+echo Some AMI ID files still exist. Please manually shut down those instances if necessary  
+fi
+
+# reset the repeater counter  
+echo 0 &gt; ${var\_loc}/repcount.txt
+
+# remove the shutdown semaphore  
+rm ${var\_loc}/shutdown.sem  
+[/bash]

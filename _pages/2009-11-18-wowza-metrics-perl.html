@@ -24,70 +24,86 @@ author:
   last_name: Beyer
 permalink: "/code/backend/wowza-metrics-perl/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>This perl script connects to a Wowza origin server and the connectioncounts.xml HTTPProvider function and extracts current connection counts at an interval specified on the command line (defaults every 10 seconds). Commandline options to write to an RRD file and silent operation. RRD file used in this example is <a title="RRD File Structure" href="http://blog.ianbeyer.com/code/stream-counter-rrd-structure" target="_blank">described over here</a>. This can be graphed with <a title="RRD Graphing Commands" href="http://blog.ianbeyer.com/code/rrd-graphing" target="_blank">these commands</a>.</p>
-<p>[perl]<br />
-#!/usr/bin/perl<br />
-use strict;</p>
-<p># use module<br />
-use XML::Simple;<br />
-use Data::Dumper;<br />
-use LWP::UserAgent;<br />
-use Getopt::Std;<br />
-use RRDs;</p>
-<p>my $interval=0;<br />
-my $rrd_file="/var/rrd/streams-2011.rrd";</p>
-<p>our($opt_r,$opt_q,$opt_i,$opt_s);<br />
-getopts('rqi:s:');</p>
-<p># Command-line options:<br />
-#<br />
-# -i &lt;seconds&gt;      Specifies polling interval<br />
-# -q                Silent operation (for running in a cron job)<br />
-# -r                Outputs to RRD<br />
-# -s &lt;server&gt;       Specifies server to poll</p>
-<p># Set default interval<br />
-if (!$opt_i) { $interval = 10; } else { $interval = $opt_i; }</p>
-<p>!$opt_s &amp;&amp; die('Please specify a server to query');</p>
-<p>while (1) {</p>
-<p>my $ua = new LWP::UserAgent;<br />
-$ua-&gt;timeout(10);</p>
-<p># Set up connection<br />
-my $wowza_url = "http://$opt_s:1935/connectioncounts.xml";<br />
-my $wowza_request = new HTTP::Request GET =&gt; $wowza_url;<br />
-my $wowza_result = $ua-&gt;request($wowza_request);</p>
-<p># create object</p>
-<p>my $hlssum = 0;<br />
-my $rtspsum = 0;<br />
-my $flashsum = 0;<br />
-my $iphonesum = 0;<br />
-my @streamcount = 0;<br />
-my %namecount = 0;</p>
-<p>if($wowza_result-&gt;is_success) {<br />
- my $wowza_xml = new XML::Simple;<br />
- my $wowza_data = $wowza_xml-&gt;XMLin($wowza_result-&gt;content);<br />
- my $loopindex = 0;<br />
- #Loop through all Streams</p>
-<p> for my $stream (@{$wowza_data-&gt;{VHost}-&gt;{Application}-&gt;{ApplicationInstance}-&gt;{Stream}})<br />
-  {<br />
-   $loopindex++;<br />
-   $flashsum += $stream-&gt;{SessionsFlash};<br />
-   $hlssum += $stream-&gt;{SessionsCupertino};<br />
-   $rtspsum += $stream-&gt;{SessionsRTSP};<br />
-   $streamcount[$loopindex] = $stream-&gt;{SessionsFlash} + $stream-&gt;{SessionsCupertino} + $stream-&gt;{SessionsRTSP};<br />
-   $namecount{$stream-&gt;{Name}} = $streamcount[$loopindex];<br />
-  }<br />
- } else {<br />
-  !$opt_q &amp;&amp; print " [ERR] ";<br />
- }</p>
-<p># You'll need to alter the %namecount hashes here to accomodate for your own stream names. </p>
-<p>$opt_r &amp;&amp; RRDs::update("/var/rrd/streams-2011.rrd","N:$namecount{'mobile-1'}:$namecount{'mobile-2'}:$hlssum:$rtspsum:$flashsum:$namecount{'ipad.smil'}:$namecount{'mobile.smil'}");<br />
-if (!$opt_q) { $opt_r &amp;&amp; print "[RRD] "; }</p>
-<p>!$opt_q &amp;&amp; print "[ F: $flashsum: H $hlssum : R $rtspsum ]";<br />
-!$opt_q &amp;&amp; print "[ Low: $namecount{'mobile-1'} High: $namecount{'mobile-2'} ]";<br />
-!$opt_q &amp;&amp; print "[ iOS: $namecount{'ipad.smil'} Roku: $namecount{'mobile.smil'} ]";<br />
-!$opt_q &amp;&amp; print "[ StreamClass | High: $namecount{'playlist-high'} Low: $namecount{'playlist-low'} ]n";</p>
-<p>sleep($interval);<br />
-}<br />
-[/perl]</p>
-<p></body></html></p>
+
+This perl script connects to a Wowza origin server and the connectioncounts.xml HTTPProvider function and extracts current connection counts at an interval specified on the command line (defaults every 10 seconds). Commandline options to write to an RRD file and silent operation. RRD file used in this example is [described over here](http://blog.ianbeyer.com/code/stream-counter-rrd-structure "RRD File Structure"). This can be graphed with [these commands](http://blog.ianbeyer.com/code/rrd-graphing "RRD Graphing Commands").
+
+[perl]  
+#!/usr/bin/perl  
+use strict;
+
+# use module  
+use XML::Simple;  
+use Data::Dumper;  
+use LWP::UserAgent;  
+use Getopt::Std;  
+use RRDs;
+
+my $interval=0;  
+my $rrd\_file="/var/rrd/streams-2011.rrd";
+
+our($opt\_r,$opt\_q,$opt\_i,$opt\_s);  
+getopts('rqi:s:');
+
+# Command-line options:  
+#  
+# -i <seconds> Specifies polling interval  
+# -q Silent operation (for running in a cron job)  
+# -r Outputs to RRD  
+# -s <server> Specifies server to poll
+
+# Set default interval  
+if (!$opt\_i) { $interval = 10; } else { $interval = $opt\_i; }
+
+!$opt\_s && die('Please specify a server to query');
+
+while (1) {
+
+my $ua = new LWP::UserAgent;  
+$ua->timeout(10);
+
+# Set up connection  
+my $wowza\_url = "http://$opt\_s:1935/connectioncounts.xml";  
+my $wowza\_request = new HTTP::Request GET => $wowza\_url;  
+my $wowza\_result = $ua->request($wowza\_request);
+
+# create object
+
+my $hlssum = 0;  
+my $rtspsum = 0;  
+my $flashsum = 0;  
+my $iphonesum = 0;  
+my @streamcount = 0;  
+my %namecount = 0;
+
+if($wowza\_result->is\_success) {  
+my $wowza\_xml = new XML::Simple;  
+my $wowza\_data = $wowza\_xml->XMLin($wowza\_result->content);  
+my $loopindex = 0;  
+#Loop through all Streams
+
+for my $stream (@{$wowza\_data->{VHost}->{Application}->{ApplicationInstance}->{Stream}})  
+{  
+$loopindex++;  
+$flashsum += $stream->{SessionsFlash};  
+$hlssum += $stream->{SessionsCupertino};  
+$rtspsum += $stream->{SessionsRTSP};  
+$streamcount[$loopindex] = $stream->{SessionsFlash} + $stream->{SessionsCupertino} + $stream->{SessionsRTSP};  
+$namecount{$stream->{Name}} = $streamcount[$loopindex];  
+}  
+} else {  
+!$opt\_q && print " [ERR] ";  
+}
+
+# You'll need to alter the %namecount hashes here to accomodate for your own stream names.
+
+$opt\_r && RRDs::update("/var/rrd/streams-2011.rrd","N:$namecount{'mobile-1'}:$namecount{'mobile-2'}:$hlssum:$rtspsum:$flashsum:$namecount{'ipad.smil'}:$namecount{'mobile.smil'}");  
+if (!$opt\_q) { $opt\_r && print "[RRD] "; }
+
+!$opt\_q && print "[ F: $flashsum: H $hlssum : R $rtspsum ]";  
+!$opt\_q && print "[ Low: $namecount{'mobile-1'} High: $namecount{'mobile-2'} ]";  
+!$opt\_q && print "[ iOS: $namecount{'ipad.smil'} Roku: $namecount{'mobile.smil'} ]";  
+!$opt\_q && print "[ StreamClass | High: $namecount{'playlist-high'} Low: $namecount{'playlist-low'} ]n";
+
+sleep($interval);  
+}  
+[/perl]

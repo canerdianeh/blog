@@ -38,32 +38,22 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2022/11/15/setting-up-an-aruba-wireless-bridge-using-wi-fi-uplink/"
+image: "https://nerdian.ca/files/2022/11/AdobeStock_105367535.jpg"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<!-- wp:paragraph --><html><body></p>
-<p>A while back, I posted about <a href="https://nerdian.ca/2021/12/07/aruba-wireless-bridging/" data-type="post" data-id="1880">how to set up an Aruba wireless bridge</a> using the built-in mesh method. Today I'll show you how to accomplish a similar goal, but using the <strong>Wi-Fi Uplink</strong> approach. You'll need to do it this way if you:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:list --></p>
-<ul>
-<!-- wp:list-item --></p>
-<li>Need to connect an Ethernet Bridge to a non-Aruba network such as Starlink or a cellular hotspot</li>
-<p><!-- /wp:list-item --></p>
-<p><!-- wp:list-item --></p>
-<li>Need to connect to a network that is using 802.1X/EAP enterprise authentication</li>
-<p><!-- /wp:list-item --></p>
-<p><!-- wp:list-item --></p>
-<li>Need to connect to an Aruba network but can't deploy dedicated mesh portals (because deploying an AP as a mesh portal disables any other VAPs configured on that AP's group) </li>
-<p><!-- /wp:list-item -->
-</ul>
-<p><!-- /wp:list --></p>
-<p><!-- wp:paragraph --></p>
-<p>The setup is much like you would for a mesh AP, except we're going straight to the mesh point, since the root is your existing infrastructure. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Perform the initial setup in the boot loader. IP address is optional, but since the AP will be in bridge mode, you may want an IP address to be able to manage it either manually or by adding it to Airwave. This IP address will exist on the uplink VLAN, and won't be reachable even on the ethernet side until the uplink is active:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code class="">factory_reset
+
+A while back, I posted about [how to set up an Aruba wireless bridge](https://nerdian.ca/2021/12/07/aruba-wireless-bridging/) using the built-in mesh method. Today I'll show you how to accomplish a similar goal, but using the **Wi-Fi Uplink** approach. You'll need to do it this way if you:
+
+- Need to connect an Ethernet Bridge to a non-Aruba network such as Starlink or a cellular hotspot
+- Need to connect to a network that is using 802.1X/EAP enterprise authentication
+- Need to connect to an Aruba network but can't deploy dedicated mesh portals (because deploying an AP as a mesh portal disables any other VAPs configured on that AP's group)
+
+The setup is much like you would for a mesh AP, except we're going straight to the mesh point, since the root is your existing infrastructure.
+
+Perform the initial setup in the boot loader. IP address is optional, but since the AP will be in bridge mode, you may want an IP address to be able to manage it either manually or by adding it to Airwave. This IP address will exist on the uplink VLAN, and won't be reachable even on the ethernet side until the uplink is active:
+
+```
+
+factory_reset
 purgeenv
 setenv standalone_mode 1
 setenv uap_controller_less 1
@@ -74,52 +64,27 @@ setenv ipaddr 11.22.33.44
 setenv netmask 255.255.255.0
 setenv gatewayip 11.22.33.1
 saveenv
-boot</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>Power up the AP, either via PoE or external DC power (If your AP has a 12V input, I've found that a <a href="https://amzn.to/3ttwBm9">Type C PD to 12V cable</a> is very handy for powering an AP off a standard Type C battery). Make sure you also have something like a laptop connected to the eth0 port because Instant gets a little cranky about operating when it doesn't have Ethernet. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Your boot time will vary by your specific AP model, but I've observed the following boot times to be typical:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:list --></p>
-<ul>
-<!-- wp:list-item --></p>
-<li>AP-514/515: 3-4 minutes</li>
-<p><!-- /wp:list-item --></p>
-<p><!-- wp:list-item --></p>
-<li>AP-303H: 8-10 minutes</li>
-<p><!-- /wp:list-item -->
-</ul>
-<p><!-- /wp:list --></p>
-<p><!-- wp:paragraph --></p>
-<p>Once the AP has booted up and the CLI is ready and not in degraded mode, log in.</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:list {"backgroundColor":"light-green-cyan"} --></p>
-<ul class="has-light-green-cyan-background-color has-background">
-<!-- wp:list-item --></p>
-<li>
-<strong>Default credentials:</strong><!-- wp:list --></p>
-<ul>
-<!-- wp:list-item --></p>
-<li>standalone mode : <strong>admin/admin</strong>
-</li>
-<p><!-- /wp:list-item --></p>
-<p><!-- wp:list-item --></p>
-<li>virtual controller mode : <strong>admin/&lt;serial number&gt;</strong>
-</li>
-<p><!-- /wp:list-item -->
-</ul>
-<p><!-- /wp:list -->
-</li>
-<p><!-- /wp:list-item -->
-</ul>
-<p><!-- /wp:list --></p>
-<p><!-- wp:paragraph --></p>
-<p>Start with the initial configuration (initial clock set time is in UTC). If you need to configure DST, follow <a href="https://www.arubanetworks.com/techdocs/CLI-Bank/Content/instant/clock-summ-time.htm">the instructions</a> for <strong>clock summer-time</strong>:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code class="">clock set &lt;year&gt; &lt;month 1-12&gt; &lt;day&gt; &lt;hour (24)&gt; &lt;minutes&gt; &lt;seconds&gt;
+boot
+```
+
+Power up the AP, either via PoE or external DC power (If your AP has a 12V input, I've found that a [Type C PD to 12V cable](https://amzn.to/3ttwBm9) is very handy for powering an AP off a standard Type C battery). Make sure you also have something like a laptop connected to the eth0 port because Instant gets a little cranky about operating when it doesn't have Ethernet.
+
+Your boot time will vary by your specific AP model, but I've observed the following boot times to be typical:
+
+- AP-514/515: 3-4 minutes
+- AP-303H: 8-10 minutes
+
+Once the AP has booted up and the CLI is ready and not in degraded mode, log in.
+
+- **Default credentials:**
+  - standalone mode : **admin/admin**
+  - virtual controller mode : **admin/<serial number>**
+
+Start with the initial configuration (initial clock set time is in UTC). If you need to configure DST, follow [the instructions](https://www.arubanetworks.com/techdocs/CLI-Bank/Content/instant/clock-summ-time.htm) for **clock summer-time**:
+
+```
+
+clock set &lt;year&gt; &lt;month 1-12&gt; &lt;day&gt; &lt;hour (24)&gt; &lt;minutes&gt; &lt;seconds&gt;
 
 configure
 
@@ -147,22 +112,19 @@ wlan ssid-profile dummy_ssid_to_disable_setup_mode
  local-probe-req-thresh 0
  max-clients-threshold 64
 exit
-</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>This section is critical for two reasons: </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>The first is that you are setting your regulatory domain for RF operation. <strong>The access point will not turn on the radio until you set a regulatory domain</strong>. Any radio operations will still look like they're running even if they're not, and it won't tell you that you forgot to set it... <em>Ask me how I know, and which hairs turned gray from this!</em></p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>The second is that you are creating a dummy SSID profile to tell Instant that you've configured the AP and so it will stop trying to enter SetMeUp mode. Disabling <strong>extended-ssid</strong> is critical to the ability to act as a wifi client, and it will not take effect until the AP is out of setup mode. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Continue with the following configuration. This establishes and applies your Ethernet port profiles. Your <strong>native-vlan</strong> number should match whatever you configured in the boot loader for the <strong>uplink-vlan</strong>:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code class="">wlan access-rule IAP_DownLink
+```
+
+This section is critical for two reasons:
+
+The first is that you are setting your regulatory domain for RF operation. **The access point will not turn on the radio until you set a regulatory domain**. Any radio operations will still look like they're running even if they're not, and it won't tell you that you forgot to set it... *Ask me how I know, and which hairs turned gray from this!*
+
+The second is that you are creating a dummy SSID profile to tell Instant that you've configured the AP and so it will stop trying to enter SetMeUp mode. Disabling **extended-ssid** is critical to the ability to act as a wifi client, and it will not take effect until the AP is out of setup mode.
+
+Continue with the following configuration. This establishes and applies your Ethernet port profiles. Your **native-vlan** number should match whatever you configured in the boot loader for the **uplink-vlan**:
+
+```
+
+wlan access-rule IAP_DownLink
  index 4
  rule any any match any any any permit
 exit
@@ -187,41 +149,42 @@ enet0-port-profile IAP_DownLink
 enet1-port-profile IAP_DownLink
 enet2-port-profile IAP_DownLink
 enet3-port-profile IAP_DownLink
-enet4-port-profile IAP_DownLink</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>You only need to apply this profile to the ports that exist on your particular AP. If you're using a 303H or 505H, or an outdoor AP with PoE output, you will want to make sure the <strong>poe</strong> setting reflects what you need. Applying <strong>poe</strong> to a port that doesn't support it won't hurt anything, it just won't output PoE on those ports. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Continuing with the configuration of the <a href="https://www.arubanetworks.com/techdocs/CLI-Bank/Content/instant/wlan-sta-prof.htm">WLAN station profile</a> (for an SSID with enterprise auth). Your username will be in whatever format the NAC backend is expecting. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code class="">wlan sta-profile
+enet4-port-profile IAP_DownLink
+```
+
+You only need to apply this profile to the ports that exist on your particular AP. If you're using a 303H or 505H, or an outdoor AP with PoE output, you will want to make sure the **poe** setting reflects what you need. Applying **poe** to a port that doesn't support it won't hurt anything, it just won't output PoE on those ports.
+
+Continuing with the configuration of the [WLAN station profile](https://www.arubanetworks.com/techdocs/CLI-Bank/Content/instant/wlan-sta-prof.htm) (for an SSID with enterprise auth). Your username will be in whatever format the NAC backend is expecting.
+
+```
+
+wlan sta-profile
 essid CorporateWifi
 cipher-suite wpa2-ccmp
 uplink-band dot11a
 wifi1x peap domain\username aruba123
-exit</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>If your target network is using WPA2-PSK, use the following instead:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code class="">wlan sta-profile
+exit
+```
+
+If your target network is using WPA2-PSK, use the following instead:
+
+```
+
+wlan sta-profile
 essid CorporateWifi
 cipher-suite wpa2-ccmp-psk
 uplink-band dot11a
 wpa-passphrase SSIDPassphrase!!!
-exit</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>As of this writing, the CLI bank documentation does not correctly reflect the acceptable values for uplink-band, which are <strong>dot11g</strong> for 2.4 GHz and <strong>dot11a</strong> for 5 GHz. Make sure the <strong>allowed-band</strong> that you set up earlier matches this or it won't work. Generally speaking, stick to 5 GHz. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Then follow with this to establish uplink priorities</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code class="">uplink
+exit
+```
+
+As of this writing, the CLI bank documentation does not correctly reflect the acceptable values for uplink-band, which are **dot11g** for 2.4 GHz and **dot11a** for 5 GHz. Make sure the **allowed-band** that you set up earlier matches this or it won't work. Generally speaking, stick to 5 GHz.
+
+Then follow with this to establish uplink priorities
+
+```
+
+uplink
  preemption
  enforce none
  failover-internet-pkt-lost-cnt 10
@@ -230,17 +193,11 @@ exit</code></pre>
  uplink-priority ethernet 9
  uplink-priority wifi 8
  uplink-priority cellular 10
-exit</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>exit out of the configuration context, save with <strong>write memory</strong> and then apply with <strong>commit apply</strong>, and reboot the AP with <strong>reload</strong>.</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Once it's back up, log back in and check that wifi uplink is configured with <strong>show wifi-uplink configuration</strong>. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Check to see the connection status with <strong>show wifi-uplink status</strong>. If it's still in PROBE mode, run <strong>show wifi-uplink candidates</strong> to see if it's found any APs to connect to. If it shows none, make sure you've got sufficient signal, and that you have in fact set your country code. If it's showing that it's associated, check the device connected to the e0 port and see if it can get an address (if you're using DHCP), or configure one manually and try pinging both the AP and the gateway IP addresses. If that's working, you're done!</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p><!-- /wp:paragraph --><br />
-</body></html></p>
+exit
+```
+
+exit out of the configuration context, save with **write memory** and then apply with **commit apply**, and reboot the AP with **reload**.
+
+Once it's back up, log back in and check that wifi uplink is configured with **show wifi-uplink configuration**.
+
+Check to see the connection status with **show wifi-uplink status**. If it's still in PROBE mode, run **show wifi-uplink candidates** to see if it's found any APs to connect to. If it shows none, make sure you've got sufficient signal, and that you have in fact set your country code. If it's showing that it's associated, check the device connected to the e0 port and see if it can get an address (if you're using DHCP), or configure one manually and try pinging both the AP and the gateway IP addresses. If that's working, you're done!

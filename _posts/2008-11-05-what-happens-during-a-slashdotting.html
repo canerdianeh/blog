@@ -25,13 +25,17 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2008/11/05/what-happens-during-a-slashdotting/"
+image: "http://blog.ianbeyer.com/files/2008/11/consumeristapache.png"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>Well, OK, it wasn't <a title="Slashdot" href="http://www.slashdot.org">Slashdot</a> that was the culprit this time, but rather the pro blog <a title="Consumerist" href="http://www.consumerist.com">Consumerist</a> (if we're a megachurch, does Consumerist count as a megablog? It claims nearly 3 million unique visitors a month)</p>
-<p>Last week, <a title="Clif Guy ALL THE TIME!" href="http://www.clifguy.com">Clif</a> <a title="Worst Buy?" href="http://clifguy.com/2008/10/30/worst-buy/">posted about his experience at Best Buy</a>. Seems the folks at <a title="Gawker Media" href="http://www.gawker.com">Gawker Media</a> got wind of the story (Best Buy is a perennial favourite target of theirs) and <a href="http://consumerist.com/5077143/best-buy-sells-new-laptop-used-by-employee">posted it</a> at 10:21am Eastern, 9:21 in KC. Here's what happened to our <a title="Wordpress MU" href="http://mu.wordpress.org/">Wordpress server</a>:</p>
-<p>[caption id="attachment_88" align="aligncenter" width="500" caption="Apache Processes, November 5"]<a href="http://blog.ianbeyer.com/files/2008/11/consumeristapache.png"><img class="size-full wp-image-88" src="{{site.baseurl}}/assets/2008/11/consumeristapache.png" alt="Apache Processes, November 5" width="500" height="271"></a>[/caption]</p>
-<p>[caption id="attachment_89" align="aligncenter" width="500" caption="Web Datacenter traffic, November 5 (% of 10Mbps link)"]<a href="http://blog.ianbeyer.com/files/2008/11/consumeristtraffic.png"><img class="size-full wp-image-89" src="{{site.baseurl}}/assets/2008/11/consumeristtraffic.png" alt="Web Datacenter traffic, November 5 (% of 10Mbps link)" width="500" height="271"></a>[/caption]</p>
-<p>Wow. I noticed the odd traffic behaviour (that particular server gets very little traffic most of the time) when I got in the office, and called a few folks to see if they'd done anything that would cause this. When that came up empty, I started looking at the access logs on the server and noticed a lot of referrer traffic from Consumerist. I threw <a title="AWStats" href="http://awstats.sourceforge.net">AWstats</a> onto the server to grok the apache logs. At posting time, Clif's blog post had seen around 7000 visitors. Apache peaks out at a point due to the <a title="MaxClients" href="http://httpd.apache.org/docs/1.3/mod/core.html#maxclients">MaxClients directive</a>, in order to keep the CPU from saturating and killing the site.</p>
-<p>It's always fun to see new an interesting traffic patterns. It's very helpful to have active monitoring to tell us when things leap outside the bounds of normalcy.</p>
-<p></body></html></p>
+
+Well, OK, it wasn't [Slashdot](http://www.slashdot.org "Slashdot") that was the culprit this time, but rather the pro blog [Consumerist](http://www.consumerist.com "Consumerist") (if we're a megachurch, does Consumerist count as a megablog? It claims nearly 3 million unique visitors a month)
+
+Last week, [Clif](http://www.clifguy.com "Clif Guy ALL THE TIME!") [posted about his experience at Best Buy](http://clifguy.com/2008/10/30/worst-buy/ "Worst Buy?"). Seems the folks at [Gawker Media](http://www.gawker.com "Gawker Media") got wind of the story (Best Buy is a perennial favourite target of theirs) and [posted it](http://consumerist.com/5077143/best-buy-sells-new-laptop-used-by-employee) at 10:21am Eastern, 9:21 in KC. Here's what happened to our [Wordpress server](http://mu.wordpress.org/ "Wordpress MU"):
+
+[caption id="attachment\_88" align="aligncenter" width="500" caption="Apache Processes, November 5"][![Apache Processes, November 5]({{site.baseurl}}/assets/2008/11/consumeristapache.png)](http://blog.ianbeyer.com/files/2008/11/consumeristapache.png)[/caption]
+
+[caption id="attachment\_89" align="aligncenter" width="500" caption="Web Datacenter traffic, November 5 (% of 10Mbps link)"][![Web Datacenter traffic, November 5 (% of 10Mbps link)]({{site.baseurl}}/assets/2008/11/consumeristtraffic.png)](http://blog.ianbeyer.com/files/2008/11/consumeristtraffic.png)[/caption]
+
+Wow. I noticed the odd traffic behaviour (that particular server gets very little traffic most of the time) when I got in the office, and called a few folks to see if they'd done anything that would cause this. When that came up empty, I started looking at the access logs on the server and noticed a lot of referrer traffic from Consumerist. I threw [AWstats](http://awstats.sourceforge.net "AWStats") onto the server to grok the apache logs. At posting time, Clif's blog post had seen around 7000 visitors. Apache peaks out at a point due to the [MaxClients directive](http://httpd.apache.org/docs/1.3/mod/core.html#maxclients "MaxClients"), in order to keep the CPU from saturating and killing the site.
+
+It's always fun to see new an interesting traffic patterns. It's very helpful to have active monitoring to tell us when things leap outside the bounds of normalcy.

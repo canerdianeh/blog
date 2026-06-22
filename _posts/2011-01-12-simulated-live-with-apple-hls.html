@@ -31,30 +31,42 @@ author:
   last_name: Beyer
 permalink: "/2011/01/12/simulated-live-with-apple-hls/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>Last summer, we switched our primary Flash streaming over to <a title="316 Networks " href="http://solutions.316networks.com" target="_blank">316 Networks</a> partly because of the simulated live capability they offered, and partly for the Media Suite backend. We continued to use <a title="Wowza Media Server" href="http://wowzamedia.com" target="_blank">Wowza</a> on <a title="Amazon EC2 Cloud Computing" href="http://aws.amazon.com">EC2</a> for our mobile users, since the solution works very well. Unfortunately, simulated doesn't work for our mobile users, who are limited to live.</p>
-<p>We have 3 replays a week for each of our two web services: the traditional service from Sunday morning, and the praise service from Sunday night.</p>
-<p>I should probably step back for a moment and explain what "Simulated Live" means. It's a recorded event, but from a user standpoint, it behaves like a live event. There's a set start time, and if you come in 20 minutes after the start of the event, you get the video 20 minutes in; there are no "trick play" DVR functions like fast-forward or rewind. This gives a shared experience for everyone who is watching, and also keeps us legit with the copyright restrictions, as our "live" events are considered extensions of the actual live event in the sanctuary. Simulated live is also known as "pseudostreaming"</p>
-<p>Wowza doesn't natively support pseudostreaming (although the <a title="Wowza Stream Class " href="http://www.wowzamedia.com/forums/content.php?162-Server-side-publishing-using-the-Stream-class" target="_blank">Stream Class</a> API does have some scheduling capability -- see <a title="Using the Wowza Stream Class" href="http://blog.ianbeyer.com/2011/01/17/wowza-stream-class/" target="_blank">this post</a>), so we needed some way of broadcasting recordings on a schedule. I could use the VT5 machine and the <a title="VT5/Tricaster scheduler" href="http://www.youngmonkey.ca/hands/restaurant/plugins/Scheduler/index.html" target="_blank">Scheduler</a> to replay the recordings on a schedule, but the big downside is that it consumes local bandwidth, which is in short supply.</p>
-<p>What I needed was a way of streaming the archive files (high and low bandwidth) that were created by the <a title="KulaByte xStream Live encoder" href="http://www.kulabyte.com/live-video-streaming-software-and-server-products/live-video-streaming-software/live-video-streaming-software-xstream-live-2.html" target="_blank">Kulabyte</a> encoder during the live event. Ideally, since I already upload these to 316 for rebroadcast, I'd like to not have to upload it to two locations.</p>
-<p>Enter the lovely open-source encoder, <a title="ffmpeg" href="http://ffmpeg.org/" target="_blank">ffmpeg</a>. My concern about using ffmpeg was that re-encoding an already encoded file had the potential of introducing compression artifacts and adding CPU load. I was very happy to find an obscure command-line setting that tells it to copy the input file's audio and video codec directly. The only thing ffmpeg would be doing would be extracting the audio and video streams from the MPEG-4 container and stuffing them into a Flash container without molesting the actual streams at all. Added bonus: ffmpeg can also not only output to RTMP, but can take RTMP as an input as well.</p>
-<p>Fortunately, Media Suite's media bin makes videos available via direct RTMP and HTTP and helpfully provides the CDN URL for those files. Another method of storage would be to use Amazon S3 and get the files either via HTTP or Cloudfront RTMP.</p>
-<p>Attempt #1: Installed ffmpeg on a local Ubuntu box via apt-get, no dice. It refused to connect to the RTMP server. After some research, I found that the version of ffmpeg on the Jaunty version of Ubuntu is 0.50, and seems to have some weird build options.</p>
-<p>Attempt #2: I downloaded the ffmpeg 0.61 source, ran a quick configure/make/make install on it, and tried again. Success! I was taking an MP4 recording on a disk, and streaming to Wowza. I then changed the input from a local file to to the URL provided by 316, and weird stuff started happening. And then I realized that the URL had some GET parameters in it that left a question mark and two ampersands in the URL that I needed to escape before bash would parse it correctly. Once I fixed that, it started running happily, and I was seeing the stream on my iPod.</p>
-<p>Attempt #3: I Downloaded the <a title="ffmpeg 0.6.1" href="http://ffmpeg.org/releases/ffmpeg-0.6.1.tar.gz" target="_blank">ffmpeg 0.61 source</a> to my Wowza server on EC2 and crossed my fingers that the build would go off without a hitch. Success! I then transplanted the command line I used on my test box, tweaked the destination server to the local Wowza install, and fired it off. Success again!</p>
-<p>Now that I'd proved the concept, it was simply a matter of putting that command into a cron job and waiting to see if it fired off. And then realizing that the server is in eastern time. And then realizing that I should probably correctly specify the path to ffmpeg (doh!). But once I got those silly details ironed out, off it went.</p>
-<p>So now I have ffmpeg on my EC2 system, consuming virtually no CPU, pulling my archive files from 316 (only had to upload them once), streaming to Wowza on a scheduled basis, without chewing up T1 bandwidth at our main site.</p>
-<p>Unfortunately, there's a little bit of brain damage involved in pulling it from 316, because I'll have to go change the filename in the cron job every week. Perhaps I'll end up uploading it to S3 after all and just giving it a static name.</p>
-<p>Here's the commandline used:</p>
-<p><code>/path_to/ffmpeg -i rtmp://rtmp.server/filename.mp4 -re -sameq -acodec copy -vcodec copy -f flv rtmp://localhost/live/stream</code></p>
-<p>Commandline options used:</p>
-<ul>
-<li>-i : specifies input. This can be either RTMP, HTTP, or a local file.</li>
-<li>-re : near-realtime mode</li>
-<li>-sameq : Keep quality settings</li>
-<li>-acodec copy : send input audio stream unmolested to the output</li>
-<li>-vcodec copy : send input video stream unmolested to the output</li>
-<li>-f flv : Force output to FLV container</li>
-</ul>
-<p></body></html></p>
+
+Last summer, we switched our primary Flash streaming over to [316 Networks](http://solutions.316networks.com "316 Networks ") partly because of the simulated live capability they offered, and partly for the Media Suite backend. We continued to use [Wowza](http://wowzamedia.com "Wowza Media Server") on [EC2](http://aws.amazon.com "Amazon EC2 Cloud Computing") for our mobile users, since the solution works very well. Unfortunately, simulated doesn't work for our mobile users, who are limited to live.
+
+We have 3 replays a week for each of our two web services: the traditional service from Sunday morning, and the praise service from Sunday night.
+
+I should probably step back for a moment and explain what "Simulated Live" means. It's a recorded event, but from a user standpoint, it behaves like a live event. There's a set start time, and if you come in 20 minutes after the start of the event, you get the video 20 minutes in; there are no "trick play" DVR functions like fast-forward or rewind. This gives a shared experience for everyone who is watching, and also keeps us legit with the copyright restrictions, as our "live" events are considered extensions of the actual live event in the sanctuary. Simulated live is also known as "pseudostreaming"
+
+Wowza doesn't natively support pseudostreaming (although the [Stream Class](http://www.wowzamedia.com/forums/content.php?162-Server-side-publishing-using-the-Stream-class "Wowza Stream Class ") API does have some scheduling capability -- see [this post](http://blog.ianbeyer.com/2011/01/17/wowza-stream-class/ "Using the Wowza Stream Class")), so we needed some way of broadcasting recordings on a schedule. I could use the VT5 machine and the [Scheduler](http://www.youngmonkey.ca/hands/restaurant/plugins/Scheduler/index.html "VT5/Tricaster scheduler") to replay the recordings on a schedule, but the big downside is that it consumes local bandwidth, which is in short supply.
+
+What I needed was a way of streaming the archive files (high and low bandwidth) that were created by the [Kulabyte](http://www.kulabyte.com/live-video-streaming-software-and-server-products/live-video-streaming-software/live-video-streaming-software-xstream-live-2.html "KulaByte xStream Live encoder") encoder during the live event. Ideally, since I already upload these to 316 for rebroadcast, I'd like to not have to upload it to two locations.
+
+Enter the lovely open-source encoder, [ffmpeg](http://ffmpeg.org/ "ffmpeg"). My concern about using ffmpeg was that re-encoding an already encoded file had the potential of introducing compression artifacts and adding CPU load. I was very happy to find an obscure command-line setting that tells it to copy the input file's audio and video codec directly. The only thing ffmpeg would be doing would be extracting the audio and video streams from the MPEG-4 container and stuffing them into a Flash container without molesting the actual streams at all. Added bonus: ffmpeg can also not only output to RTMP, but can take RTMP as an input as well.
+
+Fortunately, Media Suite's media bin makes videos available via direct RTMP and HTTP and helpfully provides the CDN URL for those files. Another method of storage would be to use Amazon S3 and get the files either via HTTP or Cloudfront RTMP.
+
+Attempt #1: Installed ffmpeg on a local Ubuntu box via apt-get, no dice. It refused to connect to the RTMP server. After some research, I found that the version of ffmpeg on the Jaunty version of Ubuntu is 0.50, and seems to have some weird build options.
+
+Attempt #2: I downloaded the ffmpeg 0.61 source, ran a quick configure/make/make install on it, and tried again. Success! I was taking an MP4 recording on a disk, and streaming to Wowza. I then changed the input from a local file to to the URL provided by 316, and weird stuff started happening. And then I realized that the URL had some GET parameters in it that left a question mark and two ampersands in the URL that I needed to escape before bash would parse it correctly. Once I fixed that, it started running happily, and I was seeing the stream on my iPod.
+
+Attempt #3: I Downloaded the [ffmpeg 0.61 source](http://ffmpeg.org/releases/ffmpeg-0.6.1.tar.gz "ffmpeg 0.6.1") to my Wowza server on EC2 and crossed my fingers that the build would go off without a hitch. Success! I then transplanted the command line I used on my test box, tweaked the destination server to the local Wowza install, and fired it off. Success again!
+
+Now that I'd proved the concept, it was simply a matter of putting that command into a cron job and waiting to see if it fired off. And then realizing that the server is in eastern time. And then realizing that I should probably correctly specify the path to ffmpeg (doh!). But once I got those silly details ironed out, off it went.
+
+So now I have ffmpeg on my EC2 system, consuming virtually no CPU, pulling my archive files from 316 (only had to upload them once), streaming to Wowza on a scheduled basis, without chewing up T1 bandwidth at our main site.
+
+Unfortunately, there's a little bit of brain damage involved in pulling it from 316, because I'll have to go change the filename in the cron job every week. Perhaps I'll end up uploading it to S3 after all and just giving it a static name.
+
+Here's the commandline used:
+
+`/path_to/ffmpeg -i rtmp://rtmp.server/filename.mp4 -re -sameq -acodec copy -vcodec copy -f flv rtmp://localhost/live/stream`
+
+Commandline options used:
+
+- -i : specifies input. This can be either RTMP, HTTP, or a local file.
+- -re : near-realtime mode
+- -sameq : Keep quality settings
+- -acodec copy : send input audio stream unmolested to the output
+- -vcodec copy : send input video stream unmolested to the output
+- -f flv : Force output to FLV container

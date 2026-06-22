@@ -24,91 +24,105 @@ author:
   last_name: Administrator
 permalink: "/code/backend/load-balancer-server-monitor/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>[perl]<br />
-#!/usr/bin/perl<br />
-use strict;<br />
-print "Content-type: text/htmlnn";<br />
-print "&lt;HEAD&gt;n&lt;TITLE&gt;Load Balancer Status&lt;/TITLE&gt;n&lt;/HEAD&gt;n&lt;BODY&gt;n";<br />
-print "&lt;style type="text/css"&gt; np.normal {color: white; background-color: green;} np.warning {color: black; background-color: yellow;} np.danger {color: white; background-color: red;}np#total {font:bold;}&lt;/STYLE&gt;n";</p>
-<p># use module<br />
-use XML::Simple;<br />
-use Data::Dumper;<br />
-use LWP::UserAgent;<br />
-use Scalar::Util 'reftype';</p>
-<p># Poll Origin server for list of active edge servers</p>
-<p>my $lb_ua = new LWP::UserAgent;<br />
-my $lb_url = "http://wms.rezonline.org:1935/loadbalancer?serverInfoXML";<br />
-my $lb_req = new HTTP::Request GET =&gt; $lb_url;<br />
-my $lb_res = $lb_ua-&gt;request($lb_req);<br />
-my $lb_xml = new XML::Simple;<br />
-my $lb_data = $lb_xml-&gt;XMLin($lb_res-&gt;content);<br />
-my @lb_ip;<br />
-my %connections;<br />
-my %status;<br />
-my $total=0;<br />
-my $running=0;<br />
-my $capacity=250;</p>
-<p># Dump raw XML (for debugging)<br />
-# print Dumper($lb_data);</p>
-<p># check reference type:<br />
-# if HASH, only single server is running, and XML returns without an array wrapping single element<br />
-# if ARRAY, multiple servers, each one inside an array element.</p>
-<p>my $reference = reftype $lb_data-&gt;{LoadBalancerServer};        # Check to see how to handle this...</p>
-<p>if ( $reference eq 'ARRAY' )<br />
-{<br />
-for my $lb_server (@{$lb_data-&gt;{LoadBalancerServer}})<br />
-{<br />
-push @lb_ip, $lb_server-&gt;{redirect};<br />
-$connections{$lb_server-&gt;{redirect}} = $lb_server-&gt;{connectCount};<br />
-$status{$lb_server-&gt;{redirect}} = $lb_server-&gt;{status};<br />
-}<br />
-}</p>
-<p>elsif ( $reference eq 'HASH' )<br />
-{<br />
-if ($lb_data-&gt;{LoadBalancerServer}-&gt;{status} eq "RUNNING")<br />
-{<br />
-push @lb_ip, $lb_data-&gt;{LoadBalancerServer}-&gt;{redirect};<br />
-$connections{$lb_data-&gt;{LoadBalancerServer}-&gt;{redirect}} = $lb_data-&gt;{LoadBalancerServer}-&gt;{connectCount};<br />
-$status{$lb_data-&gt;{LoadBalancerServer}-&gt;{redirect}} = $lb_data-&gt;{LoadBalancerServer}-&gt;{status};</p>
-<p>}<br />
-}</p>
-<p>else {<br />
-print "unknown reference type - abortingn";<br />
-}</p>
-<p>my $arraysize = @lb_ip;<br />
-my $style;<br />
-foreach (@lb_ip) {</p>
-<p>my $load = ($connections{$_} / $capacity)*100;<br />
-if ($load &gt; 85) {<br />
-$style = "danger";<br />
-}<br />
-elsif ( $load &gt;75) {<br />
-$style = "warning";<br />
-}<br />
-else    {<br />
-$style = "normal";<br />
-}</p>
-<p>if ($status{$_} eq "RUNNING") {<br />
-if ($_ eq "50.19.92.63") { print "&lt;I&gt;"; }<br />
-print "&lt;P class="$style"&gt;Repeater $_ is $status{$_} with $connections{$_} connections ($load %)&lt;/P&gt;n";<br />
-if ($_ eq "50.19.92.63") { print "&lt;/I&gt;"; }<br />
-$total += $connections{$_};<br />
-$running ++;<br />
-}<br />
-}<br />
-my $load = ($total / ($running * $capacity)) * 100;</p>
-<p>if ($load &gt; 85) {<br />
-$style = "danger";<br />
-}<br />
-elsif ( $load &gt;75) {<br />
-$style = "warning";<br />
-}<br />
-else    {<br />
-$style = "normal";<br />
-}</p>
-<p>print "&lt;P id="total" class="$style"&gt;Total of $total connections on $running active servers ($load %)&lt;/P&gt;n";</p>
-<p>print "&lt;/BODY&gt;n&lt;/HTML&gt;";<br />
-[/perl]</p>
-<p></body></html></p>
+
+[perl]  
+#!/usr/bin/perl  
+use strict;  
+print "Content-type: text/htmlnn";  
+print "<HEAD>n<TITLE>Load Balancer Status</TITLE>n</HEAD>n<BODY>n";  
+print "<style type="text/css"> np.normal {color: white; background-color: green;} np.warning {color: black; background-color: yellow;} np.danger {color: white; background-color: red;}np#total {font:bold;}</STYLE>n";
+
+# use module  
+use XML::Simple;  
+use Data::Dumper;  
+use LWP::UserAgent;  
+use Scalar::Util 'reftype';
+
+# Poll Origin server for list of active edge servers
+
+my $lb\_ua = new LWP::UserAgent;  
+my $lb\_url = "http://wms.rezonline.org:1935/loadbalancer?serverInfoXML";  
+my $lb\_req = new HTTP::Request GET => $lb\_url;  
+my $lb\_res = $lb\_ua->request($lb\_req);  
+my $lb\_xml = new XML::Simple;  
+my $lb\_data = $lb\_xml->XMLin($lb\_res->content);  
+my @lb\_ip;  
+my %connections;  
+my %status;  
+my $total=0;  
+my $running=0;  
+my $capacity=250;
+
+# Dump raw XML (for debugging)  
+# print Dumper($lb\_data);
+
+# check reference type:  
+# if HASH, only single server is running, and XML returns without an array wrapping single element  
+# if ARRAY, multiple servers, each one inside an array element.
+
+my $reference = reftype $lb\_data->{LoadBalancerServer}; # Check to see how to handle this...
+
+if ( $reference eq 'ARRAY' )  
+{  
+for my $lb\_server (@{$lb\_data->{LoadBalancerServer}})  
+{  
+push @lb\_ip, $lb\_server->{redirect};  
+$connections{$lb\_server->{redirect}} = $lb\_server->{connectCount};  
+$status{$lb\_server->{redirect}} = $lb\_server->{status};  
+}  
+}
+
+elsif ( $reference eq 'HASH' )  
+{  
+if ($lb\_data->{LoadBalancerServer}->{status} eq "RUNNING")  
+{  
+push @lb\_ip, $lb\_data->{LoadBalancerServer}->{redirect};  
+$connections{$lb\_data->{LoadBalancerServer}->{redirect}} = $lb\_data->{LoadBalancerServer}->{connectCount};  
+$status{$lb\_data->{LoadBalancerServer}->{redirect}} = $lb\_data->{LoadBalancerServer}->{status};
+
+}  
+}
+
+else {  
+print "unknown reference type - abortingn";  
+}
+
+my $arraysize = @lb\_ip;  
+my $style;  
+foreach (@lb\_ip) {
+
+my $load = ($connections{$\_} / $capacity)\*100;  
+if ($load > 85) {  
+$style = "danger";  
+}  
+elsif ( $load >75) {  
+$style = "warning";  
+}  
+else {  
+$style = "normal";  
+}
+
+if ($status{$\_} eq "RUNNING") {  
+if ($\_ eq "50.19.92.63") { print "<I>"; }  
+print "<P class="$style">Repeater $\_ is $status{$\_} with $connections{$\_} connections ($load %)</P>n";  
+if ($\_ eq "50.19.92.63") { print "</I>"; }  
+$total += $connections{$\_};  
+$running ++;  
+}  
+}  
+my $load = ($total / ($running \* $capacity)) \* 100;
+
+if ($load > 85) {  
+$style = "danger";  
+}  
+elsif ( $load >75) {  
+$style = "warning";  
+}  
+else {  
+$style = "normal";  
+}
+
+print "<P id="total" class="$style">Total of $total connections on $running active servers ($load %)</P>n";
+
+print "</BODY>n</HTML>";  
+[/perl]

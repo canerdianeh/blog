@@ -23,10 +23,12 @@ author:
   last_name: Beyer
 permalink: "/code/backend/stream-counter-rrd-structure/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>Create RRD file (<a title="RRD Graphing Commands" href="http://blog.ianbeyer.com/code/rrd-graphing" target="_blank">can be graphed with this script</a>):</p>
-<pre>rrdtool create filename.rrd
+
+Create RRD file ([can be graphed with this script](http://blog.ianbeyer.com/code/rrd-graphing "RRD Graphing Commands")):
+
+```
+
+rrdtool create filename.rrd
 --step '10'
 'DS:Low:GAUGE:30:U:U'
 'DS:High:GAUGE:30:U:U'
@@ -38,18 +40,15 @@ permalink: "/code/backend/stream-counter-rrd-structure/"
 'RRA:LAST:0.5:1:8640'
 'RRA:MAX:0.5:6:10080'
 'RRA:MAX:0.5:30:51840'
-'RRA:MAX:0.5:360:8760'</pre>
-<p>Details:</p>
-<ul>
-<li>Step interval is 10 seconds</li>
-<li>7 GAUGE datasets</li>
-<li>4 Archive datasets:
-<ul>
-<li>Archive point is saved every 10 sec, archive kept for 1 day back.</li>
-<li>Archive point is saved every 1 min, archive kept for 7 days back.</li>
-<li>Archive point is saved every 5 min, archive kept for 6 months back.</li>
-<li>Archive point is saved every 1 hour, archive is kept for 1 year back.</li>
-</ul>
-</li>
-</ul>
-<p></body></html></p>
+'RRA:MAX:0.5:360:8760'
+```
+
+Details:
+
+- Step interval is 10 seconds
+- 7 GAUGE datasets
+- 4 Archive datasets:
+  - Archive point is saved every 10 sec, archive kept for 1 day back.
+  - Archive point is saved every 1 min, archive kept for 7 days back.
+  - Archive point is saved every 5 min, archive kept for 6 months back.
+  - Archive point is saved every 1 hour, archive is kept for 1 year back.

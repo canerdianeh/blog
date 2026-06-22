@@ -24,60 +24,62 @@ author:
   last_name: Beyer
 permalink: "/2011/10/11/wowza-v3-costs-for-churches/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>In my previous post, I mentioned that Wowza's licensing is changing for EC2-based instances. Naturally, this is going to have an effect on how much it costs. I'm going to break down the numbers for a typical church scenario.</p>
-<p>The assumptions I'm going to make are based on usage patterns for Resurrection Online:</p>
-<ul>
-<li>1 full-time server</li>
-<li>2 services on Sunday, approx. 2 hours each,</li>
-<li>2 repeaters per service</li>
-<li>1000GB traffic/month</li>
-<li>US-East zone</li>
-</ul>
-<p>Under the current V2 scenario with DevPay, you have the following costs:</p>
-<ul>
-<li>Full-time instance: 720 hours @ 0.15/hr : $108</li>
-<li>Repeaters: 32 hours @ 0.15/hr : $4.80</li>
-<li>Traffic: 1000GB @ $0.15/GB: $150.00</li>
-<li>Wowza AMI Access: $5</li>
-</ul>
-<p>Total: $267.80/month</p>
-<p>Under V3, it looks like this:</p>
-<ul>
-<li>Full-time instance: 720 hours @ $0.085/hr : $61.20</li>
-<li>Monthly Wowza License: $55</li>
-<li>Monthly nDVR Add-On License: $20</li>
-<li>Repeaters: 32 hours @ $0.085/hr: $2.72</li>
-<li>Daily Wowza License @ $5/day/repeater: $40</li>
-<li>Daily nDVR License @ $2/day/repeater: $16</li>
-<li>Traffic: 1000GB @ $0.12/GB: $120.00</li>
-</ul>
-<p>Total: $278.92 ($314.92 with nDVR)</p>
-<p>Pretty close... But because V3 is no longer tied to DevPay, you have the freedom of using reserved instances. I'll assume you won't do a reserved instance for the repeaters.</p>
-<ul>
-<li>Full-time instance: 720 hours @ $0.03/hr : $21.60</li>
-<li>Monthly Wowza License: $55</li>
-<li>Monthly nDVR License: $20</li>
-<li>Repeaters: 32 hours @ $0.085/hr: $2.72</li>
-<li>Daily Wowza License @ $5/day/repeater: $40</li>
-<li>Daily nDVR License @ $2/day/repeater: $16</li>
-<li>nDVR License:</li>
-<li>Traffic: 1000GB @ $0.12/GB: $120.00</li>
-</ul>
-<p>Subtotal: $239.32 ($273.92 with nDVR)</p>
-<ul>
-<li>Reserved instance fee - 1 year: $227.50 ($18.96/month) : $ 258.28</li>
-<li>Reserved instance fee - 3 years : $350 ($9.72/month) : $249.04</li>
-</ul>
-<p>Additional repeaters will set you back about $6/day extra ($8 with nDVR)</p>
-<p>Summary:</p>
-<ul>
-<li>V2: 267.80/month</li>
-<li>V3: 278.92/month</li>
-<li>V3 (1 year reserved): 258.28/month</li>
-<li>V3 (3 year reserved): 249.04/month</li>
-<li>nDVR on V3 will add $36/month</li>
-</ul>
-<p>As you can see, the economics of this have been turned on their ear - now, instead of multiple small servers being the most cost-effective method of doing repeaters, it now makes sense to spin up one or two considerably larger instances for a couple of hours. If each small costs you $5.16  for two hours, and gains you 150Mbps, it looks a lot better to supersize your instance for about 9 bucks for two hours and get several gigabits out of it. When the folks at Wowza get done benchmarking the EC2 instances with V3, I'll post another entry.</p>
-<p> </body></html></p>
+
+In my previous post, I mentioned that Wowza's licensing is changing for EC2-based instances. Naturally, this is going to have an effect on how much it costs. I'm going to break down the numbers for a typical church scenario.
+
+The assumptions I'm going to make are based on usage patterns for Resurrection Online:
+
+- 1 full-time server
+- 2 services on Sunday, approx. 2 hours each,
+- 2 repeaters per service
+- 1000GB traffic/month
+- US-East zone
+
+Under the current V2 scenario with DevPay, you have the following costs:
+
+- Full-time instance: 720 hours @ 0.15/hr : $108
+- Repeaters: 32 hours @ 0.15/hr : $4.80
+- Traffic: 1000GB @ $0.15/GB: $150.00
+- Wowza AMI Access: $5
+
+Total: $267.80/month
+
+Under V3, it looks like this:
+
+- Full-time instance: 720 hours @ $0.085/hr : $61.20
+- Monthly Wowza License: $55
+- Monthly nDVR Add-On License: $20
+- Repeaters: 32 hours @ $0.085/hr: $2.72
+- Daily Wowza License @ $5/day/repeater: $40
+- Daily nDVR License @ $2/day/repeater: $16
+- Traffic: 1000GB @ $0.12/GB: $120.00
+
+Total: $278.92 ($314.92 with nDVR)
+
+Pretty close... But because V3 is no longer tied to DevPay, you have the freedom of using reserved instances. I'll assume you won't do a reserved instance for the repeaters.
+
+- Full-time instance: 720 hours @ $0.03/hr : $21.60
+- Monthly Wowza License: $55
+- Monthly nDVR License: $20
+- Repeaters: 32 hours @ $0.085/hr: $2.72
+- Daily Wowza License @ $5/day/repeater: $40
+- Daily nDVR License @ $2/day/repeater: $16
+- nDVR License:
+- Traffic: 1000GB @ $0.12/GB: $120.00
+
+Subtotal: $239.32 ($273.92 with nDVR)
+
+- Reserved instance fee - 1 year: $227.50 ($18.96/month) : $ 258.28
+- Reserved instance fee - 3 years : $350 ($9.72/month) : $249.04
+
+Additional repeaters will set you back about $6/day extra ($8 with nDVR)
+
+Summary:
+
+- V2: 267.80/month
+- V3: 278.92/month
+- V3 (1 year reserved): 258.28/month
+- V3 (3 year reserved): 249.04/month
+- nDVR on V3 will add $36/month
+
+As you can see, the economics of this have been turned on their ear - now, instead of multiple small servers being the most cost-effective method of doing repeaters, it now makes sense to spin up one or two considerably larger instances for a couple of hours. If each small costs you $5.16  for two hours, and gains you 150Mbps, it looks a lot better to supersize your instance for about 9 bucks for two hours and get several gigabits out of it. When the folks at Wowza get done benchmarking the EC2 instances with V3, I'll post another entry.

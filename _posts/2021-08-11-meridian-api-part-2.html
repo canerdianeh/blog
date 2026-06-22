@@ -44,52 +44,43 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2021/08/11/meridian-api-part-2/"
+image: "https://nerdian.ca/files/2021/08/AdobeStock_418483281.jpeg"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<!-- wp:paragraph --><html><body></p>
-<p>Yesterday, I <a href="https://nerdian.ca/2021/08/10/aruba-meridian-location/" data-type="post" data-id="1840">posted</a> about leveraging the Meridian API to get a list of placemarks into a CSV file. Today, We'll take that one step further, and go the other way - because bulk creating/updating placemarks is no fun by hand. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>For instance, in this project, I created a bunch of placemarks called "Phone Room" (didn't know what else to call them at the time). There were several of these on multiple floors. To rename them in the Meridian Editor, I would have to click on each one, rename it, and save. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:image {"id":1848,"sizeSlug":"large","linkDestination":"media"} --></p>
-<figure class="wp-block-image size-large"><a href="https://nerdian.ca/files/2021/08/Screen-Shot-2021-08-11-at-11.47.44-AM.png"><img src="{{site.baseurl}}/assets/2021/08/Screen-Shot-2021-08-11-at-11.47.44-AM-1024x563.png" alt="" class="wp-image-1848"></a></figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>So, once I got guidance on what they were to be called, I fired up Excel and opened up the CSV that I created yesterday, and made the changes in bulk, and then ran them back into Meridian the other way - I changed the name, the type, and the icon:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:image {"id":1849,"sizeSlug":"large","linkDestination":"media"} --></p>
-<figure class="wp-block-image size-large"><a href="https://nerdian.ca/files/2021/08/Screen-Shot-2021-08-11-at-11.48.12-AM.png"><img src="{{site.baseurl}}/assets/2021/08/Screen-Shot-2021-08-11-at-11.48.12-AM-1024x527.png" alt="" class="wp-image-1849"></a></figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>Sounds easy, right? </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Not so much. I ran into some trouble when I opened it in excel, and all my map IDs looked like this:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:image {"id":1850,"width":390,"height":207,"sizeSlug":"full","linkDestination":"media"} --></p>
-<figure class="wp-block-image size-full is-resized"><a href="https://nerdian.ca/files/2021/08/Screen-Shot-2021-08-11-at-11.59.16-AM.png"><img src="{{site.baseurl}}/assets/2021/08/Screen-Shot-2021-08-11-at-11.59.16-AM.png" alt="" class="wp-image-1850" width="390" height="207"></a></figure>
-<p><!-- /wp:image --></p>
-<p><!-- wp:paragraph --></p>
-<p>This is because Excel is stupid, but trying to be smart. It sees those as Really Big Numbers, and converts them to scientific notation, because the largest it can store is a 15-digit integer. And of course, these map IDs are... 16 digits. But I can't just convert them back as integer number formatting because it then takes the first 15 digits and adds a zero. This, of course, breaks the whole thing. Excel will also do some similar shenanigans when parsing interface names from AOS or Cisco that look like "2/1/4", which excel assumes is a date, because excel assumes <em>everything</em> that looks vaguely numeric <em>must</em> be a number, because it <em>is</em> a spreadsheet after all, and spreadsheets are made for numbers, even if people abuse them all the time as a poor substitute for a database. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>So, this means you either have to make the changes directly in the CSV with a text editor, or find another sheets application that doesn't mangle the map IDs. Fortunately, for us Mac users, Apple's spreadsheet application ("Numbers") handles this just fine. So make the changes, export to CSV, and run it all back into the API. (you can also name it as a .txt and manually import into Excel and specify that as a text column, but that's tedious, which is what we're trying to avoid)</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>I've built a bit of smarts into this script, since I don't want to break things on Meridian's end (although Meridian does a great job of sanity checking and sanitizing the input data from the API). The first thing it does is grab a list of available maps for the location. Then it goes through all the lines in the spreadsheet, converts them to the JSON payload that Meridian wants, and checks to see if there's existing data in the id field. If there is, it assumes that this is an update (it does not, however, check to see if the data already matches the existing placemark since Meridian does that already when you update). If there is no ID, it assumes that this is a new object to be created, and verifies that it has the minimum required information (name, map, and x/y position), and in both cases, checks to make sure the map data in the object is a map ID that exists at this location (this is how I found out that excel was mangling them)</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Running the script spits out this for each row in the CSV that it considers an update:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code lang="json" class="language-json">Update object id <meta charset="utf-8">XXXXXXXXXXXXXXX_5666694473318400
+
+Yesterday, I [posted](https://nerdian.ca/2021/08/10/aruba-meridian-location/) about leveraging the Meridian API to get a list of placemarks into a CSV file. Today, We'll take that one step further, and go the other way - because bulk creating/updating placemarks is no fun by hand.
+
+For instance, in this project, I created a bunch of placemarks called "Phone Room" (didn't know what else to call them at the time). There were several of these on multiple floors. To rename them in the Meridian Editor, I would have to click on each one, rename it, and save.
+
+[![]({{site.baseurl}}/assets/2021/08/Screen-Shot-2021-08-11-at-11.47.44-AM-1024x563.png)](https://nerdian.ca/files/2021/08/Screen-Shot-2021-08-11-at-11.47.44-AM.png)
+
+So, once I got guidance on what they were to be called, I fired up Excel and opened up the CSV that I created yesterday, and made the changes in bulk, and then ran them back into Meridian the other way - I changed the name, the type, and the icon:
+
+[![]({{site.baseurl}}/assets/2021/08/Screen-Shot-2021-08-11-at-11.48.12-AM-1024x527.png)](https://nerdian.ca/files/2021/08/Screen-Shot-2021-08-11-at-11.48.12-AM.png)
+
+Sounds easy, right?
+
+Not so much. I ran into some trouble when I opened it in excel, and all my map IDs looked like this:
+
+[![]({{site.baseurl}}/assets/2021/08/Screen-Shot-2021-08-11-at-11.59.16-AM.png)](https://nerdian.ca/files/2021/08/Screen-Shot-2021-08-11-at-11.59.16-AM.png)
+
+This is because Excel is stupid, but trying to be smart. It sees those as Really Big Numbers, and converts them to scientific notation, because the largest it can store is a 15-digit integer. And of course, these map IDs are... 16 digits. But I can't just convert them back as integer number formatting because it then takes the first 15 digits and adds a zero. This, of course, breaks the whole thing. Excel will also do some similar shenanigans when parsing interface names from AOS or Cisco that look like "2/1/4", which excel assumes is a date, because excel assumes *everything* that looks vaguely numeric *must* be a number, because it *is* a spreadsheet after all, and spreadsheets are made for numbers, even if people abuse them all the time as a poor substitute for a database.
+
+So, this means you either have to make the changes directly in the CSV with a text editor, or find another sheets application that doesn't mangle the map IDs. Fortunately, for us Mac users, Apple's spreadsheet application ("Numbers") handles this just fine. So make the changes, export to CSV, and run it all back into the API. (you can also name it as a .txt and manually import into Excel and specify that as a text column, but that's tedious, which is what we're trying to avoid)
+
+I've built a bit of smarts into this script, since I don't want to break things on Meridian's end (although Meridian does a great job of sanity checking and sanitizing the input data from the API). The first thing it does is grab a list of available maps for the location. Then it goes through all the lines in the spreadsheet, converts them to the JSON payload that Meridian wants, and checks to see if there's existing data in the id field. If there is, it assumes that this is an update (it does not, however, check to see if the data already matches the existing placemark since Meridian does that already when you update). If there is no ID, it assumes that this is a new object to be created, and verifies that it has the minimum required information (name, map, and x/y position), and in both cases, checks to make sure the map data in the object is a map ID that exists at this location (this is how I found out that excel was mangling them)
+
+Running the script spits out this for each row in the CSV that it considers an update:
+
+```
+
+json
+Update object id XXXXXXXXXXXXXXX_5666694473318400
 object update passed initial sanity checks and will be placed on 11th Floor.
 Updating existing object with payload:
 {
-  "id": "<meta charset="utf-8">XXXXXXXXXXXXXXX_5666694473318400",
+  "id": "XXXXXXXXXXXXXXX_5666694473318400",
   "name": "Huddle Space",
-  "map": "<meta charset="utf-8">XXXXXXXXXXXXXXX",
+  "map": "XXXXXXXXXXXXXXX",
   "type": "conference_room",
   "type_name": "Conference Room",
   "color": "f2af1d",
@@ -103,13 +94,14 @@ Updating existing object with payload:
   "email": "",
   "url": ""
 }
-Object ID <meta charset="utf-8">XXXXXXXXXXXXXXX_5666694473318400 named Huddle Space updated on map XXXXXXXXXXXXXXXX</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>If it doesn't find an id and determines that an object needs to be created, it goes down like this:</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code class="">Create new object: 
+Object ID XXXXXXXXXXXXXXX_5666694473318400 named Huddle Space updated on map XXXXXXXXXXXXXXXX
+```
+
+If it doesn't find an id and determines that an object needs to be created, it goes down like this:
+
+```
+
+Create new object: 
 object create passed initial sanity checks and will be placed on 11th Floor.
 Creating new object with payload:
 {
@@ -134,13 +126,14 @@ Object not created. Errors are
     "Enter a valid URL."
   ]
 }
-</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>As you can see here, I made a typo in the URL field, and the data returned from the API call lists the fields that contain an error. If the call is successful, it returns an ID, which the script checks for to verify success. The response from a successful API call looks like this :</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code --></p>
-<pre class="wp-block-code"><code lang="json" class="language-json">{
+```
+
+As you can see here, I made a typo in the URL field, and the data returned from the API call lists the fields that contain an error. If the call is successful, it returns an ID, which the script checks for to verify success. The response from a successful API call looks like this :
+
+```
+
+json
+{
   "parent_pane": "",
   "child_pane_ne": "",
   "child_pane_se": "",
@@ -158,7 +151,7 @@ Object not created. Errors are
   "map": "XXXXXXXXXXXXXXXX",
   "x": 400.0,
   "y": 600.0,
-  <meta charset="utf-8">"latitude": 41.94822,
+  "latitude": 41.94822,
   "longitude": -87.65552,
   "related_map": "",
   "name": "Test Placemark",
@@ -189,18 +182,17 @@ Object not created. Errors are
   "is_disabled": false,
   "category_ids": [],
   "categories": []
-}</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Of course, the script doesn't have to spit out all that output, but it's handy to follow what's going on. Comment out the print lines if you want it to shut up. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>So, without further ado, here's the script. This has not been debugged extensively, so use at your own risk. If you break your environment, you probably should have tested it in the lab first. </p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:code {"lineNumbers":true} --></p>
-<pre title="Meridian CSV Placemark Import" class="wp-block-code"><code lang="json" class="language-json line-numbers">#!/usr/bin/python3
+}
+```
+
+Of course, the script doesn't have to spit out all that output, but it's handy to follow what's going on. Comment out the print lines if you want it to shut up.
+
+So, without further ado, here's the script. This has not been debugged extensively, so use at your own risk. If you break your environment, you probably should have tested it in the lab first.
+
+```
+
+json
+#!/usr/bin/python3
 
 # Aruba Meridian Placemark Import from CSV
 # (c) 2021 Ian Beyer
@@ -216,7 +208,6 @@ location_id = 'XXXXXXXXXXXXXXXX'
 
 baseurl = 'https://edit.meridianapps.com/api/locations/'+location_id
 
-
 header_base = {'Authorization': 'Token '+auth_token}
 
 def api_call(method,endpoint,headers,payload):
@@ -231,7 +222,6 @@ except:
 	print("Exception: Enter file to use")
 	exit()
 
-
 # Get available maps for this location for sanity check
 maps={}
 
@@ -239,8 +229,6 @@ maps={}
 for floor in api_call('GET','/maps',header_base,{})['results']:
  	maps[floor['id']] = floor['name']
 # 	print (floor['name']+ ": "+ floor['id'])
-
-
 
 import_data_file = open(fileName, 'rt')
 
@@ -285,7 +273,6 @@ for pm in objects:
 		task = 'update'
 		print("Update object id "+ pm['id'])
 
-
 	# Remove floor from payload as it is not valid
 	del pm['floor']
 
@@ -311,7 +298,6 @@ for pm in objects:
 			task = 'ignore'
 		else:
 			print("object "+ task + " passed initial sanity checks and will be placed on "+ maps[pm['map']] +".")
-
 
 	#print ("Object Payload:")	
 	#print (json.dumps(pm, indent=2))
@@ -343,9 +329,7 @@ for pm in objects:
 			print ("Object not updated. Errors are")
 			print (json.dumps(result, indent=2))
 
-
 baseurl = 'https://edit.meridianapps.com/api/locations/'+location_id
-
 
 header_base = {'Authorization': 'Token '+auth_token}
 
@@ -354,7 +338,6 @@ def api_call(method,endpoint,headers,payload):
 	resp_json = json.loads(response.text)
 	return(resp_json)
 
-
 # Get available maps for this location for sanity check
 maps={}
 
@@ -362,7 +345,6 @@ maps={}
 for floor in api_call('GET','/maps',header_base,{})['results']:
  	maps[floor['id']] = floor['name']
 # 	print (floor['name']+ ": "+ floor['id'])
-
 
 # I've hard coded the file name here because I'm lazy. 
 
@@ -409,7 +391,6 @@ for pm in objects:
 		task = 'update'
 		print("Update object id "+ pm['id'])
 
-
 	# Remove floor from payload as it is not valid
 	del pm['floor']
 
@@ -435,7 +416,6 @@ for pm in objects:
 			task = 'ignore'
 		else:
 			print("object "+ task + " passed initial sanity checks and will be placed on "+ maps[pm['map']] +".")
-
 
 	#print ("Object Payload:")	
 	#print (json.dumps(pm, indent=2))
@@ -466,13 +446,8 @@ for pm in objects:
 		else:
 			print ("Object not updated. Errors are")
 			print (json.dumps(result, indent=2))
+```
 
-</code></pre>
-<p><!-- /wp:code --></p>
-<p><!-- wp:paragraph --></p>
-<p>It's also worth noting here that the CSV structure and field order isn't especially important since it reads in the header row to get the keys for the dict - as long as you have the minimum data (name/map/x/y) you can create a table of new objects from scratch. Any valid field can be used (although categories requires some additional structure)</p>
-<p><!-- /wp:paragraph --></p>
-<p><!-- wp:paragraph --></p>
-<p>Questions/comments/glaring errors? Comment section is right here. <meta charset="utf-8"><a rel="noreferrer noopener" href="https://github.com/canerdianeh/aruba-meridian" data-type="URL" data-id="https://github.com/canerdianeh/aruba-meridian" target="_blank"><em>Scripts on this page can also be found on github. </em></a></p>
-<p><!-- /wp:paragraph --><br />
-</body></html></p>
+It's also worth noting here that the CSV structure and field order isn't especially important since it reads in the header row to get the keys for the dict - as long as you have the minimum data (name/map/x/y) you can create a table of new objects from scratch. Any valid field can be used (although categories requires some additional structure)
+
+Questions/comments/glaring errors? Comment section is right here. [*Scripts on this page can also be found on github.*](https://github.com/canerdianeh/aruba-meridian)

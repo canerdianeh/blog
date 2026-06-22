@@ -39,73 +39,91 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2017/05/04/ec2-monitoring-with-raspberry-pi/"
+image: "https://nerdian.ca/files/2017/05/1200px-Mission_control_center.jpg"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>I've been doing a little Raspberry Pi hacking lately, and put together a neat way to have physical status LEDs on your desk for things like EC2 instances.</p>
-<h3>The Hardware</h3>
-<p>In its most basic form, you can simply hook up an LED and a bias resistor between a ground line and a GPIO line on the Pi, but that doesn't scale especially well - You can run out of GPIO lines pretty quickly, especially if you're doing different colors for each status. Plus, it's not overly elegant.</p>
-<p><iframe src="https://youtube.com/embed/ZVtpEGZjt0o" width="640" height="360"><br />
-</iframe></p>
-<p>The solution? Unicorns!</p>
-<p>No, really. The fine folks at <a href="http://pimoroni.com">Pimoroni</a> in Sheffield, UK have made a lovely little HAT device for the Pi called a Unicorn. Its primary purpose is lots of blinky lights to make pretty rainbows and stuff, hence the name. However, this HAT is a 4x8 (or an 8x8) array of RGB LEDs, addressable via the I2C bus, which doesn't eat up a line per LED (good thing, otherwise it would require 96 analog lines). The <strong>unicornhat</strong> library (python3-unicornhat) is available for Python 2 and Python 3 in the Raspbian repo. When installed onto the Pi, the Unicorn will fit within a standard Raspberry Pi case.</p>
-<h3>The Code</h3>
-<p>This is my first foray into Python, so there was a bit of a learning curve. If you're familiar with object-oriented code concepts, this should be easy for you. Python is much more parsimonious with punctuation than PHP or perl are.</p>
-<p>For accessing the EC2 data, we'll need Amazon's <strong>boto3</strong> library, also available in the Raspbian repo (python3-boto). One area where boto3 is really nice is that the data is returned directly as a <em>dict</em> object (what users of other languages would call an array), so you don't have to mess with converting JSON or XML into an object structure, and it can be manipulated as you would any other associative array (or a hash for you old-timers that use perl). AWS returns a fairly complex object, so you kind of have to dig into it via a few iterative loops to extract the data you're after.</p>
-<p>From there, it's a matter of assigning different RGB values to the states. I chose these ones:</p>
-<ul>
-<li>stopped: red</li>
-<li>pending: green</li>
-<li>running: blue</li>
-<li>stopping: yellow(ish)</li>
-</ul>
-<p>I also discovered that I needed to assign a specific pixel to each instance ID, otherwise they tended to move around a bit depending on what order AWS returned them on a particular request.</p>
-<p>Here's what the second iteration looks like in action:</p>
-<p><iframe src="https://youtube.com/embed/oKdzFFg_y-o" width="640" height="360"></iframe></p>
-<p>[code lang="python"]<br />
-import boto3 as aws<br />
-import unicornhat as unicorn<br />
-import time</p>
-<p># Initialize the Unicorn<br />
-unicorn.clear()<br />
-unicorn.show()<br />
-unicorn.brightness(0.5)</p>
-<p># Create an EC2 object<br />
-ec2 = aws.client('ec2')</p>
-<p># Define colors and positions<br />
-color = {}<br />
-color['stopped']={'red':255,'green':0,'blue':0}<br />
-color['pending']={'red':64,'green':255,'blue':0}<br />
-color['running']={'red':32,'green':32,'blue':255}<br />
-color['stopping']={'red':192,'green':128,'blue':32}</p>
-<p>pixel = {}<br />
-pixel['i-0fa4ea2560aa17ffd']={'x':0,'y':0}<br />
-pixel['i-06b95cd864acb1a8c']={'x':0,'y':1}<br />
-pixel['i-0661da0f50ffb604c']={'x':0,'y':2}<br />
-pixel['i-063ec151e0f44ef9b']={'x':0,'y':3}<br />
-pixel['i-02c514ca567d8a033']={'x':0,'y':4}</p>
-<p># Loop until forever<br />
-while True:</p>
-<p>	response = ec2.describe_instances()</p>
-<p>	statetable = {}<br />
-	resarray = response['Reservations']<br />
-	for res in resarray:<br />
-		instarray = res['Instances']<br />
-		for inst in instarray:<br />
-			iid = inst['InstanceId']<br />
-			state = inst['State']['Name']<br />
-			# print(iid)<br />
-			# print(state)<br />
-			statetable[iid] = state</p>
-<p>	for ec2inst in statetable:<br />
-		x = pixel[ec2inst]['x']<br />
-		y = pixel[ec2inst]['y']<br />
-		r = color[statetable[ec2inst]]['red']<br />
-		g = color[statetable[ec2inst]]['green']<br />
-		b = color[statetable[ec2inst]]['blue']<br />
-		# print(x,y,r,g,b)</p>
-<p>		unicorn.set_pixel(x,y,r,g,b)<br />
-		unicorn.show()</p>
-<p>	time.sleep(1)<br />
-[/code]</p>
-<p>For the moment, this is just monitoring EC2 status, but I'm going to be adding checks in the near future to do things like ping tests, HTTP checks, etc. Stay tuned.</body></html></p>
+
+I've been doing a little Raspberry Pi hacking lately, and put together a neat way to have physical status LEDs on your desk for things like EC2 instances.
+
+### The Hardware
+
+In its most basic form, you can simply hook up an LED and a bias resistor between a ground line and a GPIO line on the Pi, but that doesn't scale especially well - You can run out of GPIO lines pretty quickly, especially if you're doing different colors for each status. Plus, it's not overly elegant.
+
+The solution? Unicorns!
+
+No, really. The fine folks at [Pimoroni](http://pimoroni.com) in Sheffield, UK have made a lovely little HAT device for the Pi called a Unicorn. Its primary purpose is lots of blinky lights to make pretty rainbows and stuff, hence the name. However, this HAT is a 4x8 (or an 8x8) array of RGB LEDs, addressable via the I2C bus, which doesn't eat up a line per LED (good thing, otherwise it would require 96 analog lines). The **unicornhat** library (python3-unicornhat) is available for Python 2 and Python 3 in the Raspbian repo. When installed onto the Pi, the Unicorn will fit within a standard Raspberry Pi case.
+
+### The Code
+
+This is my first foray into Python, so there was a bit of a learning curve. If you're familiar with object-oriented code concepts, this should be easy for you. Python is much more parsimonious with punctuation than PHP or perl are.
+
+For accessing the EC2 data, we'll need Amazon's **boto3** library, also available in the Raspbian repo (python3-boto). One area where boto3 is really nice is that the data is returned directly as a *dict* object (what users of other languages would call an array), so you don't have to mess with converting JSON or XML into an object structure, and it can be manipulated as you would any other associative array (or a hash for you old-timers that use perl). AWS returns a fairly complex object, so you kind of have to dig into it via a few iterative loops to extract the data you're after.
+
+From there, it's a matter of assigning different RGB values to the states. I chose these ones:
+
+- stopped: red
+- pending: green
+- running: blue
+- stopping: yellow(ish)
+
+I also discovered that I needed to assign a specific pixel to each instance ID, otherwise they tended to move around a bit depending on what order AWS returned them on a particular request.
+
+Here's what the second iteration looks like in action:
+
+[code lang="python"]  
+import boto3 as aws  
+import unicornhat as unicorn  
+import time
+
+# Initialize the Unicorn  
+unicorn.clear()  
+unicorn.show()  
+unicorn.brightness(0.5)
+
+# Create an EC2 object  
+ec2 = aws.client('ec2')
+
+# Define colors and positions  
+color = {}  
+color['stopped']={'red':255,'green':0,'blue':0}  
+color['pending']={'red':64,'green':255,'blue':0}  
+color['running']={'red':32,'green':32,'blue':255}  
+color['stopping']={'red':192,'green':128,'blue':32}
+
+pixel = {}  
+pixel['i-0fa4ea2560aa17ffd']={'x':0,'y':0}  
+pixel['i-06b95cd864acb1a8c']={'x':0,'y':1}  
+pixel['i-0661da0f50ffb604c']={'x':0,'y':2}  
+pixel['i-063ec151e0f44ef9b']={'x':0,'y':3}  
+pixel['i-02c514ca567d8a033']={'x':0,'y':4}
+
+# Loop until forever  
+while True:
+
+response = ec2.describe\_instances()
+
+statetable = {}  
+resarray = response['Reservations']  
+for res in resarray:  
+instarray = res['Instances']  
+for inst in instarray:  
+iid = inst['InstanceId']  
+state = inst['State']['Name']  
+# print(iid)  
+# print(state)  
+statetable[iid] = state
+
+for ec2inst in statetable:  
+x = pixel[ec2inst]['x']  
+y = pixel[ec2inst]['y']  
+r = color[statetable[ec2inst]]['red']  
+g = color[statetable[ec2inst]]['green']  
+b = color[statetable[ec2inst]]['blue']  
+# print(x,y,r,g,b)
+
+unicorn.set\_pixel(x,y,r,g,b)  
+unicorn.show()
+
+time.sleep(1)  
+[/code]
+
+For the moment, this is just monitoring EC2 status, but I'm going to be adding checks in the near future to do things like ping tests, HTTP checks, etc. Stay tuned.

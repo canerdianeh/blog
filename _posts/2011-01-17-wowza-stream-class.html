@@ -38,208 +38,231 @@ author:
   last_name: Beyer
 permalink: "/2011/01/17/wowza-stream-class/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>I mentioned in the previous post about using <a title="ffmpeg" href="http://ffmpeg.org" target="_blank">ffmpeg</a> in a cron job to create Simulated Live events via Wowza. In this post, I'll explain how to do it using the Wowza Stream Class module, which allows you to set a broadcast schedule to play a mix of recorded and live content.</p>
-<p>Wowza has a pretty good <a title="Stream class example with playlists and schedules set in smil file" href="http://www.wowzamedia.com/forums/content.php?145" target="_blank">document</a> on how to add this module in to your server and do a test playlist.If you're setting this up on Amazon EC2, you'll need to update your startup package by putting the module in the wowza/lib directory and the playlist in the wowza/content directory</p>
-<p>Unfortunately, the tutorial doesn't really cover playlist creation beyond the example. This is especially tricky, given that the scheduling parameters don't seem to conform to any known SMIL standard. Yes, it's XML, so theoretically, it doesn't matter, but there are extensions in <a title="SMIL 3.0" href="http://www.w3.org/TR/2006/WD-SMIL3-20061220/" target="_blank">SMIL 3.0</a> that are meant to deal with server-side playlists for automating programming.</p>
-<p>Unless you specified a different application name in the Properties section of Server.xml, the automated playlist will publish to the <em>live</em> application.</p>
-<p>The basic structure of the SMIL file body consists of &lt;stream&gt; and &lt;playlist&gt; statements.</p>
-<h3>Stream Element</h3>
-<p>The &lt;stream&gt; element defines one or more virtual stream names that the playlists will feed into:</p>
-<pre>&lt;stream name="playlist-high"&gt;&lt;/stream&gt;
-&lt;stream name="playlist-low"&gt;&lt;/stream&gt;</pre>
-<p>In this example, I have a high and low bandwidth stream. In your player, you reference the stream name, rather than the streamshedule.smil file, like this:</p>
-<h4 style="padding-left: 30px">Flash RTMP:</h4>
-<p style="padding-left: 30px">streamer: rtmp://wowza.server.address(:port)/live<br />
-file: playlist-high</p>
-<h4 style="padding-left: 30px">Flash HTTP:</h4>
-<p style="padding-left: 30px">http://wowza.server.address/live/playlist-high/manifest.f4m</p>
-<h4 style="padding-left: 30px">HLS:</h4>
-<p style="padding-left: 30px">http://wowza.server.address/live/playlist-high/playlist.m3u8</p>
-<h4 style="padding-left: 30px">Silverlight</h4>
-<p style="padding-left: 30px">http://wowza.server.address/live/playlist-high/Manifest</p>
-<h3>Playlist element</h3>
-<p>The &lt;playlist&gt; element defines specific video sequences that go into the virtual stream. There are four key parameters to the playlist element:</p>
-<ul>
-<li>
-<strong>name</strong> : This is a unique name for that particular sequence.</li>
-<li>
-<strong>playOnStream</strong> : This tells the Stream Class module which of the previously defined streams this playlist is associated with.</li>
-<li>
-<strong>repeat</strong> : Valid values are true/false. This defines whether this playlist loops when it gets to the end.</li>
-<li>
-<strong>scheduled</strong> : When this playlist is scheduled, in the format "YYYY-MM-DD HH:MM:SS" (24-hour time)</li>
-</ul>
-<p>Within the playlist element are one or more &lt;video&gt; statements that use the following parameters:</p>
-<ul>
-<li>
-<strong>src</strong>: the video to be played. Can either be:</p>
-<ul>
-<li>a stream within the same live application (use the stream name only)</li>
-<li>an MP4 video file in the Wowza content directory (use <em>mp4:filename.mp4</em>)</li>
-<li>A stream elsewhere (requires some additional modules)</li>
-</ul>
-</li>
-<li>
-<strong>start</strong> : The number of seconds into the video to start playing. If this is a live source, use the value <strong>-2</strong>.</li>
-<li>
-<strong>length</strong> : The number of seconds to play the video. The value <strong>-1</strong> indicates to play until it ends.</li>
-</ul>
-<p>Using start/length is a useful way to introduce commercial breaks or intermissions into a stream. This example would show <strong>BigBuckBunny.mp4</strong> from the start, for 60 seconds, then cut to a commercial for the duration of the <strong>advertisement-1.mp4</strong> file. After the commercial, it would resume and play for 2 more minutes, play a 30-second commercial from <strong>advertisement-2.mp4</strong> and then plays the rest of the <strong>BigBuckBunny.mp4</strong> file. If the playlist set to repeat, this will loop.</p>
-<pre>&lt;video src="mp4:BigBuckBunny.m4v" start="0" length="60"/&gt;
-&lt;video src="mp4:advertisement-1.mp4 start="0" length="-1"/&gt;
-&lt;video src="mp4:BigBuckBunny.m4v" start="60" length="120"/&gt;
-&lt;video src="mp4:advertisement-2.mp4 start="0" length="30"/&gt;
-&lt;video src="mp4:BigBuckBunny.m4v" start="180" length="-1"/&gt;</pre>
-<p>When a particular playlist has ended, and there are no others currently scheduled, it will default to the last playlist, even if that playlist's <strong>repeat</strong> is set to <strong>false</strong>.</p>
-<p>Here's an example for our weekly service replays, and live sunday events:</p>
-<pre>&lt;smil&gt;
- &lt;head&gt;
- &lt;/head&gt;
- &lt;body&gt;
 
-  &lt;stream name="playlist-high"&gt;&lt;/stream&gt;
-  &lt;stream name="playlist-low"&gt;&lt;/stream&gt;
+I mentioned in the previous post about using [ffmpeg](http://ffmpeg.org "ffmpeg") in a cron job to create Simulated Live events via Wowza. In this post, I'll explain how to do it using the Wowza Stream Class module, which allows you to set a broadcast schedule to play a mix of recorded and live content.
 
-  &lt;playlist name="mon-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-17 07:45:00"&gt;
-   &lt;video src="mp4:traditions-l.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+Wowza has a pretty good [document](http://www.wowzamedia.com/forums/content.php?145 "Stream class example with playlists and schedules set in smil file") on how to add this module in to your server and do a test playlist.If you're setting this up on Amazon EC2, you'll need to update your startup package by putting the module in the wowza/lib directory and the playlist in the wowza/content directory
 
-  &lt;playlist name="mon-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-17 07:45:00"&gt;
-   &lt;video src="mp4:traditions-h.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+Unfortunately, the tutorial doesn't really cover playlist creation beyond the example. This is especially tricky, given that the scheduling parameters don't seem to conform to any known SMIL standard. Yes, it's XML, so theoretically, it doesn't matter, but there are extensions in [SMIL 3.0](http://www.w3.org/TR/2006/WD-SMIL3-20061220/ "SMIL 3.0") that are meant to deal with server-side playlists for automating programming.
 
-  &lt;playlist name="mon-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-17 09:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+Unless you specified a different application name in the Properties section of Server.xml, the automated playlist will publish to the *live* application.
 
-  &lt;playlist name="mon-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-17 09:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+The basic structure of the SMIL file body consists of <stream> and <playlist> statements.
 
-  &lt;playlist name="tue-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-18 12:45:00"&gt;
-   &lt;video src="mp4:praise-l.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+### Stream Element
 
-  &lt;playlist name="tue-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-18 12:45:00"&gt;
-   &lt;video src="mp4:praise-h.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+The <stream> element defines one or more virtual stream names that the playlists will feed into:
 
-  &lt;playlist name="tue-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-18 14:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+```
 
-  &lt;playlist name="tue-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-18 14:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+<stream name="playlist-high"></stream>
+<stream name="playlist-low"></stream>
+```
 
-  &lt;playlist name="wed-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-19 21:45:00"&gt;
-   &lt;video src="mp4:praise-l.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+In this example, I have a high and low bandwidth stream. In your player, you reference the stream name, rather than the streamshedule.smil file, like this:
 
-  &lt;playlist name="wed-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-19 21:45:00"&gt;
-   &lt;video src="mp4:praise-h.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+#### Flash RTMP:
 
-  &lt;playlist name="wed-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-19 23:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+streamer: rtmp://wowza.server.address(:port)/live  
+file: playlist-high
 
-  &lt;playlist name="wed-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-19 23:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+#### Flash HTTP:
 
-  &lt;playlist name="thu-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-20 03:15:00"&gt;
-   &lt;video src="mp4:traditions-l.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+http://wowza.server.address/live/playlist-high/manifest.f4m
 
-  &lt;playlist name="thu-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-20 03:15:00"&gt;
-   &lt;video src="mp4:traditions-h.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+#### HLS:
 
-  &lt;playlist name="thu-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-20 05:00:00"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+http://wowza.server.address/live/playlist-high/playlist.m3u8
 
-  &lt;playlist name="thu-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-20 05:00:00"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+#### Silverlight
 
-  &lt;playlist name="fri-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-21 07:45:00"&gt;
-   &lt;video src="mp4:traditions-l.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+http://wowza.server.address/live/playlist-high/Manifest
 
-  &lt;playlist name="fri-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-21 07:45:00"&gt;
-   &lt;video src="mp4:traditions-h.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+### Playlist element
 
-  &lt;playlist name="fri-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-21 09:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+The <playlist> element defines specific video sequences that go into the virtual stream. There are four key parameters to the playlist element:
 
-  &lt;playlist name="fri-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-21 09:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+- **name** : This is a unique name for that particular sequence.
+- **playOnStream** : This tells the Stream Class module which of the previously defined streams this playlist is associated with.
+- **repeat** : Valid values are true/false. This defines whether this playlist loops when it gets to the end.
+- **scheduled** : When this playlist is scheduled, in the format "YYYY-MM-DD HH:MM:SS" (24-hour time)
 
-  &lt;playlist name="sat-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-22 02:45:00"&gt;
-   &lt;video src="mp4:praise-l.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+Within the playlist element are one or more <video> statements that use the following parameters:
 
-  &lt;playlist name="sat-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-22 02:45:00"&gt;
-   &lt;video src="mp4:praise-h.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+- **src**: the video to be played. Can either be:
+  - a stream within the same live application (use the stream name only)
+  - an MP4 video file in the Wowza content directory (use *mp4:filename.mp4*)
+  - A stream elsewhere (requires some additional modules)
+- **start** : The number of seconds into the video to start playing. If this is a live source, use the value **-2**.
+- **length** : The number of seconds to play the video. The value **-1** indicates to play until it ends.
 
-  &lt;playlist name="sat-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-22 04:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+Using start/length is a useful way to introduce commercial breaks or intermissions into a stream. This example would show **BigBuckBunny.mp4** from the start, for 60 seconds, then cut to a commercial for the duration of the **advertisement-1.mp4** file. After the commercial, it would resume and play for 2 more minutes, play a 30-second commercial from **advertisement-2.mp4** and then plays the rest of the **BigBuckBunny.mp4** file. If the playlist set to repeat, this will loop.
 
-  &lt;playlist name="sat-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-22 04:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+```
 
-  &lt;playlist name="sun-am-high" playOnStream="playlist-high" repeat="false" scheduled="2011-01-23 11:30:00"&gt;
-   &lt;video src="mobile-2" start="-2" length="6300"/&gt;
-  &lt;/playlist&gt;
+<video src="mp4:BigBuckBunny.m4v" start="0" length="60"/>
+<video src="mp4:advertisement-1.mp4 start="0" length="-1"/>
+<video src="mp4:BigBuckBunny.m4v" start="60" length="120"/>
+<video src="mp4:advertisement-2.mp4 start="0" length="30"/>
+<video src="mp4:BigBuckBunny.m4v" start="180" length="-1"/>
+```
 
-  &lt;playlist name="sun-am-low" playOnStream="playlist-low" repeat="false" scheduled="2011-01-23 11:30:00"&gt;
-   &lt;video src="mobile-1" start="-2" length="6300"/&gt;
-  &lt;/playlist&gt;
+When a particular playlist has ended, and there are no others currently scheduled, it will default to the last playlist, even if that playlist's **repeat** is set to **false**.
 
-  &lt;playlist name="sun-am-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-23 13:15:00"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+Here's an example for our weekly service replays, and live sunday events:
 
-  &lt;playlist name="sun-am-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-23 13:15:00"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+```
 
-  &lt;playlist name="sun-pm-high" playOnStream="playlist-high" repeat="false" scheduled="2011-01-23 17:45:00"&gt;
-   &lt;video src="mobile-2" start="-2" length="6300"/&gt;
-  &lt;/playlist&gt;
+<smil>
+ <head>
+ </head>
+ <body>
 
-  &lt;playlist name="sun-pm-low" playOnStream="playlist-low" repeat="false" scheduled="2011-01-23 17:45:00"&gt;
-   &lt;video src="mobile-1" start="-2" length="6300"/&gt;
-  &lt;/playlist&gt;
+  <stream name="playlist-high"></stream>
+  <stream name="playlist-low"></stream>
 
-  &lt;playlist name="sun-pm-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-23 19:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+  <playlist name="mon-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-17 07:45:00">
+   <video src="mp4:traditions-l.mp4" start="0" length="-1"/>
+  </playlist>
 
-  &lt;playlist name="sun-pm-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-23 19:30:00"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+  <playlist name="mon-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-17 07:45:00">
+   <video src="mp4:traditions-h.mp4" start="0" length="-1"/>
+  </playlist>
 
-  &lt;playlist name="default-high" playOnStream="playlist-high" repeat="true" scheduled="2011-01-01 00:00:01"&gt;
-   &lt;video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+  <playlist name="mon-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-17 09:30:00">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
 
-  &lt;playlist name="default-low" playOnStream="playlist-low" repeat="true" scheduled="2011-01-01 00:00:01"&gt;
-   &lt;video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/&gt;
-  &lt;/playlist&gt;
+  <playlist name="mon-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-17 09:30:00">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
 
- &lt;/body&gt;
-&lt;/smil&gt;</pre>
-<p>Video files can either be uploaded, or recorded on the server using a live-record application type.</p>
-<p>Once your playlist is built, you'll need to restart the Wowza service for it to read the new playlist in and schedule it internally.</p>
-<p>Update(July 18, 2001) : I've added a post about my Excel <a title="Wowza Stream Class Playlist Generator" href="http://blog.ianbeyer.com/wowza-stream-class-playlist-generator/" target="_blank">playlist generator</a>.</body></html></p>
+  <playlist name="tue-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-18 12:45:00">
+   <video src="mp4:praise-l.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="tue-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-18 12:45:00">
+   <video src="mp4:praise-h.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="tue-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-18 14:30:00">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="tue-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-18 14:30:00">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="wed-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-19 21:45:00">
+   <video src="mp4:praise-l.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="wed-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-19 21:45:00">
+   <video src="mp4:praise-h.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="wed-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-19 23:30:00">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="wed-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-19 23:30:00">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="thu-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-20 03:15:00">
+   <video src="mp4:traditions-l.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="thu-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-20 03:15:00">
+   <video src="mp4:traditions-h.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="thu-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-20 05:00:00">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="thu-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-20 05:00:00">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="fri-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-21 07:45:00">
+   <video src="mp4:traditions-l.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="fri-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-21 07:45:00">
+   <video src="mp4:traditions-h.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="fri-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-21 09:30:00">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="fri-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-21 09:30:00">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="sat-l" playOnStream="playlist-low" repeat="false" scheduled="2011-01-22 02:45:00">
+   <video src="mp4:praise-l.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="sat-h" playOnStream="playlist-high" repeat="false" scheduled="2011-01-22 02:45:00">
+   <video src="mp4:praise-h.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="sat-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-22 04:30:00">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="sat-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-22 04:30:00">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="sun-am-high" playOnStream="playlist-high" repeat="false" scheduled="2011-01-23 11:30:00">
+   <video src="mobile-2" start="-2" length="6300"/>
+  </playlist>
+
+  <playlist name="sun-am-low" playOnStream="playlist-low" repeat="false" scheduled="2011-01-23 11:30:00">
+   <video src="mobile-1" start="-2" length="6300"/>
+  </playlist>
+
+  <playlist name="sun-am-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-23 13:15:00">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="sun-am-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-23 13:15:00">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="sun-pm-high" playOnStream="playlist-high" repeat="false" scheduled="2011-01-23 17:45:00">
+   <video src="mobile-2" start="-2" length="6300"/>
+  </playlist>
+
+  <playlist name="sun-pm-low" playOnStream="playlist-low" repeat="false" scheduled="2011-01-23 17:45:00">
+   <video src="mobile-1" start="-2" length="6300"/>
+  </playlist>
+
+  <playlist name="sun-pm-loop-h" playOnStream="playlist-high" repeat="true" scheduled="2011-01-23 19:30:00">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="sun-pm-loop-l" playOnStream="playlist-low" repeat="true" scheduled="2011-01-23 19:30:00">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="default-high" playOnStream="playlist-high" repeat="true" scheduled="2011-01-01 00:00:01">
+   <video src="mp4:1-16-Loop-H.mp4" start="0" length="-1"/>
+  </playlist>
+
+  <playlist name="default-low" playOnStream="playlist-low" repeat="true" scheduled="2011-01-01 00:00:01">
+   <video src="mp4:1-16-Loop-L.mp4" start="0" length="-1"/>
+  </playlist>
+
+ </body>
+</smil>
+```
+
+Video files can either be uploaded, or recorded on the server using a live-record application type.
+
+Once your playlist is built, you'll need to restart the Wowza service for it to read the new playlist in and schedule it internally.
+
+Update(July 18, 2001) : I've added a post about my Excel [playlist generator](http://blog.ianbeyer.com/wowza-stream-class-playlist-generator/ "Wowza Stream Class Playlist Generator").

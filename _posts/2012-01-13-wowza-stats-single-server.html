@@ -21,33 +21,36 @@ author:
   last_name: Beyer
 permalink: "/2012/01/13/wowza-stats-single-server/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body></p>
-<p>Here's the code for gathering Wowza Stats from a single server. This assumes that you've enabled the stats on Wowza (serverinfo, connectioncounts in VHost.xml HTTPProviders), with authentication turned off). You'll also get better detailed stats if you use <a title="Andrew Kennedy CasterStats" href="http://www.shamrock.org.uk/WowzaModules/CasterStats/">Andrew Kennedy's CasterStats module </a>for the serverinfo.</p>
-<p><!--more--></p>
-<pre>
+
+Here's the code for gathering Wowza Stats from a single server. This assumes that you've enabled the stats on Wowza (serverinfo, connectioncounts in VHost.xml HTTPProviders), with authentication turned off). You'll also get better detailed stats if you use [Andrew Kennedy's CasterStats module](http://www.shamrock.org.uk/WowzaModules/CasterStats/ "Andrew Kennedy CasterStats") for the serverinfo.
+
+```
+
 [xml]
-                                        &lt;HTTPProvider&gt;
-                                                &lt;BaseClass&gt;com.wowza.wms.plugin.test.HTTPServerInfo&lt;/BaseClass&gt;
-                                                &lt;RequestFilters&gt;serverinfo*&lt;/RequestFilters&gt;
-                                                &lt;AuthenticationMethod&gt;none&lt;/AuthenticationMethod&gt;
-                                        &lt;/HTTPProvider&gt;
-                                        &lt;HTTPProvider&gt;
-                                                &lt;BaseClass&gt;com.wowza.wms.http.HTTPConnectionInfo&lt;/BaseClass&gt;
-                                                &lt;RequestFilters&gt;connectioninfo*&lt;/RequestFilters&gt;
-                                                &lt;AuthenticationMethod&gt;none&lt;/AuthenticationMethod&gt;
-                                        &lt;/HTTPProvider&gt;
-                                        &lt;HTTPProvider&gt;
-                                                &lt;BaseClass&gt;com.wowza.wms.http.HTTPConnectionCountsXML&lt;/BaseClass&gt;
-                                                &lt;RequestFilters&gt;connectioncounts*&lt;/RequestFilters&gt;
-                                                &lt;AuthenticationMethod&gt;none&lt;/AuthenticationMethod&gt;
-                                        &lt;/HTTPProvider&gt;
+                                        <HTTPProvider>
+                                                <BaseClass>com.wowza.wms.plugin.test.HTTPServerInfo</BaseClass>
+                                                <RequestFilters>serverinfo*</RequestFilters>
+                                                <AuthenticationMethod>none</AuthenticationMethod>
+                                        </HTTPProvider>
+                                        <HTTPProvider>
+                                                <BaseClass>com.wowza.wms.http.HTTPConnectionInfo</BaseClass>
+                                                <RequestFilters>connectioninfo*</RequestFilters>
+                                                <AuthenticationMethod>none</AuthenticationMethod>
+                                        </HTTPProvider>
+                                        <HTTPProvider>
+                                                <BaseClass>com.wowza.wms.http.HTTPConnectionCountsXML</BaseClass>
+                                                <RequestFilters>connectioncounts*</RequestFilters>
+                                                <AuthenticationMethod>none</AuthenticationMethod>
+                                        </HTTPProvider>
   [/xml]
-</pre>
-<p>PHP code:</p>
-<pre>
+```
+
+PHP code:
+
+```
+
 [php]
-&lt;?PHP
+<?PHP
 error_reporting(0);
 header("Content-type: text/html; charset=utf-8");
 
@@ -78,35 +81,34 @@ if (isset($_GET['port'])) { $adminport = $_GET['port'];} else { $adminport='8086
 
 if ($form) {
 
-?&gt;
-&lt;HTML&gt;
- &lt;HEAD&gt;
-  &lt;TITLE&gt;Single-Server Metrics&lt;/TITLE&gt;
- &lt;/HEAD&gt;
- &lt;BODY&gt;
-  &lt;H3&gt;Single-Server Stats Gathering&lt;/H3&gt;
-  &lt;FORM ACTION="#" METHOD="GET"&gt;
-   &lt;P&gt;Server Address:&lt;BR&gt;
-   &lt;INPUT TYPE="text" size="15" value="&lt;?=$repeater;?&gt;" name="server"&gt;&lt;/P&gt;
-   &lt;P&gt;Admin Port&lt;BR&gt;
-   &lt;INPUT TYPE="text" size="15" value="8086" name="port"&gt;&lt;/P&gt;
-   &lt;P&gt;Data to display: &lt;BR&gt;
-   &lt;INPUT TYPE="radio" name="mode" value="detailed"&gt;Detailed Count&lt;/INPUT&gt;&lt;BR&gt;
-   &lt;INPUT TYPE="radio" name="mode" value="graph_load"&gt;Load Graph&lt;/INPUT&gt;&lt;BR&gt;
-   &lt;INPUT TYPE="radio" name="mode" value="simple_load"&gt;Load in Mbps&lt;/INPUT&gt;&lt;BR&gt;
-   &lt;INPUT TYPE="radio" name="mode" value="simple_count"&gt;Simple Count&lt;/INPUT&gt;&lt;BR&gt;
-   &lt;INPUT TYPE="radio" name="mode" value="geo_count"&gt;Geographical Count&lt;/INPUT&gt;&lt;BR&gt;
-   &lt;INPUT TYPE="radio" name="mode" value="stream_count"&gt;Stream Count&lt;/INPUT&gt;&lt;BR&gt;
-   &lt;BR&gt;
-   &lt;INPUT TYPE="submit" Value="Show Me The Data"&gt;
-  &lt;/FORM&gt;
- &lt;/BODY&gt;
-&lt;/HTML&gt;
+?>
+<HTML>
+ <HEAD>
+  <TITLE>Single-Server Metrics</TITLE>
+ </HEAD>
+ <BODY>
+  <H3>Single-Server Stats Gathering</H3>
+  <FORM ACTION="#" METHOD="GET">
+   <P>Server Address:<BR>
+   <INPUT TYPE="text" size="15" value="<?=$repeater;?>" name="server"></P>
+   <P>Admin Port<BR>
+   <INPUT TYPE="text" size="15" value="8086" name="port"></P>
+   <P>Data to display: <BR>
+   <INPUT TYPE="radio" name="mode" value="detailed">Detailed Count</INPUT><BR>
+   <INPUT TYPE="radio" name="mode" value="graph_load">Load Graph</INPUT><BR>
+   <INPUT TYPE="radio" name="mode" value="simple_load">Load in Mbps</INPUT><BR>
+   <INPUT TYPE="radio" name="mode" value="simple_count">Simple Count</INPUT><BR>
+   <INPUT TYPE="radio" name="mode" value="geo_count">Geographical Count</INPUT><BR>
+   <INPUT TYPE="radio" name="mode" value="stream_count">Stream Count</INPUT><BR>
+   <BR>
+   <INPUT TYPE="submit" Value="Show Me The Data">
+  </FORM>
+ </BODY>
+</HTML>
 
-&lt;?php 
+<?php 
 
 } else {
-
 
 // Iterate through IP address array
 // initialize counters
@@ -127,15 +129,14 @@ $server_bwin = 0;
 $server_bwout = 0;
 $server_conns = 0;
 
-
-if ($graph_load) { echo "&lt;H3&gt;Server Load&lt;/H3&gt;"; }
+if ($graph_load) { echo "<H3>Server Load</H3>"; }
 
 	$filter = array(
-        	"Name" =&gt; 'ip-address',
-        	"Value" =&gt; $repeater 
+        	"Name" => 'ip-address',
+        	"Value" => $repeater 
         	);
 	$opts = array (
-        	"Filter" =&gt; $filter
+        	"Filter" => $filter
         	);
 	
 	if($load) { // compute load per server
@@ -143,20 +144,20 @@ if ($graph_load) { echo "&lt;H3&gt;Server Load&lt;/H3&gt;"; }
                 $repeaterurl = "http://$repeater:$adminport/connectioncounts";
                 $repeaterxml = simplexml_load_file($repeaterurl);
 
-                foreach ($repeaterxml-&gt;VHost as $vhost) {
-                        foreach ($vhost-&gt;Application as $app) { // parse bandwidth usage by app in case we want it. 
-				$appname = (string)$app-&gt;Name;
-				if ($app-&gt;Status == "Loaded") {
-					$inbytes = (string)$app-&gt;MessagesInBytesRate;
-					$outbytes = (string)$app-&gt;MessagesOutBytesRate;
+                foreach ($repeaterxml->VHost as $vhost) {
+                        foreach ($vhost->Application as $app) { // parse bandwidth usage by app in case we want it. 
+				$appname = (string)$app->Name;
+				if ($app->Status == "Loaded") {
+					$inbytes = (string)$app->MessagesInBytesRate;
+					$outbytes = (string)$app->MessagesOutBytesRate;
 					$bwin[$appname] = $inbytes / 131072; // Convert Bps to Mbps
 					$bwout[$appname] = $outbytes / 131027; // Convert Bps to Mbps
 				} 
 			} // End App Loop
 		} // End VHost Loop
-		$server_bwin = (string)$repeaterxml-&gt;MessagesInBytesRate / 131072; // Convert Bps to Mbps
-		$server_bwout = (string)$repeaterxml-&gt;MessagesOutBytesRate / 131072; // Convert Bps to Mbps
-		$server_conns = $repeaterxml-&gt;ConnectionsCurrent;
+		$server_bwin = (string)$repeaterxml->MessagesInBytesRate / 131072; // Convert Bps to Mbps
+		$server_bwout = (string)$repeaterxml->MessagesOutBytesRate / 131072; // Convert Bps to Mbps
+		$server_conns = $repeaterxml->ConnectionsCurrent;
 
 		if ($graph_load) {
 			$server_load = $server_bwout / 1024 * 100; // convert to percentage
@@ -166,42 +167,41 @@ if ($graph_load) { echo "&lt;H3&gt;Server Load&lt;/H3&gt;"; }
 			$load_round = round($server_load);
 	
 			switch ($server_load) {
-				case ($server_load &gt; 99): $color = "black"; $heavy = true; break;
-				case ($server_load &gt;= 85): $color = "red"; $heavy = true; break;
-				case ($server_load &gt;= 75): $color = "yellow"; break;
+				case ($server_load > 99): $color = "black"; $heavy = true; break;
+				case ($server_load >= 85): $color = "red"; $heavy = true; break;
+				case ($server_load >= 75): $color = "yellow"; break;
 				default: $color = "green";
 				}
-				$info = '&lt;A HREF="http://'.$repeater.':$adminport/serverinfo.xml" target="_blank"&gt;'.$repeater.'&lt;/A&gt;: &lt;B&gt;'. $load_string ."%&lt;/B&gt; with ". $server_conns . " connections (". $bwout_string ." Mbps out)"; 
-				print "&lt;P&gt;" . $info . "&lt;/P&gt;"; 
+				$info = '<A HREF="http://'.$repeater.':$adminport/serverinfo.xml" target="_blank">'.$repeater.'</A>: <B>'. $load_string ."%</B> with ". $server_conns . " connections (". $bwout_string ." Mbps out)"; 
+				print "<P>" . $info . "</P>"; 
 	
-			?&gt;
-			&lt;DIV style="height: 5px; background: none repeat scroll 0% 0% #ffffff; border: 2px solid;"&gt;
-				&lt;DIV style="height: 100%; background: &lt;?=$color?&gt;; color: black; width: &lt;?=$load_round?&gt;%;"&gt;&lt;/div&gt;
-			&lt;/div&gt;
-			&lt;?php
+			?>
+			<DIV style="height: 5px; background: none repeat scroll 0% 0% #ffffff; border: 2px solid;">
+				<DIV style="height: 100%; background: <?=$color?>; color: black; width: <?=$load_round?>%;"></div>
+			</div>
+			<?php
 
 		} // End Load Graph
 		
 	} // End Bandwidth Loop
 
-
 	if($count) {
 		$repeaterurl = "http://$repeater:$adminport/serverinfo";
 		$repeaterxml = simplexml_load_file($repeaterurl);
 		
-		foreach ($repeaterxml-&gt;VHost as $vhost) {
-			foreach ($vhost-&gt;Application as $app) {
-				foreach ($app-&gt;ApplicationInstance as $instance) {
-					foreach ($instance-&gt;Client as $client) {
+		foreach ($repeaterxml->VHost as $vhost) {
+			foreach ($vhost->Application as $app) {
+				foreach ($app->ApplicationInstance as $instance) {
+					foreach ($instance->Client as $client) {
 						// Skip repeaters and encoders - FMS is already filtered out by the HTTPProvider
 						$skip = false; // Init variable
-						if (preg_match('(Repeater)',$client-&gt;Referrer)) { $skip = true; }
-						if (preg_match('(Kulabyte)',$client-&gt;Referrer)) { $skip = true; }
+						if (preg_match('(Repeater)',$client->Referrer)) { $skip = true; }
+						if (preg_match('(Kulabyte)',$client->Referrer)) { $skip = true; }
 	
 						if (!$skip) { 
-							$protocol = (string)$client-&gt;Protocol;
+							$protocol = (string)$client->Protocol;
 							$proto[$protocol]++;
-							$streamnames = (string)$client-&gt;StreamNames;
+							$streamnames = (string)$client->StreamNames;
 							$streamarray=explode("/",$streamnames);
 							$str_array_len=sizeof($streamarray);
 	
@@ -213,24 +213,24 @@ if ($graph_load) { echo "&lt;H3&gt;Server Load&lt;/H3&gt;"; }
 								} else {
 								$live[$strname]++;
 								}
-							$client_list[] = (string)$client-&gt;IpAddress;
+							$client_list[] = (string)$client->IpAddress;
 
 							if ($detailed) {
 	
-								if ($client-&gt;UserAgent) // HTML clients will have a useragent defined
+								if ($client->UserAgent) // HTML clients will have a useragent defined
 									{ 
-										echo $client-&gt;IpAddress.": ".$client-&gt;UserAgent ."&lt;BR&gt;\n"; 
-										if (preg_match('(Roku)',$client-&gt;UserAgent)) { $agent['Roku']++; }
-										if (preg_match('(iPhone)',$client-&gt;UserAgent)) { $agent['iPhone']++; }
-										if (preg_match('(iPad)',$client-&gt;UserAgent)) { $agent['iPad']++; }
-										if (preg_match('(iPod)',$client-&gt;UserAgent)) { $agent['iPod']++; }
-										if (preg_match('(stagefright)',$client-&gt;UserAgent)) { $agent['Android']++; }
+										echo $client->IpAddress.": ".$client->UserAgent ."<BR>\n"; 
+										if (preg_match('(Roku)',$client->UserAgent)) { $agent['Roku']++; }
+										if (preg_match('(iPhone)',$client->UserAgent)) { $agent['iPhone']++; }
+										if (preg_match('(iPad)',$client->UserAgent)) { $agent['iPad']++; }
+										if (preg_match('(iPod)',$client->UserAgent)) { $agent['iPod']++; }
+										if (preg_match('(stagefright)',$client->UserAgent)) { $agent['Android']++; }
 											
 									} 
 			
-								if ($client-&gt;FlashVersion) // Flash clients will have a different string. 
+								if ($client->FlashVersion) // Flash clients will have a different string. 
 									{ 
-										echo $client-&gt;IpAddress.": Flash version " . $client-&gt;FlashVersion ."&lt;BR&gt;\n"; 
+										echo $client->IpAddress.": Flash version " . $client->FlashVersion ."<BR>\n"; 
 										$agent['Flash']++;
 										} 
 								}	//Client Details
@@ -242,13 +242,12 @@ if ($graph_load) { echo "&lt;H3&gt;Server Load&lt;/H3&gt;"; }
 
 	} // Count Loop
 
-
 if ($geo_count) {
 
-	print "&lt;H3&gt;Client Connections&lt;/H3&gt;\n";
-	echo "&lt;SMALL&gt;Last Refresh: ";
+	print "<H3>Client Connections</H3>\n";
+	echo "<SMALL>Last Refresh: ";
 	echo $date = date("Y-m-d H:i:s");
-	echo "&lt;/SMALL&gt;\n";
+	echo "</SMALL>\n";
 
 	foreach($client_list as $client_ip) {
 		$geo_record = geoip_record_by_name($client_ip);
@@ -263,31 +262,31 @@ if ($geo_count) {
 		$country_total[$cc]++;
 	} //End Client iteration	
 	arsort($country_total);
-	print '&lt;DIV class="countries"&gt;'."\n";
-	print '&lt;H4&gt;Countries&lt;/H4&gt;'."\n";
+	print '<DIV class="countries">'."\n";
+	print '<H4>Countries</H4>'."\n";
 	foreach (array_keys($country_total) as $ccode) {
-		print '&lt;IMG SRC="images/flags/'.$ccode.'.png"&gt;&amp;nbsp;';
-		print "$country_name[$ccode] : ".$country_total[$ccode]."&lt;BR&gt;\n";
+		print '<IMG SRC="images/flags/'.$ccode.'.png">&nbsp;';
+		print "$country_name[$ccode] : ".$country_total[$ccode]."<BR>\n";
 	} // End Country iteration
-	print '&lt;/DIV&gt;';
+	print '</DIV>';
 	
 	arsort($state_total);
-	print '&lt;DIV class="states"&gt;'."\n";
-	print '&lt;H4&gt;States&lt;/H4&gt;'."\n";
+	print '<DIV class="states">'."\n";
+	print '<H4>States</H4>'."\n";
 	foreach (array_keys($state_total) as $state) {
-		print "$state : ".$state_total[$state]."&lt;BR&gt;\n";
+		print "$state : ".$state_total[$state]."<BR>\n";
 	} // End State iteration
-	print '&lt;/DIV&gt;';
+	print '</DIV>';
 
 } // End Geo Loop
 
 if ($detailed) {
 	$agent['iOS'] = $agent['iPhone'] + $agent ['iPad'] + $agent['iPod'];
-	echo "&lt;BR&gt;\n";
-	echo "Total HLS Clients: ". $proto['HLS']."&lt;BR&gt;\n";
-	echo "Total Roku clients: ". $agent['Roku']."&lt;BR&gt;\n";
-	echo "Total iOS clients: ". $agent['iOS'] ." (".$agent['iPhone']." iPhone,". $agent['iPad']." iPad,". $agent['iPod']." iPod)&lt;BR&gt;\n";
-	echo "Total RTMP clients: ". $proto['RTMP']." (". $agent['Flash'] ." Flash)&lt;BR&gt;\n";
+	echo "<BR>\n";
+	echo "Total HLS Clients: ". $proto['HLS']."<BR>\n";
+	echo "Total Roku clients: ". $agent['Roku']."<BR>\n";
+	echo "Total iOS clients: ". $agent['iOS'] ." (".$agent['iPhone']." iPhone,". $agent['iPad']." iPad,". $agent['iPod']." iPod)<BR>\n";
+	echo "Total RTMP clients: ". $proto['RTMP']." (". $agent['Flash'] ." Flash)<BR>\n";
 } // Detailed Loop
 
 if ($simple_load) { printf("%.3f", $server_bwout); }
@@ -295,23 +294,20 @@ if ($simple_load) { printf("%.3f", $server_bwout); }
 if ($simple_count) { print $server_conns; }
 
 if ($stream_count) {
-	print "&lt;h3&gt;Stream Connections&lt;/h3&gt;\n";
+	print "<h3>Stream Connections</h3>\n";
 	arsort($live);
 	arsort($vod);
-	print "&lt;DIV CLASS=\"live\"&gt;&lt;h4&gt;Live&lt;/h4&gt;\n";
-        foreach (array_keys($live) as $lstr) { print strtoupper($lstr)." : ".$live[$lstr]."&lt;BR&gt;\n"; }
-	print "&lt;/DIV&gt;&lt;DIV CLASS=\"vod\"&gt;&lt;h4&gt;On-Demand&lt;/h4&gt;\n";
-        foreach (array_keys($vod) as $vstr) { print strtoupper($vstr)." : ".$vod[$vstr]."&lt;BR&gt;\n"; }
-	print "&lt;/DIV&gt;";
+	print "<DIV CLASS=\"live\"><h4>Live</h4>\n";
+        foreach (array_keys($live) as $lstr) { print strtoupper($lstr)." : ".$live[$lstr]."<BR>\n"; }
+	print "</DIV><DIV CLASS=\"vod\"><h4>On-Demand</h4>\n";
+        foreach (array_keys($vod) as $vstr) { print strtoupper($vstr)." : ".$vod[$vstr]."<BR>\n"; }
+	print "</DIV>";
 }
-
-
 
 	
 }
 
+?>
 
-?&gt;
-
-[/php]</pre>
-<p></body></html></p>
+[/php]
+```

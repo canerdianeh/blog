@@ -23,22 +23,20 @@ author:
   last_name: Beyer
 permalink: "/code/client/js-image-refresh/"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>[js]<br />
-&lt;IMG src="streams.png" name="refresh"&gt;<br />
-      &lt;SCRIPT language="JavaScript" type="text/javascript"&gt;<br />
-      &lt;!--<br />
-      var t = 30 // interval in seconds<br />
-      image = "streams.png" //name of the image<br />
-      function Start() {<br />
-      tmp = new Date();<br />
-      tmp = "?"+tmp.getTime()<br />
-      document.images["refresh"].src = image+tmp<br />
-      setTimeout("Start()", t*1000)<br />
-      }<br />
-      Start();<br />
-      // --&gt;<br />
-      &lt;/SCRIPT&gt;<br />
-[/js]</p>
-<p></body></html></p>
+
+[js]  
+<IMG src="streams.png" name="refresh">  
+<SCRIPT language="JavaScript" type="text/javascript">  
+<!--  
+var t = 30 // interval in seconds  
+image = "streams.png" //name of the image  
+function Start() {  
+tmp = new Date();  
+tmp = "?"+tmp.getTime()  
+document.images["refresh"].src = image+tmp  
+setTimeout("Start()", t\*1000)  
+}  
+Start();  
+// -->  
+</SCRIPT>  
+[/js]

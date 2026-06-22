@@ -33,16 +33,23 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2008/10/10/fixing-network-priority-in-windows/"
+image: "http://blog.ianbeyer.com/files/2008/10/networkproperties.png"
 ---
-<p><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><br />
-<html><body>
-<p>Recently, we made some changes to the DNS infrastructure on our public wireless networks which has had the unintended consequence of breaking things when our laptop users are plugged into the LAN and have their wireless active. Brian and I have wrangled with this in the office, but we simply turned off the wireless as a workaround.</p>
-<p>What's happening is that when connected to both networks, the wireless has a higher priority by default, and so it resolves DNS via that interface. This is problematic when trying to access an internal resource, because our DNS is set to have a default resolution to our website for *.cor.org. To complicate matters further, Arena behaves differently when you're on the guest network (sends to a forms-based auth portal instead of using IE integrated authentication).</p>
-<p>After much digging, I found out how to change interface priority. Here's the process in XP screenshots (the process is similar in Vista):</p>
-<p>1. Open your network connection properties (XP: Via control panel or right-click on Network Places, then select Properties. Vista: Go to Network and Sharing Center and select "Manage Network Connections in the links on the left)</p>
-<p>[caption id="attachment_77" align="aligncenter" width="500"]<a href="http://blog.ianbeyer.com/files/2008/10/networkproperties.png"><img class="size-full wp-image-77" src="{{site.baseurl}}/assets/2008/10/networkproperties.png" alt="XP Network Properties" width="500" height="375"></a> XP Network Properties[/caption]</p>
-<p>2. On the menu bar (press Alt to show it in Vista), Select Advanced, then "Advanced Settings"</p>
-<p>[caption id="attachment_78" align="aligncenter" width="404"]<a href="http://blog.ianbeyer.com/files/2008/10/advanced.png"><img class="size-full wp-image-78" src="{{site.baseurl}}/assets/2008/10/advanced.png" alt="Advanced Network Properties Dialog (XP)" width="404" height="455"></a> Advanced Network Properties Dialog (XP)[/caption]</p>
-<p>3. Move the Wired LAN Connection (By Default, "Local Area Connection") to the top, followed by the wireless connection. Make sure that any VPN virtual adapters come after these, otherwise the VPN will only use the ones above it. This tends to be problematic if you're using split tunneling, as it will kill any network connection you have.<a href="http://blog.ianbeyer.com/files/2008/10/advanced2.png"><img class="aligncenter size-full wp-image-79" src="{{site.baseurl}}/assets/2008/10/advanced2.png" alt="" width="404" height="455"></a></p>
-<p>4. Hit OK, and you're good to go.</p>
-<p></body></html></p>
+
+Recently, we made some changes to the DNS infrastructure on our public wireless networks which has had the unintended consequence of breaking things when our laptop users are plugged into the LAN and have their wireless active. Brian and I have wrangled with this in the office, but we simply turned off the wireless as a workaround.
+
+What's happening is that when connected to both networks, the wireless has a higher priority by default, and so it resolves DNS via that interface. This is problematic when trying to access an internal resource, because our DNS is set to have a default resolution to our website for \*.cor.org. To complicate matters further, Arena behaves differently when you're on the guest network (sends to a forms-based auth portal instead of using IE integrated authentication).
+
+After much digging, I found out how to change interface priority. Here's the process in XP screenshots (the process is similar in Vista):
+
+1. Open your network connection properties (XP: Via control panel or right-click on Network Places, then select Properties. Vista: Go to Network and Sharing Center and select "Manage Network Connections in the links on the left)
+
+[caption id="attachment\_77" align="aligncenter" width="500"][![XP Network Properties]({{site.baseurl}}/assets/2008/10/networkproperties.png)](http://blog.ianbeyer.com/files/2008/10/networkproperties.png) XP Network Properties[/caption]
+
+2. On the menu bar (press Alt to show it in Vista), Select Advanced, then "Advanced Settings"
+
+[caption id="attachment\_78" align="aligncenter" width="404"][![Advanced Network Properties Dialog (XP)]({{site.baseurl}}/assets/2008/10/advanced.png)](http://blog.ianbeyer.com/files/2008/10/advanced.png) Advanced Network Properties Dialog (XP)[/caption]
+
+3. Move the Wired LAN Connection (By Default, "Local Area Connection") to the top, followed by the wireless connection. Make sure that any VPN virtual adapters come after these, otherwise the VPN will only use the ones above it. This tends to be problematic if you're using split tunneling, as it will kill any network connection you have.[![]({{site.baseurl}}/assets/2008/10/advanced2.png)](http://blog.ianbeyer.com/files/2008/10/advanced2.png)
+
+4. Hit OK, and you're good to go.
