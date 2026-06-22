@@ -1,2 +1,20 @@
+title: "The CaNerdIan"
+author: "Ian Beyer"
+description: "My blog"
+permalink: /:title/
 baseurl: "/blog"
 url: "https://canerdianeh.github.io"
+lang: "en"
+
+show_excerpts: true
+show_frame: true
+show_sidebar: false
+include:
+  - _pages
+  
+remote_theme: niklasbuschmann/contrast
+
+plugins:
+  - jekyll-feed
+  - jekyll-remote-theme
+
