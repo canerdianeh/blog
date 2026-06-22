@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="{{ "/assets/css/sidebar.css" | relative_url }}" media="screen and (min-width: 58em)">
 <aside style="display: none">
+  <h1><a href="{{ "/" | relative_url }}">{{ site.title | escape }}</a></h1>
   <nav>
   {% assign keys = 'navigation,external,footer' | split: ',' %}
   {% for key in keys %}
@@ -16,25 +17,25 @@
   {%- endfor -%}
   </nav>
 
-  <section class="sidebar-about">
-    <h3>About The Nerd</h3>
+  <section style="padding: 1em 1em 0 1em;">
+    <h3 style="margin-top:0;">About The Nerd</h3>
     <a href="{{ site.baseurl }}/about/">
       <img src="{{ "/assets/images/headshot.jpg" | relative_url }}" alt="Ian Beyer" style="max-width:100%;border-radius:4px;">
     </a>
   </section>
 
-  <section class="sidebar-links">
-    <h3>Blogroll</h3>
-    <ul>
+  <section style="padding: 1em 1em 0 1em;">
+    <h3 style="margin-top:0;">Blogroll</h3>
+    <ul style="padding-left:1.2em;margin:0;">
       <li><a href="https://blogs.arubanetworks.com/solutions/gaining-altitude-with-python-and-apis/">Aruba Blog: Gaining Altitude with Python and APIs</a></li>
       <li><a href="https://jimswirelessworld.wordpress.com/2019/12/19/wi-fi-and-the-netflix-effect-aka-dont-rate-limit-your-wi-fi/">Jim Palmer: Wi-Fi and the Netflix Effect</a></li>
       <li><a href="https://blog.theitrebel.com/2020/03/20/temporary-network-connectivity-options/">Scott Lester: Temporary Network Connectivity Options</a></li>
     </ul>
   </section>
 
-  <section class="sidebar-links">
-    <h3>Network Resources</h3>
-    <ul>
+  <section style="padding: 1em;">
+    <h3 style="margin-top:0;">Network Resources</h3>
+    <ul style="padding-left:1.2em;margin:0;">
       <li><a href="https://www.cisco.com/c/en/us/support/docs/broadband-cable/cable-modem-termination-systems-cmts/12188-calculate-hexadecimal-dhcp.pdf">Calculate TZ Offset for DHCP Option 2</a></li>
       <li><a href="https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf">Propagation Losses Through Common Building Materials: 2.4 GHz vs 5 GHz</a></li>
     </ul>
