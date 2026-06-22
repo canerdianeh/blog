@@ -8,7 +8,7 @@ lang: "en"
 
 show_excerpts: true
 show_frame: true
-show_sidebar: false
+show_sidebar: true
 include:
   - _pages
 
@@ -16,7 +16,6 @@ navigation:
   - {title: "About", url: "/about/"}
   - {title: "The Lab", url: "/the-lab/"}
   - {title: "Archive", url: "/archive/"}
-
 
 remote_theme: niklasbuschmann/contrast
 
