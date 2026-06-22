@@ -57,9 +57,7 @@ By using the API, you can spit out a list of placemarks in JSON (easiest way to 
 
 The structure of a placemark object from a **GET**:
 
-```
-
-javascript
+```javascript
        {
             "parent_pane": "",
             "child_pane_ne": "",
@@ -121,9 +119,7 @@ javascript
 
 However, when creating a new placemark, you don't need all these fields... The only objects that are absolutely *required* are **map**, **type**, **x**, and **y** (I haven't tried sending an **id** along with a POST, so I don't know if it will ignore it or reject it.) I've used Postman variables here for **map** and **name**, because then I could just change those in the environment variables and resubmit to put on multiple floors. The best part about the **POST** method is that the payload doesn't just have to be a single JSON object, it can be a list of them, by simply putting multiple objects inside a list using square brackets.
 
-```
-
-javascript
+```javascript
 {
             "map": "{{ActiveMapID}}",
             "x": 2152.0189227788246,
@@ -173,9 +169,7 @@ And if you want to update an *existing* placemark, simply make a **PATCH** call 
 
 It may also come in handy to generate a list of all the placemarks at a given location. So I threw together a handy little python script that will spit it out into a CSV (and will also look up the map ID and get the floor number for easy reference).
 
-```
-
-python
+```python
 #!/usr/bin/python3
 
 # Aruba Meridian Placemark Export to CSV

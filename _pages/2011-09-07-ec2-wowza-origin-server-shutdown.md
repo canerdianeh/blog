@@ -25,9 +25,7 @@ author:
 permalink: "/code/ec2/ec2-wowza-origin-server-shutdown/"
 ---
 
-```
-
-bash
+```bash
   
 #!/bin/bash
 

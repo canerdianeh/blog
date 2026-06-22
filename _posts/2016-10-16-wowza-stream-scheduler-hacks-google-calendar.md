@@ -117,9 +117,7 @@ In order to use this data, we need to do the following:
 - Convert datestamps to the local server time
 For starters, we're going to need to set a few defaults:
 
-```
-
-php
+```php
 ini\\_set("allow\\_url\\_fopen", 1);
 error\\_reporting(0);
 date\\_default\\_timezone\\_set("US/Central");
@@ -127,9 +125,7 @@ date\\_default\\_timezone\\_set("US/Central");
 
 Using Evert's conversion function, we get the schedule into an XML object:
 
-```
-
-php
+```php
 $calUrl = "https://calendar.google.com/calendar/ical/xxxxxxxxxxxxx8%40group.calendar.google.com/private-xxxxx/basic.ics";
 // get your private calendar URL from the calendar settings.
 $CalData=file\\_get\\_contents($calUrl);
@@ -187,9 +183,7 @@ SimpleXMLElement Object
 [/code]
 So now we need to create another XML object for our schedule and give it the basic structure:
 
-```
-
-php
+```php
 $smilXml = new SimpleXMLElement('');
 $smilHead = $smilXml->addChild('head');
 $smilBody = $smilXml->addChild('body');
@@ -197,9 +191,7 @@ $smilBody = $smilXml->addChild('body');
 
 Now we need to iterate once through the VEVENT objects to get stream names:
 
-```
-
-php
+```php
 $playonstream = [];
 foreach ($xmlObj->VEVENT as $event) {
 $loc = $event->LOCATION;
@@ -216,17 +208,13 @@ $smilStream->addAttribute('name',$key);
 
 So now we have the beginnings of a schedule:
 
-```
-
-xml
+```xml
 xml version="1.0"?
 ```
 
 We now need to iterate through the list again to add in the fallback items for each stream that starts when the stream starts (this is done as a separate loop to keep the output XML cleaner):
 
-```
-
-php
+```php
 // Add in default fallback entries
 foreach ($playOnStream as $key => $value) {
 $defaultPl=$smilBody->addChild('playlist');
@@ -243,17 +231,13 @@ $contentItem->addAttribute('length','-1');
 
 Which then gives us these new items:
 
-```
-
-xml
+```xml
 [](mp4:padding.mp4)
 ```
 
 And then we need to iterate again through the VEVENTS to create the actual schedule items:
 
-```
-
-php
+```php
 foreach ($xmlObj->VEVENT as $event) {
 //parse the times into Unix time stamps using the ever-useful strtotime() function;
 $eventStart = strtotime($event->DTSTART);
@@ -294,9 +278,7 @@ $contentItem->addAttribute('length',$attrs[2]);
 
 And, finally, we need to add a little bit of code to format the XML object for use with Wowza:
 
-```
-
-php
+```php
 $dom = dom\\_import\\_simplexml($smilXml)->ownerDocument;
 $dom->formatOutput = true;
 $output=$dom->saveXML();
@@ -380,9 +362,7 @@ END:VCALENDAR
 [/code]
 And when we run the process, we get this spiffy code coming out:
 
-```
-
-xml
+```xml
 [](mp4:padding.mp4)
 
 [](mp4:padding.mp4)

@@ -24,9 +24,7 @@ author:
 permalink: "/code/client/js-image-refresh/"
 ---
 
-```
-
-javascript
+```javascript
 ![](streams.png)
 
 <!--

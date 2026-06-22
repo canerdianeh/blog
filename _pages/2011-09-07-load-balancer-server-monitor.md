@@ -25,9 +25,7 @@ author:
 permalink: "/code/backend/load-balancer-server-monitor/"
 ---
 
-```
-
-perl
+```perl
 #!/usr/bin/perl
 use strict;
 print "Content-type: text/htmlnn";

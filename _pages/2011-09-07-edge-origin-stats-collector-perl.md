@@ -25,9 +25,7 @@ author:
 permalink: "/code/backend/edge-origin-stats-collector-perl/"
 ---
 
-```
-
-perl
+```perl
   
 #!/usr/bin/perl  
 use strict;

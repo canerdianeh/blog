@@ -32,9 +32,7 @@ permalink: "/2013/04/17/browser-aware-player-code-episode-v-ie-strikes-back/"
 
 Not so long ago, I updated my browser-aware player code to [check for the presence of a stream](http://blog.ianbeyer.com/2012/10/29/browser-aware-player-code-revisited-again/ "Browser-aware player code, revisited again"). Recently, it's come to light that Internet Explorer 9 doesn't play nice with this particular snippet, because in IE9, the Javascript engine is rather brain-damaged when it comes to cross-site requests. In order to deal with this properly, we must alter the way we query the server for the presence of a stream:
 
-```
-
-javascript
+```javascript
 console.log("Starting stream Check");
 if (is\\_ie9) {
 console.log ("Using XDR because IE9 is stupid");

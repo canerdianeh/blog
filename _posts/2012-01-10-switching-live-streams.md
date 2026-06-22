@@ -39,9 +39,7 @@ Page code:
 
 ```
 
-```
-
-html
+```html
 
 JW Player Switching
 

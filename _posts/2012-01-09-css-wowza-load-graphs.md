@@ -141,9 +141,7 @@ aws-init.php:
 
 ```
 
-```
-
-php
+```php
 <?php
 require_once '/usr/share/php/AWSSDKforPHP/sdk.class.php';
 
@@ -163,9 +161,7 @@ functions.php:
 
 ```
 
-```
-
-php
+```php
 function getRepeaters($origin_ip) {
 		
 	$addr = array();
@@ -219,9 +215,7 @@ capacity\_vars.php:
 
 ```
 
-```
-
-php
+```php
 <?PHP 
 $mbps['m1.small']=150; 
 $mbps['m1.large']=250; 

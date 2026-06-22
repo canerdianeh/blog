@@ -27,9 +27,7 @@ permalink: "/code/client/js-countdown-timer/"
 I don't know who wrote the original script this is based on. I've modified it some.
 \*\*Usage:\*\*
 
-```
-
-javascript
+```javascript
 // \\*\\*\\*\\* Time Zone Count Down Javascript \\*\\*\\*\\* //
 ////////// CONFIGURE THE COUNT DOWN SCRIPT //////////////////
 var month = '1'; // use '\\*' for next month; '0' for this month; or 1 thru 12 for the month

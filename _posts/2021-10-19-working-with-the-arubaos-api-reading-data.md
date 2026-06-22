@@ -42,9 +42,7 @@ However, be aware that not all \*\*show\*\* commands return structured JSON - so
 You can always go to \*\*https://:4343/api\*\* (after logging in) and get a Swagger doc for all the available API calls - although owing to system limitations, the description of those endpoints isn't generally there, but it can be found in the full [AOS8 API reference](https://developer.arubanetworks.com/aruba-aos/reference).
 This blog entry does not deal with sending data \*to\* the ArubaOS device.
 
-```
-
-python
+```python
 #!/usr/bin/python3
 
 import requests

@@ -27,9 +27,7 @@ permalink: "/code/ec2/shutdown-logship/"
 
 Shuts down an instance and ships the Wowza logs.  
 
-```
-
-bash
+```bash
   
 #!/bin/bash
 

@@ -31,9 +31,7 @@ You'll notice there's also code in here to reference an MPEG-DASH manifest as w
 This assumes that you're using cloud-hosted JW Player with a key, but if you're not, simply replace the first SCRIPT reference with your locally hosted JWPlayer file and comment out the jwplayer.key line.
 If you wish to use a different player such as FlowPlayer, you can replace the appropriate code in the flashPlayer() function.
 
-```
-
-javascript
+```javascript
 Player
 
 jwplayer.key='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';

@@ -26,9 +26,7 @@ Here's the code for gathering Wowza Stats from a single server. This assumes tha
 
 ```
 
-```
-
-xml
+```xml
 com.wowza.wms.plugin.test.HTTPServerInfo
 serverinfo\*
 none

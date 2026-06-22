@@ -37,9 +37,7 @@ Screen shots:
 [caption id="attachment\\_1161" align="alignnone" width="452"]![]({{site.baseurl}}/assets/2012/01/Screen-Shot-2012-08-29-at-11.20.49-AM1.png "Upload Success") Upload Success[/caption]
 code:
 
-```
-
-php
+```php
 Upload a file to S3
 
 # S3 File Upload
@@ -140,9 +138,7 @@ php
 
 success.php:
 
-```
-
-php
+```php
 Upload Success!
 
 # Upload Success!

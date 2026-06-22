@@ -71,9 +71,7 @@ I've built a bit of smarts into this script, since I don't want to break things 
 
 Running the script spits out this for each row in the CSV that it considers an update:
 
-```
-
-json
+```json
 Update object id XXXXXXXXXXXXXXX_5666694473318400
 object update passed initial sanity checks and will be placed on 11th Floor.
 Updating existing object with payload:
@@ -130,9 +128,7 @@ Object not created. Errors are
 
 As you can see here, I made a typo in the URL field, and the data returned from the API call lists the fields that contain an error. If the call is successful, it returns an ID, which the script checks for to verify success. The response from a successful API call looks like this :
 
-```
-
-json
+```json
 {
   "parent_pane": "",
   "child_pane_ne": "",
@@ -189,9 +185,7 @@ Of course, the script doesn't have to spit out all that output, but it's handy t
 
 So, without further ado, here's the script. This has not been debugged extensively, so use at your own risk. If you break your environment, you probably should have tested it in the lab first.
 
-```
-
-json
+```json
 #!/usr/bin/python3
 
 # Aruba Meridian Placemark Import from CSV

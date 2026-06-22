@@ -64,9 +64,7 @@ What you will need:
 
 To start, hook up the console cable to the AP, and power it on. When prompted, stop the boot loader. Once at the boot loader prompt, issue the following commands:
 
-```
-
-factory_reset
+```factory_reset
 setenv standalone_mode 1
 setenv uap_controller_less 1
 saveenv

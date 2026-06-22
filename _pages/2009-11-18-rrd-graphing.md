@@ -27,9 +27,7 @@ permalink: "/code/backend/rrd-graphing/"
 
 Live Graph ([Source RRD Database is here](http://blog.ianbeyer.com/code/stream-counter-rrd-structure "RRD File Structure")):
 
-```
-
-bash
+```bash
 #!/bin/bash
 rrdtool graph
 '/var/www/streams.png'
@@ -78,9 +76,7 @@ rrdtool graph
 
 Archive version:
 
-```
-
-bash
+```bash
 #!/bin/bash
 FILE="streams-$(date +%Y%m%d%H%M).png"
 DATESTAMP="$(date +%B %d, %Y)"

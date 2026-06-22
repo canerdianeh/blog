@@ -25,9 +25,7 @@ author:
 permalink: "/code/ec2/wowza-origin-startup-bash/"
 ---
 
-```
-
-bash
+```bash
 #!/bin/bash
 export JAVA\\_HOME=/usr
 export EC2\\_HOME=/opt/ec2/tools

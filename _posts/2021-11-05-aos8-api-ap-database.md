@@ -60,9 +60,7 @@ This script will take the human-readable uptime string ("100d:12h:34m:28s") and 
 
 The code is extensively commented so you should be able to follow along. Also [available on github](https://github.com/canerdianeh/aruba-campus/blob/main/apdb2csv.py).
 
-```
-
-python
+```python
 #!/usr/bin/python3
 
 # ArubaOS 8 AP Database to CSV output via API call
@@ -233,9 +231,7 @@ else :
 
 The human-readable output of the **show ap database** gives you a list of what the flags are, but the API call does not, so in case you want a handy reference, here it is in JSON format so that you can easily adapt it. ([Github](https://github.com/canerdianeh/aruba-campus/blob/main/apflags.json))
 
-```
-
-json
+```json
 sheldon={
 '1':'802.1x authenticated AP use EAP-PEAP',
 '1+':'802.1x use EST',

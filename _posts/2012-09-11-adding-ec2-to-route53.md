@@ -27,9 +27,7 @@ Today's nifty bit of code is a startup/shutdown script for linux that allows you
 This makes use of the very useful Python-based [boto](https://github.com/boto/boto "boto")tool which is available in both Yum and Debian repositories under the package name \*python-boto\*.
 Create this script in /etc/init.d and make it executable, and then add it to the requisite rcX.d directory for startup/shutdown.
 
-```
-
-bash
+```bash
 #!/bin/bash
 #
 # /etc/rc.d/init.d/

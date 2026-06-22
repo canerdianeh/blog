@@ -25,9 +25,7 @@ author:
 permalink: "/code/ec2/wowza-edge-startup-bash/"
 ---
 
-```
-
-bash
+```bash
   
 #!/bin/bash
 

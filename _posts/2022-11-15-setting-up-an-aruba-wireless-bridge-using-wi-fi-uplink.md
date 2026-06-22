@@ -51,9 +51,7 @@ The setup is much like you would for a mesh AP, except we're going straight to t
 
 Perform the initial setup in the boot loader. IP address is optional, but since the AP will be in bridge mode, you may want an IP address to be able to manage it either manually or by adding it to Airwave. This IP address will exist on the uplink VLAN, and won't be reachable even on the ethernet side until the uplink is active:
 
-```
-
-factory_reset
+```factory_reset
 purgeenv
 setenv standalone_mode 1
 setenv uap_controller_less 1
@@ -177,9 +175,7 @@ As of this writing, the CLI bank documentation does not correctly reflect the ac
 
 Then follow with this to establish uplink priorities
 
-```
-
-uplink
+```uplink
  preemption
  enforce none
  failover-internet-pkt-lost-cnt 10
