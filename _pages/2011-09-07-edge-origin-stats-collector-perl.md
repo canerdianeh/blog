@@ -25,7 +25,10 @@ author:
 permalink: "/code/backend/edge-origin-stats-collector-perl/"
 ---
 
-[perl]  
+```
+
+perl
+  
 #!/usr/bin/perl  
 use strict;
 
@@ -191,4 +194,4 @@ if (!$opt\_q) { $opt\_r && print "[RRD] "; }
 
 sleep($interval);  
 } # End of Forever Loop  
-[/perl]
+```

@@ -31,8 +31,10 @@ permalink: "/2011/08/24/browser-aware-player-code-revisited/"
 
 I posted a while back about [selecting video players based on browsers](http://blog.ianbeyer.com/code/browser-aware-player-code/ "Browser-Aware Player code")... It was an ugly javascript hack, and since then [LongTail](http://longtailvideo.com "Longtail Video") has updated their excellent [JWPlayer](http://www.longtailvideo.com/players/ "JW Player") to support multiple methods. In order to create an embed that worked best for supporting both HTML5 and Flash players, I had to dig through the documentation a little bit, and combine a couple of different sections.
 Here's how to embed JWPlayer 5.7 to try flash first, with multiple bitrates, and then attempt HTML5 if Flash is not supported. This particular scenario is for iOS support.
-[js]
 
+```
+
+javascript
 Loading the player ...
 
 jwplayer("container").setup({
@@ -61,5 +63,6 @@ file: "http://streamer.com/live/ipad.smil/playlist.m3u8"
 } ]
 }
 );
-[/js]
+```
+
 This still doesn't support RTSP and other HTML5  fallbacks due to limitations in JWPlayer, so if you're on a BlackBerry, you'll still need to switch the player. The order that the "type" statements appear in the javascript determines the order in which they'll be tried. Generally, you'll want to try Flash first, otherwise browsers that support HTML5 but not Apple's HTTP Live Streaming (which is pretty much all of them), will default to the HTML5 player, but be unable to get the stream. You can, however, provide multiple video sources with different codecs (for on-demand content) to support the different flavors of browsers, though.

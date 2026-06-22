@@ -65,6 +65,30 @@ def fetch_og_image(url):
     return None
 
 
+# SyntaxHighlighter shortcode language mapping
+SHORTCODE_LANGS = {
+    'js': 'javascript', 'javascript': 'javascript',
+    'python': 'python', 'py': 'python',
+    'php': 'php', 'bash': 'bash', 'shell': 'bash', 'sh': 'bash',
+    'xml': 'xml', 'html': 'html', 'css': 'css',
+    'perl': 'perl', 'java': 'java', 'ruby': 'ruby',
+    'c': 'c', 'cpp': 'cpp', 'sql': 'sql', 'plain': '',
+}
+
+def convert_shortcode_blocks(body):
+    """Convert [js]...[/js] style SyntaxHighlighter shortcodes to fenced code blocks."""
+    langs = '|'.join(SHORTCODE_LANGS.keys())
+    pattern = re.compile(
+        rf'\[({langs})(?:\s[^\]]*)?\](.*?)\[/(?:{langs})\]',
+        re.DOTALL | re.IGNORECASE
+    )
+    def replacer(m):
+        lang = SHORTCODE_LANGS.get(m.group(1).lower(), m.group(1).lower())
+        code = m.group(2).strip('\n')
+        return f"\n```{lang}\n{code}\n```\n"
+    return pattern.sub(replacer, body)
+
+
 def convert_wp_code_blocks(body):
     soup = BeautifulSoup(body, "html.parser")
     changed = False
@@ -92,6 +116,7 @@ def html_to_markdown(segment):
 
 
 def clean_body(body):
+    body = convert_shortcode_blocks(body)
     body = convert_wp_code_blocks(body)
     parts = FENCED_BLOCK.split(body)
     result = []

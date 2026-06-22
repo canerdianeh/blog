@@ -25,7 +25,9 @@ author:
 permalink: "/code/backend/load-balancer-server-monitor/"
 ---
 
-[perl]
+```
+
+perl
 #!/usr/bin/perl
 use strict;
 print "Content-type: text/htmlnn";
@@ -117,4 +119,4 @@ Total of $total connections on $running active servers ($load %)
 
 n";
 print "n";
-[/perl]
+```

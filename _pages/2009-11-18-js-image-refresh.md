@@ -24,7 +24,9 @@ author:
 permalink: "/code/client/js-image-refresh/"
 ---
 
-[js]
+```
+
+javascript
 ![](streams.png)
 
 <!--
@@ -38,4 +40,4 @@ setTimeout("Start()", t\\*1000)
 }
 Start();
 // -->
-[/js]
+```

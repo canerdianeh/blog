@@ -47,37 +47,4 @@ To put this in your COP page, go to the event where you wish to use the player, 
 When you go to the Embed menu, you will see code to put it on the page (under Default video embed code). This is a little more involved than your standard embed code.
 [![Bitmovin Embed Controls]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.13.37-1024x552.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.13.37.png)
 A couple of key things to note here with regards to COP:
-1. In order to put the  stuff in your <head> section, you'd need to create a custom theme in COP. This is not necessary (in fact, putting that script statement in the head that way doesn't work). What you'll need to do is simply put the <script> piece just above the rest of it in the default embed code section.
-2. You'll need to edit the source section in that code. If all you're doing is HLS, you can remove the dash and progressive entries. Leave the HLS entry in place and put in the HLS URL provided by your streaming platform. In the case of Wowza Streaming Cloud, this is located at the bottom of the Overview tab of your streaming application under "Playback URLs".
-3. The "poster" entry is the image the player shows when you're not streaming any video.
-So, for my test stream, the embed code looks like this:
-[code]
-<script type="text/javascript" src="https://bitmovin-a.akamaihd.net/bitmovin-player/stable/7/bitmovinplayer.js">
-var conf = {
-key: "d8XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX2e",
-source: {
-hls: "http://wowzaprod103-i.akamaihd.net/hls/live/######/########/playlist.m3u8",
-poster: "http://dontfenceme.in/wp-content/uploads/2013/09/g-global-background.jpg"
-}
-};
-var player = bitmovin.player("player");
-player.setup(conf).then(function(value) {
-// Success
-console.log("Successfully created bitmovin player instance");
-}, function(reason) {
-// Error!
-console.log("Error while creating bitmovin player instance");
-});
-[/code]
-The console.log lines aren't necessary, but potentially useful when trying to debug why it can't instantiate the player.
-If you want to run a separate video when the doors aren't open, put that under the offline video embed code section. You can leave the mobile and low sections empty, as your stream is probably already adaptive from your streaming provider.
-Save it, and this is what you get:
-\*\*[![BitMovin in ChurchOnline Platform]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-17.39.24-1024x546.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-17.39.24.png)\*\*
-In order to remove the Bitmovin logo, edit the theme's CSS and add the following lines:
-[code]
-/\\* Remove Bitmovin Logo on player \\*/
-.bmpui-ui-watermark {
-display: none;
-}
-[/code]
-[![ChurchOnline Platform CSS Edit]({{site.baseurl}}/assets/2017/04/Screenshot-2017-04-15-23.29.27-1024x544.png)](http://blog.ianbeyer.com/files/2017/04/Screenshot-2017-04-15-23.29.27.png)
+1. In order to put the stuff in your  section, you'd need to create a custom theme in COP. This is not necessary (in fact, putting that script statement in the head that way doesn't work). What you'll need to do is simply put the

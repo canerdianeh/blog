@@ -26,7 +26,11 @@ permalink: "/code/ec2/shutdown-logship/"
 ---
 
 Shuts down an instance and ships the Wowza logs.  
-[bash]  
+
+```
+
+bash
+  
 #!/bin/bash
 
 export JAVA\_HOME=/usr  
@@ -103,4 +107,4 @@ echo 0 &gt; ${var\_loc}/repcount.txt
 
 # remove the shutdown semaphore  
 rm ${var\_loc}/shutdown.sem  
-[/bash]
+```

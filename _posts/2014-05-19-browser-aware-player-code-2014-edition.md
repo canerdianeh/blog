@@ -30,8 +30,10 @@ Yet another installment in the never-ending series of dealing with different pla
 You'll notice there's also code in here to reference an MPEG-DASH manifest as well as "sanjose" and "smooth" (in Wowza parlance). This script doesn't make use of those capabilities at the moment, but once I get a good list of which browsers can support MSE and DASH.js, I'll update it to be able to use that player.
 This assumes that you're using cloud-hosted JW Player with a key, but if you're not, simply replace the first SCRIPT reference with your locally hosted JWPlayer file and comment out the jwplayer.key line.
 If you wish to use a different player such as FlowPlayer, you can replace the appropriate code in the flashPlayer() function.
-[js]
 
+```
+
+javascript
 Player
 
 jwplayer.key='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
@@ -131,4 +133,4 @@ file: rtmpurl,
 autostart: false
 });
 }
-[/js]
+```

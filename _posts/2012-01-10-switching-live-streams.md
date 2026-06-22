@@ -39,107 +39,38 @@ Page code:
 
 ```
 
-[html]
+```
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+html
 
-	<title>JW Player Switching</title>
+JW Player Switching
 
-	<style type="text/css">
-		body { background-color: #fff; padding: 0 20px; color:#000; font: 13px/18px Arial, sans-serif; }
-		a { color: #360; }
-		h3 { padding-top: 20px; }
-		ol { margin:5px 0 15px 16px; padding:0; list-style-type:square; }
-	</style>
+body { background-color: #fff; padding: 0 20px; color:#000; font: 13px/18px Arial, sans-serif; }
+a { color: #360; }
+h3 { padding-top: 20px; }
+ol { margin:5px 0 15px 16px; padding:0; list-style-type:square; }
 
-</head>
-<body>
-	<!-- START OF THE PLAYER EMBEDDING TO COPY-PASTE -->
-	<div class="rack" style="width: 600px;">
-	<div class="rackmonitor" style="width: 600px; height: 323px; background-image: url('rackmonitor.png'); position: relative">
-	&nbsp;
-	<div class="screen" style="width: 455px; height: 275px; position: absolute; left: 60px; top: 28px;">
-	<div id="mediaplayer">Player...</div>
-	<script type="text/javascript" src="/jwplayer/jwplayer.js"></script>
-	<script type="text/javascript">
-		jwplayer("mediaplayer").setup({
-			flashplayer: "/jwplayer/player.swf",
-			height: "275",
-			width: "455",
-			file: "commons.stream",
-			streamer: "rtmp://w.streampunk.tv/live",
-			autostart: true,
-			controlbar: 'none',
-			mute: true
-		});
-	</script>
-	</div>
-	</div>
-	</div>
-	<div class="panel" 
-	style="width: 600px; 
-	height: 57px; 
-	background-image: url('blankPanel.png'); 
-	position: relative
-	">	
-		<div class="button1" 
-		style="width: 75px; 
-		height: 20px; 
-		position: absolute; 
-		left: 50px; 
-		top: 20px; 
-		border-radius: 10px; 
-		background-color: #009900; 
-		color: #cccccc; 
-		border: 1px solid black; 
-		text-align: center;" 
-		onclick="jwplayer().load({file: 'playlist-high', streamer: 'rtmp://wms.rezonline.org/redirect'})
-		">
-		RezOnline
-		</div>
-		<div class="button2" 
-		style="width: 75px; 
-		height: 20px; 
-		position: absolute; 
-		left: 150px; 
-		top: 20px; border-radius: 10px; 
-		background-color: #009900;
-		color: #cccccc; 
-		border: 1px solid black;text-align: center;" 
-		onclick="jwplayer().load({file: 'commons.stream', streamer: 'rtmp://w.streampunk.tv/live'})
-		">
-		Commons
-		</div>
-		<div class="button3" 
-		style="width: 75px; 
-		height: 20px; 
-		position: absolute; 
-		left: 250px; 
-		top: 20px; border-radius: 10px; 
-		background-color: #990000;
-		color: #cccccc; 
-		border: 1px solid black;text-align: center;" 
-		onclick="jwplayer().load({file: 'streamclass', streamer: 'rtmp://w.streampunk.tv/live'})
-		">
-		StreamClass
-		</div>
-		<div class="button4" 
-		style="width: 75px; 
-		height: 20px; 
-		position: absolute; 
-		left: 350px; 
-		top: 20px; border-radius: 10px; 
-		background-color: #990000;
-		color: #cccccc; 
-		border: 1px solid black;text-align: center;" 
-		onclick="jwplayer().load({file: 'aircam.stream', streamer: 'rtmp://w.streampunk.tv/live'})
-		">
-		AirCam
-		</div>
-	</div>
-</body>
-</html>
-[/html]
+Player...
+
+jwplayer("mediaplayer").setup({
+flashplayer: "/jwplayer/player.swf",
+height: "275",
+width: "455",
+file: "commons.stream",
+streamer: "rtmp://w.streampunk.tv/live",
+autostart: true,
+controlbar: 'none',
+mute: true
+});
+
+RezOnline
+
+Commons
+
+StreamClass
+
+AirCam
+
+```
+
 ```

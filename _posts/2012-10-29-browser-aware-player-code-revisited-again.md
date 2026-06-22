@@ -26,12 +26,19 @@ permalink: "/2012/10/29/browser-aware-player-code-revisited-again/"
 ---
 
 It's the code snippet that just won't go away. I've updated the code for some additional functionality. This version takes server, port, and stream parameters via the URL, parses them in javascript, and then queries a streamcheck HTTPProvider on the server to see if a stream by that name is currently published. If it is, it will load the player, otherwise load a message, and check periodically to see if the stream is published, and load the player if the state changes to true, and unload it if it changes to false, returning to the message. The player is designed to scale to fit whatever window it's in, so make an IFRAME of whatever size you want the player, and you're off and running
-[html]
-[/html]
+
+```
+
+html
+
+```
+
 ![]({{site.baseurl}}/assets/2012/10/Screen-Shot-2012-10-29-at-6.38.37-PM-300x172.png "Screen Shot 2012-10-29 at 6.38.37 PM")
 Without further ado, here's the code:
-[js]
 
+```
+
+javascript
 The video stream is currently offline. Playback will resume as soon as a stream is available.
 
 // Browser-aware video player for JW Player and Wowza
@@ -126,9 +133,13 @@ autostart: true,
 stretching: 'uniform'
 });
 }
-[/js]
+```
+
 The code for the streamcheck module is as follows:
-[java]
+
+```
+
+java
 package net.nerdherd.wms.http;
 import java.io.\\*;
 import java.util.Iterator;
@@ -206,4 +217,4 @@ WMSLoggerFactory.getLogger(null).error(
 }
 }
 }
-[/java]
+```

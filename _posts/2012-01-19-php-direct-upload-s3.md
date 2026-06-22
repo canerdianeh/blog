@@ -36,8 +36,10 @@ Screen shots:
 [caption id="attachment\\_1160" align="alignnone" width="317"]![]({{site.baseurl}}/assets/2012/01/Screen-Shot-2012-08-29-at-11.20.34-AM.png "File Selected") File Selected[/caption]
 [caption id="attachment\\_1161" align="alignnone" width="452"]![]({{site.baseurl}}/assets/2012/01/Screen-Shot-2012-08-29-at-11.20.49-AM1.png "Upload Success") Upload Success[/caption]
 code:
-[php]
 
+```
+
+php
 Upload a file to S3
 
 # S3 File Upload
@@ -134,10 +136,13 @@ $signature = hex2b64(hmacsha1($secretkey, $base64\\_policy));
 php
 }
 ?
-[/php]
-success.php:
-[php]
+```
 
+success.php:
+
+```
+
+php
 Upload Success!
 
 # Upload Success!
@@ -152,4 +157,4 @@ Direct URL to the file is ['.$url."]('.$url.')
 \n";
 include '../footer.php';
 ?>
-[/php]
+```

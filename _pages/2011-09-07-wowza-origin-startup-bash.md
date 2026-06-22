@@ -25,7 +25,9 @@ author:
 permalink: "/code/ec2/wowza-origin-startup-bash/"
 ---
 
-[bash]
+```
+
+bash
 #!/bin/bash
 export JAVA\\_HOME=/usr
 export EC2\\_HOME=/opt/ec2/tools
@@ -132,4 +134,4 @@ ${EC2\\_HOME}/bin/ec2-associate-address ${ip} -i ${iid}
 sleep 30
 echo ${iid} > ~/var/wowza\\_current\\_instance\\_${ip}
 echo Image ${amiid} instance ${iid} is ready to go!
-[/bash]
+```

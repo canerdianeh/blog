@@ -23,7 +23,10 @@ author:
 permalink: "/code/ec2/php-startup/"
 ---
 
-[php]  
+```
+
+php
+  
 <?php  
 require\_once '/usr/share/php/AWSSDKforPHP/sdk.class.php';
 
@@ -97,4 +100,4 @@ if ($ip\_response->status != "200") {print "IP Address allocation error"; }
 flush();
 
 ?>  
-[/php]
+```

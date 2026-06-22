@@ -25,7 +25,10 @@ author:
 permalink: "/code/ec2/ec2-wowza-origin-server-shutdown/"
 ---
 
-[bash]  
+```
+
+bash
+  
 #!/bin/bash
 
 export JAVA\_HOME=/usr  
@@ -83,4 +86,4 @@ rm ~/var/origin.\*
 rm ~/var/wowza\_current\_instance\_${ip}
 
 echo Instance ${iid} has been terminated.  
-[/bash]
+```

@@ -25,7 +25,10 @@ author:
 permalink: "/code/ec2/wowza-edge-startup-bash/"
 ---
 
-[bash]  
+```
+
+bash
+  
 #!/bin/bash
 
 export JAVA\_HOME=/usr  
@@ -160,4 +163,4 @@ echo Instance ${iid} is running at ${ip}
 
 echo Image ${amiid} instance ${iid} is ready to go!  
 echo ${iid} &gt; ~/var/wowza\_current\_instance\_${ip}  
-[/bash]
+```

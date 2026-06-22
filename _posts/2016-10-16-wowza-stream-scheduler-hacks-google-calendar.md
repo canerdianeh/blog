@@ -116,19 +116,27 @@ In order to use this data, we need to do the following:
 - figure out what video to play when
 - Convert datestamps to the local server time
 For starters, we're going to need to set a few defaults:
-[php]
+
+```
+
+php
 ini\\_set("allow\\_url\\_fopen", 1);
 error\\_reporting(0);
 date\\_default\\_timezone\\_set("US/Central");
-[/php]
+```
+
 Using Evert's conversion function, we get the schedule into an XML object:
-[php]
+
+```
+
+php
 $calUrl = "https://calendar.google.com/calendar/ical/xxxxxxxxxxxxx8%40group.calendar.google.com/private-xxxxx/basic.ics";
 // get your private calendar URL from the calendar settings.
 $CalData=file\\_get\\_contents($calUrl);
 $xmlString=iCalendarToXML($CalData);
 $xmlObj = simplexml\\_load\\_string($xmlString);
-[/php]
+```
+
 The object now looks like this:
 [code]
 SimpleXMLElement Object
@@ -178,13 +186,20 @@ SimpleXMLElement Object
 )
 [/code]
 So now we need to create another XML object for our schedule and give it the basic structure:
-[php]
+
+```
+
+php
 $smilXml = new SimpleXMLElement('');
 $smilHead = $smilXml->addChild('head');
 $smilBody = $smilXml->addChild('body');
-[/php]
+```
+
 Now we need to iterate once through the VEVENT objects to get stream names:
-[php]
+
+```
+
+php
 $playonstream = [];
 foreach ($xmlObj->VEVENT as $event) {
 $loc = $event->LOCATION;
@@ -197,14 +212,21 @@ foreach ($playOnStream as $key => $value) {
 $smilStream = $smilBody->addChild('stream');
 $smilStream->addAttribute('name',$key);
 }
-[/php]
-So now we have the beginnings of a schedule:
-[xml]
-xml version="1.0"?
+```
 
-[/xml]
+So now we have the beginnings of a schedule:
+
+```
+
+xml
+xml version="1.0"?
+```
+
 We now need to iterate through the list again to add in the fallback items for each stream that starts when the stream starts (this is done as a separate loop to keep the output XML cleaner):
-[php]
+
+```
+
+php
 // Add in default fallback entries
 foreach ($playOnStream as $key => $value) {
 $defaultPl=$smilBody->addChild('playlist');
@@ -217,14 +239,21 @@ $contentItem->addAttribute('src','mp4:padding.mp4');
 $contentItem->addAttribute('start','0');
 $contentItem->addAttribute('length','-1');
 }
-[/php]
-Which then gives us these new items:
-[xml]
+```
 
+Which then gives us these new items:
+
+```
+
+xml
 [](mp4:padding.mp4)
-[/xml]
+```
+
 And then we need to iterate again through the VEVENTS to create the actual schedule items:
-[php]
+
+```
+
+php
 foreach ($xmlObj->VEVENT as $event) {
 //parse the times into Unix time stamps using the ever-useful strtotime() function;
 $eventStart = strtotime($event->DTSTART);
@@ -261,15 +290,20 @@ $contentItem->addAttribute('start',$attrs[1]);
 $contentItem->addAttribute('length',$attrs[2]);
 } // end of playlist loop
 } // end of event loop
-[/php]
+```
+
 And, finally, we need to add a little bit of code to format the XML object for use with Wowza:
-[php]
+
+```
+
+php
 $dom = dom\\_import\\_simplexml($smilXml)->ownerDocument;
 $dom->formatOutput = true;
 $output=$dom->saveXML();
 echo "$output\n"; // outputs to STDOUT
 $dom->save('streamschedule.smil'); // save to file
-[/php]
+```
+
 For the purposes of this last section, I've created some additional events to add a secondary stream:
 [![Schedule Overview]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.25.18-300x185.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.25.18.png)
 [![11am Broadcast Event]({{site.baseurl}}/assets/2016/10/Screenshot-2016-10-16-13.19.45-300x182.png)](http://blog.ianbeyer.com/files/2016/10/Screenshot-2016-10-16-13.19.45.png)
@@ -345,8 +379,10 @@ END:VEVENT
 END:VCALENDAR
 [/code]
 And when we run the process, we get this spiffy code coming out:
-[xml]
 
+```
+
+xml
 [](mp4:padding.mp4)
 
 [](mp4:padding.mp4)
@@ -364,6 +400,7 @@ And when we run the process, we get this spiffy code coming out:
 [](mp4:video2.mp4)
 [](mp4:video3.mp4)
 [](mp4:padding.mp4)
-[/xml]
+```
+
 So there you have a relatively simple one-way hack to spit Google Calendar/iCal events out into a Wowza Schedule. You would still need to manually run this every time you wanted to update the broadcast schedule (and reload the Wowza server), and this does not send any confirmation back to your iCal that the event has been scheduled.
 Stay tuned for a variation on this code that uses the Google Calendar API (a much more elegant approach)

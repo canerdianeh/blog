@@ -26,7 +26,10 @@ permalink: "/2012/09/11/adding-ec2-to-route53/"
 Today's nifty bit of code is a startup/shutdown script for linux that allows you to add an EC2 instance to Amazon's Route53 DNS automatically when you start up the instance, and remove it when the instance is knocked down. This script also allows you to add the instance to a weighted round-robin group.
 This makes use of the very useful Python-based [boto](https://github.com/boto/boto "boto")tool which is available in both Yum and Debian repositories under the package name \*python-boto\*.
 Create this script in /etc/init.d and make it executable, and then add it to the requisite rcX.d directory for startup/shutdown.
-[bash]
+
+```
+
+bash
 #!/bin/bash
 #
 # /etc/rc.d/init.d/
@@ -146,5 +149,6 @@ exit 1
 ;;
 esac
 exit $?
-[/bash]
+```
+
 Many thanks to Dave McCormick for his [blog post on the subject](http://www.practicalclouds.com/content/blog/1/dave-mccormick/2012-02-28/route53-bring-back-some-dns-lovin-ec2) from which I borrowed heavily.

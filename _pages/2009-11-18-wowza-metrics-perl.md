@@ -26,7 +26,10 @@ permalink: "/code/backend/wowza-metrics-perl/"
 ---
 
 This perl script connects to a Wowza origin server and the connectioncounts.xml HTTPProvider function and extracts current connection counts at an interval specified on the command line (defaults every 10 seconds). Commandline options to write to an RRD file and silent operation. RRD file used in this example is [described over here](http://blog.ianbeyer.com/code/stream-counter-rrd-structure "RRD File Structure"). This can be graphed with [these commands](http://blog.ianbeyer.com/code/rrd-graphing "RRD Graphing Commands").
-[perl]
+
+```
+
+perl
 #!/usr/bin/perl
 use strict;
 # use module
@@ -88,4 +91,4 @@ if (!$opt\\_q) { $opt\\_r && print "[RRD] "; }
 !$opt\\_q && print "[ StreamClass | High: $namecount{'playlist-high'} Low: $namecount{'playlist-low'} ]n";
 sleep($interval);
 }
-[/perl]
+```
