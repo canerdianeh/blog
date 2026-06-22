@@ -1,0 +1,15 @@
+<header>
+  <h1><a href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a></h1>
+  {%- assign date_format = site.date_format | default: "%B %d, %Y" -%}
+  {% if include.post.date %}<time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: date_format }}</time>{% endif %}
+  {% if include.post.categories.size > 0 %}
+  <span class="categories">
+    {% for category in include.post.categories %}<a href="{{ site.baseurl }}/category/{{ category | slugify }}/">{{ category }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}
+  </span>
+  {% endif %}
+  {% if include.post.tags.size > 0 %}
+  <span class="tags">
+    {% for tag in include.post.tags %}<a href="{{ site.baseurl }}/tag/{{ tag | slugify }}/">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}
+  </span>
+  {% endif %}
+</header>
