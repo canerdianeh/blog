@@ -27,6 +27,9 @@ navigation:
     dropdown:
       - {title: "Calculate TZ Offset for DHCP Option 2", url: "https://www.cisco.com/c/en/us/support/docs/broadband-cable/cable-modem-termination-systems-cmts/12188-calculate-hexadecimal-dhcp.pdf"}
       - {title: "Propagation Losses Through Common Building Materials: 2.4 GHz vs 5 GHz", url: "https://www.am1.us/wp-content/uploads/Documents/E10589_Propagation_Losses_2_and_5GHz.pdf"}
+  - title: "Code"
+    dropdown:
+      - {title: "My GitHub", url: "https://github.com/canerdianeh/"}
 
 remote_theme: niklasbuschmann/contrast
 
