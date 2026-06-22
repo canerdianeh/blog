@@ -7,6 +7,7 @@ title: "Home"
 {% for post in site.posts %}
 <article>
 {% include meta.html post=post %}
+{% if post.image %}<img src="{{ post.image | relative_url }}" alt="{{ post.title }}" style="max-width:100%;margin:1em 0;">{% endif %}
 {{ post.excerpt }}
 <footer class="button"><a href="{{ post.url | relative_url }}">read more</a></footer>
 </article>
