@@ -2,8 +2,8 @@ title: "The CaNerdIan"
 author: "Ian Beyer"
 description: "My blog"
 permalink: /:title/
-baseurl: "/blog"
-url: "https://canerdianeh.github.io"
+baseurl: "/"
+url: "https://nerdian.ca"
 lang: "en"
 
 show_excerpts: true
