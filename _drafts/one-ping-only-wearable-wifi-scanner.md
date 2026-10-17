@@ -40,11 +40,29 @@ image: "/assets/images/2026/10/wifi-scanner-modes.png"
 > "Re-verify our range to target... one ping only."
 > — Captain Marko Ramius, *The Hunt for Red October*
 
-Every wireless engineer has a drawer full of gadgets that tell you how strong the Wi-Fi is. Most of them live in a laptop bag, and most of them want you to stop, pull out a laptop or phone, and squint at a graph. I wanted something I could *wear*: glance at my wrist (or lanyard, or hat brim) and know what the RF is doing around me, without breaking stride on a walkthrough.
+Every wireless engineer has a drawer full of gadgets that tell you how strong the Wi-Fi is. Most of them live in a laptop bag, and most of them want you to stop, pull out a a survey device, a laptop, a tablet, a phone, or any combination thereof, and squint at a graph. I wanted something I could *wear*: glance at my wrist (or lanyard, or hat brim) and know what the RF is doing around me, without breaking stride on a walkthrough. In essence, a survey tool almost small enough to swallow. 
 
-<!-- TODO: add your own origin story here: what prompted this, and where you've worn it so far. -->
+those of ypu who know me well will attest to my fascination with devices that emit electromagnetism at much shorter wavelengths, predominantly in the visible spectrum. I like the pretty colored blinky lights! 
 
-What started as "make an LED change color with signal strength" turned into a pocket-sized Wi-Fi, Bluetooth, Zigbee and GPS tool, plus a set of little beacons that tell it *exactly* how far away they are and *where* they are. Naturally, those beacons are named after a submarine movie.
+(gratuitous photo from a show I designed last month)
+
+As part of a work meeting a few months back where the network engineering team was presenting its capabilities to the sales team, my manager asked me to provide a photo of myself, preferably some kind of action shot. I had just the thing, but it was a video clip. Rather than attempt to extract a still out of it, my manager laughed and said it was perfect and would go into the slide deck as-is:
+
+(ekahat clip, caption: I know you're already wondering just what kind of tomfoolery this is...)
+
+Yes, dear reader, that is a Raspberry Pi Zero W, with a short strip of addressable pixel tape. It is running a full blown RPi Linux OS to scan the wifi and translate the peak RSSI into a visual indicator. The concept was to be able to generate a survey heat map outside at night using light painting techniques, but that part didn't work especially well. But it made for a cool hat! 
+
+After the meeting, several colleagues wondered if I still had it. Alas, while the pieces are somewhere, repurposed, the code is long lost. They then asked if I would consider making a re-engineered version for our annual sales kickoff where we all get together in one place. one of the key weaknesses of the original is that it only supported 2.4GHz 802.11n. Any new version would need to support 802.11ax and 5GHz. the other was that in the grand scheme of things, the Raspberry Pi W is actually kinda big. and a RPi with 5GHz support would require external USB peripherals. Having played around with some lighting controllers in the ESP32 space, and knowing that space is rife with cheap devices that only support .11n/2.4 GHz, I started searching for ESP32 devices that might support 5GHz. Sure enough, I found the ESP32-C5, which not only supports dual-band 802.11ax, it also has TWO UARTs on board, which will come in very handy for a lighting project (which will be the subject of a future post). Downside is that stock is a tad limited. However, Seeed studio had the 2.4-only -C6 model available in a 3-pack for around $11, with an external u.FL antenna connector. And then I saw that Waveshare had one with a tiny 1.8" display piggybacked on to it. A few clicks later, Amazon was delivering my new gadgets (including a set of u.FL to RP-SMA antenna pigtails – antennas, I have oodles of). 
+
+Then i had to figure out how I was going to program these little postage-stamp-sized computers. With the help of VSCode and Copilot, I was able to get the ESP-IDF framework installed, and create a new project. And then I turned to Claude, and told it what I wanted to accomplish. It asked a few clarifying questions, and in a few minutes, had flashed the C6 with a basic application that scanned the WiFi environment and returned it on the console. The ease with which Claude had done all the research built the code framework, and loaded it onto the ESP, all from a short 2-paragraph description of my desired result, was mind-boggling. And so I switched over to the fancy one that had the tiny display, and asked Claude to flash the same code onto it, whereupon I discovered it already had a built-in RGB LED. 
+ 
+And then I got crazy, trying to see what all kinds of tricks I could persuade Claude to make this thing do. What started as "make an LED change color with signal strength" turned into a pocket-sized Wi-Fi, Bluetooth, Zigbee and GPS tool. The more I added to it, the more I wondered just what esoteric Wi-Fi functions this chipset supported. And then I realized that it supports 802.11mc Fine Timing Measurement. But, I lacked an AP in the lab that had FTM responder capability with which to test. But I had Claude build in FTM capability to at lesst tell me what a given SSID or AP supported. 
+
+And then it hit me... I asked Claude if it was possible to turn one of the headless C6 units into a Wi-Fi access point whose *only* job in the world was to act as a FTM responder for measurement. Next thing I knew, Claude was asking me to connect one so it could flash the AP firmware. I had just created a set of location beacons way more accurate than the [Bluetooth beacons]() I'd used with Aruba Meridian back in 2021. Naturally, those beacons had to be named for a classic movie line: One Ping Only. 
+
+Because I had low-level access to the wifi chipset, I could put anything I wanted into those beacons, so I then added the ability to send Location Coordinate Information (LCI) in the standard vendor-specific IEs that Aruba APs support, as well as making the beacon's location known in a few other ways - either configured statically or with live NMEA position data from a GNSS module (as you may recall, I [have a patent]() relating to such things!)
+
+But enough backstory, this is starting to read like a recipe post. So on to the main course: what does this thing actually do?
 
 ![The scanner's main modes: Wi-Fi list, network details with FTM ranging and location, GPS with a sky plot, and 2.4 GHz band usage](/assets/images/2026/10/wifi-scanner-modes.png)
 *Wi-Fi list, network details (FTM distance and broadcast location), GPS, and 2.4 GHz band usage. Simulated screenshots, rendered from the firmware's drawing code.*
@@ -60,14 +78,14 @@ The whole thing runs on the **ESP32-C6**, Espressif's little RISC-V chip that do
 
 ## What it does
 
-A long press on the button opens the mode menu. A short press pages through lists, and a double press opens the details for whatever is at the top of the page.
+It boots (almost instantly) to the WiFi scan SSID list. A long press on the built-in button opens the mode menu. A short press pages through lists, and a double press opens the details for whatever is at the top of the page.
 
 ![Mode menu](/assets/images/2026/10/wifi-scanner-menu.png){: width="186" style="float: right; margin: 0 0 1em 1em;"}
 
-- **Wi-Fi scan**: every network in range, with overlaid signal bars for each BSSID, a dot per access point, and the channel. The RGB LED shows the strongest signal (or whichever network you lock it to) on a red-to-green scale, so you can read it without looking at the screen at all.
+- **Wi-Fi scan**: every network in range, with overlaid signal bars for each BSSID, a dot per access point, and the channel. The RGB LED shows the strongest signal (or whichever network you lock it to) on a red-to-green scale, so you can read it without looking at the screen at all. Or use it for light painting. 
 - **GPS**: position, speed, heading, and a satellite sky plot, from a GPS module, a computer over USB, or your phone over Bluetooth.
 - **BLE devices**: everything advertising nearby, with names, makers and rough distance. Lock onto one and the LED becomes a hot/cold finder.
-- **2.4 GHz band**: RF energy across the whole band, with a waterfall, so you can see Wi-Fi channels 1, 6 and 11 and the BLE advertising channels light up.
+- **2.4 GHz band**: RF energy across the whole band (in 5MHz strips), with a waterfall, so you can see Wi-Fi channels 1, 6 and 11 and the BLE advertising channels light up.
 - **Zigbee**: energy on 802.15.4 channels 11–26 and any Zigbee or Thread networks that answer a beacon request.
 - **Files**: the microSD scan logs (CSV, one row per AP per scan, with GPS position). Double press and it starts its own access point with a download page, so you can grab the logs from a phone.
 
@@ -75,11 +93,11 @@ A long press on the button opens the mode menu. A short press pages through list
 
 ![Wi-Fi list](/assets/images/2026/10/wifi-scanner-wifi-list.png){: width="186"} ![BLE devices](/assets/images/2026/10/wifi-scanner-ble-list.png){: width="186"} ![Zigbee](/assets/images/2026/10/wifi-scanner-zigbee.png){: width="186"}
 
-The list keeps its order once it's built: new networks get added at the bottom instead of everything jumping around every scan, which matters a lot more than you'd think when you're walking. Networks that drop out stay listed (grayed out) for five minutes.
+The list keeps its order once it's built: new networks get added at the bottom instead of everything jumping around every scan, which matters a lot more than you'd think when you're walking. Networks that drop out stay listed (grayed out) for five minutes. SSIDs that have multiple BSSIDs will stack the RSSI bars, and each one seen is represented by a dot, which will turn gray if it's out of range.  
 
 ## How far away is that AP, really?
 
-RSSI-based distance is, charitably, a vibe. Walls, bodies, antenna orientation and the phase of the moon all move it by 10 dB, so the scanner treats an RSSI estimate as "near / a room away / far" and shows it in white.
+RSSI-based distance is, charitably, a vibe. I have a post about [how it works for Bluetooth](), if you want to know more. Walls, bodies, antenna orientation and the phase of the moon all move it by 10 dB, so the scanner treats an RSSI estimate as "near / a room away / far" and shows it in white. 
 
 But the ESP32-C6 supports **802.11mc Fine Timing Measurement (FTM)**: the client and AP exchange timestamped frames and measure the round-trip time of flight. Light covers about 30 cm per nanosecond, so with decent timestamps you get real distance, not a guess. When a network's beacon says it's an FTM responder, the details screen ranges to it between scans and shows the result in **green** (uncertainty under 3 m) or **yellow**.
 
@@ -109,12 +127,11 @@ On the scanner, any network broadcasting a location shows its name in **blue**, 
 
 <div style="clear: both;"></div>
 
-I've written up the [byte-level format of both elements and the ANQP responses](https://github.com/canerdianeh/esp32c6-wifi-scanner/blob/main/ftm-responder/docs/beacon-location-elements.md), with decoded captures, so other tools can parse them.
+I had claude write up the [byte-level format of both elements and the ANQP responses](https://github.com/canerdianeh/esp32c6-wifi-scanner/blob/main/ftm-responder/docs/beacon-location-elements.md), with decoded captures, so other tools can parse them. 
 
-<!-- TODO: optionally mention the WiFi Explorer Pro work here. Adrian Granados has been looking at decoding these elements, and testing against it caught two bugs:
-     (1) the Aruba element carried a bare RFC 3825 field instead of an LCI report subelement, so the first byte (0x5C) was read as "subelement 92";
-     (2) altitude is 22.8 fixed point, so a decoder that doesn't divide by 256 reports 181 m as 46,336 m.
-     Check with Adrian before naming him or the product. -->
+WiFi Explorer can parse the coordinates in the Aruba IE, as I requested that capability when Aruba launched the 600 series APs when I was still at HPE. Testing the custom IEs with WFE caught two bugs:
+     (1) the first attempt at the Aruba element carried a bare RFC 3825 field instead of an LCI report subelement, so the first byte (0x5C) was read as "subelement 92". Thanks to Adrian for letting me know what subelements WFE knows about. 
+     (2) altitude is 22.8 fixed point, so a decoder that doesn't divide by 256 reports the 181 m elevation of Wrigley as 46,336 m.
 
 A few things that made this more interesting than expected:
 
@@ -157,4 +174,5 @@ The Bluetooth link is a switch on the GPS screen, off by default, and there's a 
 
 Everything is on GitHub: [canerdianeh/esp32c6-wifi-scanner](https://github.com/canerdianeh/esp32c6-wifi-scanner). The scanner and the responders are both ESP-IDF v6.1 projects, and the READMEs cover building, flashing, wiring and every menuconfig option.
 
+***AI disclosure**: this project was built using Claude Code. Claude also built the bulk of the technical portion of this writeup and the simulated screen shots. The narrative portion is mine, with some structural help from Claude (and Claude even threw in a bit of snark that captured my usual writing style with surprising accuracy). Model used was Sonnet 5.5/Medium.*
 <!-- TODO: closing thoughts, what's next (floor/Z subelement, a field "zero at 1 m" calibration, a case), and a call for anyone with APs that serve ANQP location to send captures. -->
