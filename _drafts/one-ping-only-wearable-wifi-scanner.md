@@ -1,0 +1,160 @@
+---
+layout: post
+title: 'One Ping Only: A Wearable Wi-Fi Scanner on the ESP32-C6'
+date: 2026-10-17 12:00:00.000000000 -05:00
+type: post
+parent_id: '0'
+published: false
+password: ''
+status: draft
+categories:
+- nerd
+- Wireless
+tags:
+- esp32
+- wi-fi
+- FTM
+- 802.11mc
+- location
+- ANQP
+- GPS
+- BLE
+author:
+  login: ianbeyer
+  email: ian.beyer@gmail.com
+  display_name: Ian Beyer
+  first_name: Ian
+  last_name: Beyer
+image: "/assets/images/2026/10/wifi-scanner-modes.png"
+---
+<!-- REVIEW NOTES (HTML comments don't render; delete them before publishing)
+  - This is a draft in _drafts/, so Jekyll won't build it. To publish: move it to
+    _posts/YYYY-MM-DD-one-ping-only-wearable-wifi-scanner.md, set published: true and
+    status: publish, add a permalink like the other posts, and merge to main.
+  - The screenshots are simulated: rendered offline from the firmware's own drawing
+    code with made-up data (generic network names, the Wrigley Field test responders,
+    the demo GPS track). Swap in photos or captures from your video if you prefer.
+  - Check the parts marked TODO.
+-->
+
+> "Re-verify our range to target... one ping only."
+> — Captain Marko Ramius, *The Hunt for Red October*
+
+Every wireless engineer has a drawer full of gadgets that tell you how strong the Wi-Fi is. Most of them live in a laptop bag, and most of them want you to stop, pull out a laptop or phone, and squint at a graph. I wanted something I could *wear*: glance at my wrist (or lanyard, or hat brim) and know what the RF is doing around me, without breaking stride on a walkthrough.
+
+<!-- TODO: add your own origin story here: what prompted this, and where you've worn it so far. -->
+
+What started as "make an LED change color with signal strength" turned into a pocket-sized Wi-Fi, Bluetooth, Zigbee and GPS tool, plus a set of little beacons that tell it *exactly* how far away they are and *where* they are. Naturally, those beacons are named after a submarine movie.
+
+![The scanner's main modes: Wi-Fi list, network details with FTM ranging and location, GPS with a sky plot, and 2.4 GHz band usage](/assets/images/2026/10/wifi-scanner-modes.png)
+*Wi-Fi list, network details (FTM distance and broadcast location), GPS, and 2.4 GHz band usage. Simulated screenshots, rendered from the firmware's drawing code.*
+
+## The hardware
+
+The whole thing runs on the **ESP32-C6**, Espressif's little RISC-V chip that does 2.4 GHz Wi-Fi 6, Bluetooth LE 5 and 802.15.4 (Zigbee/Thread) in one package. Two boards:
+
+- **The wearable**: a [Waveshare ESP32-C6-LCD-1.47](https://www.waveshare.com/esp32-c6-lcd-1.47.htm), which packs a 172×320 color LCD, an RGB LED and a microSD slot onto a board about the size of a stick of gum. Add an optional serial GPS module and a battery.
+- **The beacons**: a couple of [Seeed XIAO ESP32-C6](https://wiki.seeedstudio.com/xiao_esp32c6_getting_started/) boards, one with the built-in antenna and one with an external antenna on the u.FL jack. They're headless and run as access points named `OnePingOnly-XXXX`. More on those in a bit.
+
+<!-- TODO: photo of the wearable and the two XIAO responders. -->
+
+## What it does
+
+A long press on the button opens the mode menu. A short press pages through lists, and a double press opens the details for whatever is at the top of the page.
+
+![Mode menu](/assets/images/2026/10/wifi-scanner-menu.png){: width="186" style="float: right; margin: 0 0 1em 1em;"}
+
+- **Wi-Fi scan**: every network in range, with overlaid signal bars for each BSSID, a dot per access point, and the channel. The RGB LED shows the strongest signal (or whichever network you lock it to) on a red-to-green scale, so you can read it without looking at the screen at all.
+- **GPS**: position, speed, heading, and a satellite sky plot, from a GPS module, a computer over USB, or your phone over Bluetooth.
+- **BLE devices**: everything advertising nearby, with names, makers and rough distance. Lock onto one and the LED becomes a hot/cold finder.
+- **2.4 GHz band**: RF energy across the whole band, with a waterfall, so you can see Wi-Fi channels 1, 6 and 11 and the BLE advertising channels light up.
+- **Zigbee**: energy on 802.15.4 channels 11–26 and any Zigbee or Thread networks that answer a beacon request.
+- **Files**: the microSD scan logs (CSV, one row per AP per scan, with GPS position). Double press and it starts its own access point with a download page, so you can grab the logs from a phone.
+
+<div style="clear: both;"></div>
+
+![Wi-Fi list](/assets/images/2026/10/wifi-scanner-wifi-list.png){: width="186"} ![BLE devices](/assets/images/2026/10/wifi-scanner-ble-list.png){: width="186"} ![Zigbee](/assets/images/2026/10/wifi-scanner-zigbee.png){: width="186"}
+
+The list keeps its order once it's built: new networks get added at the bottom instead of everything jumping around every scan, which matters a lot more than you'd think when you're walking. Networks that drop out stay listed (grayed out) for five minutes.
+
+## How far away is that AP, really?
+
+RSSI-based distance is, charitably, a vibe. Walls, bodies, antenna orientation and the phase of the moon all move it by 10 dB, so the scanner treats an RSSI estimate as "near / a room away / far" and shows it in white.
+
+But the ESP32-C6 supports **802.11mc Fine Timing Measurement (FTM)**: the client and AP exchange timestamped frames and measure the round-trip time of flight. Light covers about 30 cm per nanosecond, so with decent timestamps you get real distance, not a guess. When a network's beacon says it's an FTM responder, the details screen ranges to it between scans and shows the result in **green** (uncertainty under 3 m) or **yellow**.
+
+Which brings us to the beacons. Not many APs in the wild advertise FTM responder support, so I built my own: the XIAO boards run as `OnePingOnly-XXXX` access points that answer FTM requests. (Ranging doesn't need a connection; the password just keeps people from joining.) Their status LED flickers every time someone pings them.
+
+### Calibration, or: the cable is part of the distance
+
+FTM measures the whole signal path, including the antenna cable and the radio's internal delays. Out of the box my two responders read about 2.9 m and 2.5 m at a measured 1 m. The external-antenna board reads *shorter* despite having more cable, because the two antennas and RF paths simply have different delays. On top of that, the scanner itself has a ranging offset that changes by up to ±0.9 m every time it reboots, the same for every responder.
+
+ESP-IDF has a call to set a responder-side offset, but it made no consistent difference in testing. So each responder now **broadcasts its own calibration correction in its beacon** (195 cm for the built-in antenna, 145 cm for the external one), and the scanner subtracts it. At 30 cm apart they now read 0.6–0.9 m, which is within that per-boot wobble.
+
+<!-- TODO: if you've worked out a field calibration procedure, or want to explain the per-boot offset in more detail, it goes here. -->
+
+## Where is that AP?
+
+Distance is nice; *location* is better. The responders also broadcast where they are. For testing, one of them is convinced it lives at Wrigley Field, because if you're going to fake a location you might as well pick a good one.
+
+![Network details showing FTM distance and the broadcast location](/assets/images/2026/10/wifi-scanner-wifi-detail.png){: width="186" style="float: right; margin: 0 0 1em 1em;"}
+
+The location goes out three ways:
+
+1. **In the beacon, HPE Aruba style.** Aruba APs can advertise their location in a vendor-specific element (OUI `00:0B:86`, subtype 8), carrying an 802.11 LCI report: latitude, longitude, altitude and uncertainty in the RFC 6225 binary format. Tools that already understand Aruba's element can read the OnePingOnly beacons with no changes.
+2. **In the beacon, in a second element** under Espressif's OUI, carrying the civic address in RFC 4776 format (the form RFC 5580 uses: country, state, city, street, house number, postal code, venue name), the FTM calibration correction, and whether the position is fixed or from a live GPS fix.
+3. **Over ANQP** (802.11u). The responders answer GAS queries for AP Geospatial Location (Info ID 265) and AP Civic Location (266), the standards-based way to ask an AP where it is without associating.
+
+On the scanner, any network broadcasting a location shows its name in **blue**, and the details screen shows the coordinates and street address, marked "ANQP" when they came from a query.
+
+<div style="clear: both;"></div>
+
+I've written up the [byte-level format of both elements and the ANQP responses](https://github.com/canerdianeh/esp32c6-wifi-scanner/blob/main/ftm-responder/docs/beacon-location-elements.md), with decoded captures, so other tools can parse them.
+
+<!-- TODO: optionally mention the WiFi Explorer Pro work here. Adrian Granados has been looking at decoding these elements, and testing against it caught two bugs:
+     (1) the Aruba element carried a bare RFC 3825 field instead of an LCI report subelement, so the first byte (0x5C) was read as "subelement 92";
+     (2) altitude is 22.8 fixed point, so a decoder that doesn't divide by 256 reports 181 m as 46,336 m.
+     Check with Adrian before naming him or the product. -->
+
+A few things that made this more interesting than expected:
+
+- **ESP-IDF only gives you two vendor-element slots per frame type.** One for position, one for civic and calibration, and there's no room left for an Interworking element. So the responders answer ANQP, but they can't *advertise* that they do. Clients that only query APs announcing Interworking won't ask; the scanner asks anyway.
+- **The vendor-element receive callback doesn't fire during scans**, so the scanner runs a promiscuous sniffer alongside the scan to catch the location elements in beacons and probe responses.
+- **Bit order.** The 802.11 LCI field packs RFC 6225's fields least-significant-bit first, which is backwards from how the RFC draws them. I checked it against the test vector in hostapd before trusting it.
+
+## GPS, three ways (four, if you count the demo)
+
+![GPS with sky plot](/assets/images/2026/10/wifi-scanner-gps.png){: width="186" style="float: right; margin: 0 0 1em 1em;"}
+
+With a GPS fix, every scan row in the microSD log gets a position, which turns a walk around a building into a survey dataset. The GPS screen shows position, altitude, speed, heading and a sky plot: north at the top, the horizon at the outer ring, satellites in the fix colored by signal strength.
+
+The position can come from:
+
+- **A GPS module** on a serial port: any NMEA receiver, with the baud rate detected automatically.
+- **A computer over USB.** NMEA lines sent to the scanner's USB port are used just like a module's. A small Python script forwards a GPS on the laptop, sends a fixed position, or replays a log.
+- **A phone over Bluetooth LE.** Pair the phone (the scanner shows a six-digit passkey to type in) and the scanner both *sends* its own position to the phone as NMEA, the way a Bluetooth GNSS receiver does, and *accepts* the phone's location when it has none of its own.
+
+<div style="clear: both;"></div>
+
+![Bluetooth pairing passkey](/assets/images/2026/10/wifi-scanner-pairing.png){: width="186" style="float: right; margin: 0 0 1em 1em;"}
+
+The Bluetooth link is a switch on the GPS screen, off by default, and there's a reason. The C6 has one 2.4 GHz radio shared between Wi-Fi and Bluetooth, and while Bluetooth is advertising or connected, a full Wi-Fi scan takes about 4.9 seconds instead of 2. That's a trade-off you should choose, not one the device makes for you.
+
+<!-- TODO: once you've tried it with your phone, say which app you used to receive the NMEA. -->
+
+<div style="clear: both;"></div>
+
+## Lessons from the bench
+
+- **The XIAO ESP32-C6 has an RF switch you have to drive.** GPIO3 powers it and GPIO14 picks the antenna. Leave them alone and the radio works, just about 20 dB weaker than it should. That one took a while.
+- **Use 20 MHz channels on 2.4 GHz.** The responders were initially coming up at 40 MHz, which is bad manners on a band with three non-overlapping channels.
+- **Don't trust the first calibration.** What I initially took as "the external antenna adds a meter" turned out to be the scanner's per-boot offset. Measure across several reboots before you believe anything.
+- **Build a demo mode.** For recording video, the firmware can tour all the modes on a timer, with a simulated GPS receiver walking laps around Wrigley Field, and it can redact a word in SSIDs and Bluetooth names (like, say, your last name in your home network's SSID) on the screen, in the serial log and in the SD log.
+
+<!-- TODO: embed the demo video here once it's up. -->
+
+## The code
+
+Everything is on GitHub: [canerdianeh/esp32c6-wifi-scanner](https://github.com/canerdianeh/esp32c6-wifi-scanner). The scanner and the responders are both ESP-IDF v6.1 projects, and the READMEs cover building, flashing, wiring and every menuconfig option.
+
+<!-- TODO: closing thoughts, what's next (floor/Z subelement, a field "zero at 1 m" calibration, a case), and a call for anyone with APs that serve ANQP location to send captures. -->
