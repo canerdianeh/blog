@@ -44,7 +44,7 @@ Every wireless engineer has a drawer full of gadgets that tell you how strong th
 
 those of ypu who know me well will attest to my fascination with devices that emit electromagnetism at much shorter wavelengths, predominantly in the visible spectrum. I like the pretty colored blinky lights! 
 
-[![Pirates](/assets/images/2026/10/pirates.jpg){: width="450" style="float: right; margin: 0 0 1em 1em;"}]
+![Pirates](/assets/images/2026/10/pirates.jpg){: width="350" style="float: right; margin: 0 0 1em 1em;"}
 
 As part of a work meeting a few months back where the network engineering team was presenting its capabilities to the sales team, my manager asked me to provide a photo of myself, preferably some kind of action shot. I had just the thing, but it was a video clip. Rather than attempt to extract a still out of it, my manager laughed and said it was perfect and would go into the slide deck as-is:
 
@@ -76,8 +76,6 @@ The whole thing runs on the **ESP32-C6**, Espressif's little RISC-V chip that do
 - **The wearable**: a [Waveshare ESP32-C6-LCD-1.47](https://www.waveshare.com/esp32-c6-lcd-1.47.htm), which packs a 172×320 color LCD, an RGB LED and a microSD slot onto a board about the size of a stick of gum. Add an optional serial GPS module and a battery.
 - **The beacons**: a couple of [Seeed XIAO ESP32-C6](https://wiki.seeedstudio.com/xiao_esp32c6_getting_started/) boards, one with the built-in antenna and one with an external antenna on the u.FL jack. They're headless and run as access points named `OnePingOnly-XXXX`. More on those in a bit.
 
-<!-- TODO: photo of the wearable and the two XIAO responders. -->
-
 ## What it does
 
 It boots (almost instantly) to the WiFi scan SSID list. A long press on the built-in button opens the mode menu. A short press pages through lists, and a double press opens the details for whatever is at the top of the page.
@@ -99,7 +97,7 @@ The list keeps its order once it's built: new networks get added at the bottom i
 
 ## How far away is that AP, really?
 
-RSSI-based distance is, charitably, a vibe. I have a post about [how it works for Bluetooth](), if you want to know more. Walls, bodies, antenna orientation and the phase of the moon all move it by 10 dB, so the scanner treats an RSSI estimate as "near / a room away / far" and shows it in white. 
+RSSI-based distance is, charitably, a vibe. I have a post about [how it works for Bluetooth](https://nerdian.ca/2021/08/19/bluetooth-beacons-for-location/), if you want to know more. Walls, bodies, antenna orientation and the phase of the moon all move it by 10 dB, so the scanner treats an RSSI estimate as "near / a room away / far" and shows it in white. 
 
 But the ESP32-C6 supports **802.11mc Fine Timing Measurement (FTM)**: the client and AP exchange timestamped frames and measure the round-trip time of flight. Light covers about 30 cm per nanosecond, so with decent timestamps you get real distance, not a guess. When a network's beacon says it's an FTM responder, the details screen ranges to it between scans and shows the result in **green** (uncertainty under 3 m) or **yellow**.
 
@@ -110,8 +108,6 @@ Which brings us to the beacons. Not many APs in the wild advertise FTM responder
 FTM measures the whole signal path, including the antenna cable and the radio's internal delays. Out of the box my two responders read about 2.9 m and 2.5 m at a measured 1 m. The external-antenna board reads *shorter* despite having more cable, because the two antennas and RF paths simply have different delays. On top of that, the scanner itself has a ranging offset that changes by up to ±0.9 m every time it reboots, the same for every responder.
 
 ESP-IDF has a call to set a responder-side offset, but it made no consistent difference in testing. So each responder now **broadcasts its own calibration correction in its beacon** (195 cm for the built-in antenna, 145 cm for the external one), and the scanner subtracts it. At 30 cm apart they now read 0.6–0.9 m, which is within that per-boot wobble.
-
-<!-- TODO: if you've worked out a field calibration procedure, or want to explain the per-boot offset in more detail, it goes here. -->
 
 ## Where is that AP?
 
@@ -172,9 +168,15 @@ The Bluetooth link is a switch on the GPS screen, off by default, and there's a 
 
 <!-- TODO: embed the demo video here once it's up. -->
 
+## Where does it go from here?
+
+Since the beacons have underutilized Bluetooth and a known location (either static or GPS), I would like to implement a receiver and reporter for [Apple's Find My devices](https://developer.apple.com/find-my/) such as AirTags. Maybe some integration with HomeAssistant. 
+
+Also, I want to make this work on a 5GHz-capable ESP32 module. 
+
 ## The code
 
 Everything is on GitHub: [canerdianeh/esp32c6-wifi-scanner](https://github.com/canerdianeh/esp32c6-wifi-scanner). The scanner and the responders are both ESP-IDF v6.1 projects, and the READMEs cover building, flashing, wiring and every menuconfig option.
 
 ***AI disclosure**: this project was built using Claude Code. Claude also built the bulk of the technical portion of this writeup and the simulated screen shots. The narrative portion is mine, with some structural help from Claude (and Claude even threw in a bit of snark that captured my usual writing style with surprising accuracy). Model used was Sonnet 5.5/Medium.*
-<!-- TODO: closing thoughts, what's next (floor/Z subelement, a field "zero at 1 m" calibration, a case), and a call for anyone with APs that serve ANQP location to send captures. -->
+
