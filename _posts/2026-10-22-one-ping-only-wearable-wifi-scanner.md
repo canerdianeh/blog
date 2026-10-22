@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'One Ping Only: A Wearable Wi-Fi Scanner on the ESP32-C6'
-date: 2026-10-22 15:30:00.000000000 -05:00
+date: 2026-10-22 12:00:00.000000000 -05:00
 type: post
 parent_id: '0'
 published: true
