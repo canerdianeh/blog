@@ -48,7 +48,8 @@ those of ypu who know me well will attest to my fascination with devices that em
 
 As part of a work meeting a few months back where the network engineering team was presenting its capabilities to the sales team, my manager asked me to provide a photo of myself, preferably some kind of action shot. I had just the thing, but it was a video clip. Rather than attempt to extract a still out of it, my manager laughed and said it was perfect and would go into the slide deck as-is:
 
-<iframe width="439" height="780" src="https://www.youtube.com/embed/SFLF1f2bhv0" title="The EkaHat!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![The EkaHat!](https://img.youtube.com/vi/SFLF1f2bhv0/0.jpg)](https://www.youtube.com/watch?v=SFLF1f2bhv0)
+
 I know you're already wondering just what kind of tomfoolery this is...
 
 Yes, dear reader, that is a Raspberry Pi Zero W, with a short strip of addressable pixel tape. It is running a full blown RPi Linux OS to scan the wifi and translate the peak RSSI into a visual indicator. The concept was to be able to generate a survey heat map outside at night using light painting techniques, but that part didn't work especially well. But it made for a cool hat! 
