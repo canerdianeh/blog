@@ -48,8 +48,7 @@ those of ypu who know me well will attest to my fascination with devices that em
 
 As part of a work meeting a few months back where the network engineering team was presenting its capabilities to the sales team, my manager asked me to provide a photo of myself, preferably some kind of action shot. I had just the thing, but it was a video clip. Rather than attempt to extract a still out of it, my manager laughed and said it was perfect and would go into the slide deck as-is:
 
-[![The EkaHat!](https://img.youtube.com/vi/SFLF1f2bhv0/0.jpg)](https://www.youtube.com/watch?v=SFLF1f2bhv0)
-
+[![The EkaHat!](https://img.youtube.com/vi/SFLF1f2bhv0/0.jpg)](https://youtube.com/shorts/SFLF1f2bhv0)
 I know you're already wondering just what kind of tomfoolery this is...
 
 Yes, dear reader, that is a Raspberry Pi Zero W, with a short strip of addressable pixel tape. It is running a full blown RPi Linux OS to scan the wifi and translate the peak RSSI into a visual indicator. The concept was to be able to generate a survey heat map outside at night using light painting techniques, but that part didn't work especially well. But it made for a cool hat! 
@@ -166,7 +165,7 @@ The Bluetooth link is a switch on the GPS screen, off by default, and there's a 
 - **Don't trust the first calibration.** What I initially took as "the external antenna adds a meter" turned out to be the scanner's per-boot offset. Measure across several reboots before you believe anything.
 - **Build a demo mode.** For recording video, the firmware can tour all the modes on a timer, with a simulated GPS receiver walking laps around Wrigley Field, and it can redact a word in SSIDs and Bluetooth names (like, say, your last name in your home network's SSID) on the screen, in the serial log and in the SD log.
 
-<!-- TODO: embed the demo video here once it's up. -->
+[![Live Demo](https://img.youtube.com/vi/UQFDZ4gK18A/0.jpg)](https://youtube.com/shorts/UQFDZ4gK18A)
 
 ## Where does it go from here?
 
