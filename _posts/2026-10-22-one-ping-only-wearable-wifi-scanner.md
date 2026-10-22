@@ -26,7 +26,7 @@ author:
   first_name: Ian
   last_name: Beyer
 permalink: "/2026/10/22/one-ping-only-wearable-wifi-scanner/"
-image: "/assets/images/2026/10/wifi-scanner-modes.png"
+image: "/assets/images/2026/10/IMG_5534.JPG"
 ---
 
 > "Re-verify our range to target... one ping only."
