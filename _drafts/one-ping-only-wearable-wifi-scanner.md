@@ -44,7 +44,7 @@ Every wireless engineer has a drawer full of gadgets that tell you how strong th
 
 those of ypu who know me well will attest to my fascination with devices that emit electromagnetism at much shorter wavelengths, predominantly in the visible spectrum. I like the pretty colored blinky lights! 
 
-![Wi-Fi list](/assets/images/2026/10/pirates.jpg){: width="450" style="float: right; margin: 0 0 1em 1em;"}
+[![Pirates](/assets/images/2026/10/pirates.jpg){: width="450" style="float: right; margin: 0 0 1em 1em;"}]
 
 As part of a work meeting a few months back where the network engineering team was presenting its capabilities to the sales team, my manager asked me to provide a photo of myself, preferably some kind of action shot. I had just the thing, but it was a video clip. Rather than attempt to extract a still out of it, my manager laughed and said it was perfect and would go into the slide deck as-is:
 
