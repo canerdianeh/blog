@@ -42,7 +42,7 @@ image: "/assets/images/2026/10/wifi-scanner-modes.png"
 
 Every wireless engineer has a drawer full of gadgets that tell you how strong the Wi-Fi is. Most of them live in a laptop bag, and most of them want you to stop, pull out a a survey device, a laptop, a tablet, a phone, or any combination thereof, and squint at a graph. I wanted something I could *wear*: glance at my wrist (or lanyard, or hat brim) and know what the RF is doing around me, without breaking stride on a walkthrough. In essence, a survey tool almost small enough to swallow. 
 
-those of ypu who know me well will attest to my fascination with devices that emit electromagnetism at much shorter wavelengths, predominantly in the visible spectrum. I like the pretty colored blinky lights! 
+those of you who know me well will attest to my fascination with devices that emit electromagnetism at much shorter wavelengths, predominantly in the visible spectrum. I like the pretty colored blinky lights! 
 
 ![Pirates](/assets/images/2026/10/pirates.jpg){: width="350" style="float: right; margin: 0 0 1em 1em;"}
 
