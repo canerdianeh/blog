@@ -48,7 +48,8 @@ those of ypu who know me well will attest to my fascination with devices that em
 
 As part of a work meeting a few months back where the network engineering team was presenting its capabilities to the sales team, my manager asked me to provide a photo of myself, preferably some kind of action shot. I had just the thing, but it was a video clip. Rather than attempt to extract a still out of it, my manager laughed and said it was perfect and would go into the slide deck as-is:
 
-(ekahat clip, caption: I know you're already wondering just what kind of tomfoolery this is...)
+<iframe width="439" height="780" src="https://www.youtube.com/embed/SFLF1f2bhv0" title="The EkaHat!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+I know you're already wondering just what kind of tomfoolery this is...
 
 Yes, dear reader, that is a Raspberry Pi Zero W, with a short strip of addressable pixel tape. It is running a full blown RPi Linux OS to scan the wifi and translate the peak RSSI into a visual indicator. The concept was to be able to generate a survey heat map outside at night using light painting techniques, but that part didn't work especially well. But it made for a cool hat! 
 
@@ -58,9 +59,9 @@ Then i had to figure out how I was going to program these little postage-stamp-s
  
 And then I got crazy, trying to see what all kinds of tricks I could persuade Claude to make this thing do. What started as "make an LED change color with signal strength" turned into a pocket-sized Wi-Fi, Bluetooth, Zigbee and GPS tool. The more I added to it, the more I wondered just what esoteric Wi-Fi functions this chipset supported. And then I realized that it supports 802.11mc Fine Timing Measurement. But, I lacked an AP in the lab that had FTM responder capability with which to test. But I had Claude build in FTM capability to at lesst tell me what a given SSID or AP supported. 
 
-And then it hit me... I asked Claude if it was possible to turn one of the headless C6 units into a Wi-Fi access point whose *only* job in the world was to act as a FTM responder for measurement. Next thing I knew, Claude was asking me to connect one so it could flash the AP firmware. I had just created a set of location beacons way more accurate than the [Bluetooth beacons]() I'd used with Aruba Meridian back in 2021. Naturally, those beacons had to be named for a classic movie line: One Ping Only. 
+And then it hit me... I asked Claude if it was possible to turn one of the headless C6 units into a Wi-Fi access point whose *only* job in the world was to act as a FTM responder for measurement. Next thing I knew, Claude was asking me to connect one so it could flash the AP firmware. I had just created a set of location beacons way more accurate than the [Bluetooth beacons](https://nerdian.ca/2021/08/19/bluetooth-beacons-for-location/) I'd used with Aruba Meridian back in 2021. Naturally, those beacons had to be named for a classic movie line: One Ping Only. 
 
-Because I had low-level access to the wifi chipset, I could put anything I wanted into those beacons, so I then added the ability to send Location Coordinate Information (LCI) in the standard vendor-specific IEs that Aruba APs support, as well as making the beacon's location known in a few other ways - either configured statically or with live NMEA position data from a GNSS module (as you may recall, I [have a patent]() relating to such things!)
+Because I had low-level access to the wifi chipset, I could put anything I wanted into those beacons, so I then added the ability to send Location Coordinate Information (LCI) in the standard vendor-specific IEs that Aruba APs support, as well as making the beacon's location known in a few other ways - either configured statically or with live NMEA position data from a GNSS module (as you may recall, I [have a patent](https://nerdian.ca/2026/02/03/achievement-unlocked-patent/) relating to such things!)
 
 But enough backstory, this is starting to read like a recipe post. So on to the main course: what does this thing actually do?
 
